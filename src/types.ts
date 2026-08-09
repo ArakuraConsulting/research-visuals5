@@ -111,6 +111,10 @@ export interface BodyEntry {
   bodyWaterPct?: number
   boneMassKg?: number
   bmi?: number
+  visceralFat?: number
+  proteinPct?: number
+  bmrKcal?: number
+  metabolicAge?: number
 }
 
 /** In-progress workout state, persisted so a lock/refresh can resume. */
