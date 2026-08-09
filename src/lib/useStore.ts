@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type {
   ActiveSession,
+  BodyEntry,
   ExerciseLog,
   HistoryEntry,
   Settings,
@@ -32,6 +33,7 @@ export interface AppStore {
   settings: Settings
   exerciseLog: Record<string, ExerciseLog>
   loadNoteAcks: Record<string, boolean>
+  bodyEntries: BodyEntry[]
 
   dismissFormNotice: () => void
   setActiveSession: (session: ActiveSession | null) => void
@@ -40,6 +42,8 @@ export interface AppStore {
   updateSettings: (partial: Partial<Settings>) => void
   recordExerciseLogs: (logs: Record<string, ExerciseLog>) => void
   ackLoadNote: (exerciseId: string) => void
+  addBodyEntry: (entry: BodyEntry) => void
+  deleteBodyEntry: (id: string) => void
 }
 
 export function useStore(): AppStore {
@@ -63,11 +67,19 @@ export function useStore(): AppStore {
   const [loadNoteAcks, setLoadNoteAcks] = useState<Record<string, boolean>>(() =>
     loadJSON<Record<string, boolean>>(STORAGE_KEYS.loadNoteAcks, {}),
   )
+  const [bodyEntries, setBodyEntries] = useState<BodyEntry[]>(() =>
+    loadJSON<BodyEntry[]>(STORAGE_KEYS.bodyEntries, []),
+  )
 
   // Persist history whenever it changes.
   useEffect(() => {
     saveJSON(STORAGE_KEYS.history, history)
   }, [history])
+
+  // Persist body measurements whenever they change.
+  useEffect(() => {
+    saveJSON(STORAGE_KEYS.bodyEntries, bodyEntries)
+  }, [bodyEntries])
 
   const dismissFormNotice = useCallback(() => {
     setFormNoticeDismissed(true)
@@ -119,6 +131,18 @@ export function useStore(): AppStore {
     })
   }, [])
 
+  const addBodyEntry = useCallback((entry: BodyEntry) => {
+    setBodyEntries((prev) =>
+      [entry, ...prev].sort(
+        (a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime(),
+      ),
+    )
+  }, [])
+
+  const deleteBodyEntry = useCallback((id: string) => {
+    setBodyEntries((prev) => prev.filter((e) => e.id !== id))
+  }, [])
+
   return {
     workouts,
     history,
@@ -134,5 +158,8 @@ export function useStore(): AppStore {
     updateSettings,
     recordExerciseLogs,
     ackLoadNote,
+    bodyEntries,
+    addBodyEntry,
+    deleteBodyEntry,
   }
 }

@@ -6,12 +6,20 @@ import { HomeView } from './components/HomeView'
 import { DetailView } from './components/DetailView'
 import { ActiveWorkout } from './components/ActiveWorkout'
 import { HistoryView } from './components/HistoryView'
+import { ProgressView } from './components/ProgressView'
 import { SettingsView } from './components/SettingsView'
 import { GuideView } from './components/GuideView'
 import { FormNoticeModal, FormNoticeSheet } from './components/FormNotice'
 import { ConfirmDialog } from './components/ConfirmDialog'
 
-type View = 'home' | 'detail' | 'active' | 'history' | 'settings' | 'guide'
+type View =
+  | 'home'
+  | 'detail'
+  | 'active'
+  | 'history'
+  | 'progress'
+  | 'settings'
+  | 'guide'
 
 export default function App() {
   const store = useStore()
@@ -95,6 +103,7 @@ export default function App() {
           history={store.history}
           onOpenWorkout={openWorkout}
           onOpenHistory={() => setView('history')}
+          onOpenProgress={() => setView('progress')}
           onOpenNotice={() => setShowNoticeSheet(true)}
           onOpenSettings={() => setView('settings')}
           onOpenGuide={() => openGuide('home')}
@@ -133,6 +142,17 @@ export default function App() {
           history={store.history}
           onBack={() => setView('home')}
           onDelete={store.deleteHistoryEntry}
+        />
+      )}
+
+      {view === 'progress' && (
+        <ProgressView
+          history={store.history}
+          bodyEntries={store.bodyEntries}
+          settings={store.settings}
+          onBack={() => setView('home')}
+          onAddBody={store.addBodyEntry}
+          onDeleteBody={store.deleteBodyEntry}
         />
       )}
 
