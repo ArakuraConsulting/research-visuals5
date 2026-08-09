@@ -55,10 +55,12 @@ export function LineChart({
   points,
   unit = '',
   height = 160,
+  goal,
 }: {
   points: Point[]
   unit?: string
   height?: number
+  goal?: number
 }) {
   if (points.length === 0) {
     return (
@@ -79,8 +81,10 @@ export function LineChart({
   const ys = points.map((p) => p.y)
   const minX = Math.min(...xs)
   const maxX = Math.max(...xs)
-  const minY = Math.min(...ys)
-  const maxY = Math.max(...ys)
+  // Include the goal in the vertical range so its line is always visible.
+  const hasGoal = typeof goal === 'number' && Number.isFinite(goal)
+  const minY = Math.min(...ys, hasGoal ? (goal as number) : Infinity)
+  const maxY = Math.max(...ys, hasGoal ? (goal as number) : -Infinity)
   const spanX = maxX - minX || 1
   const spanY = maxY - minY || 1
 
@@ -131,6 +135,18 @@ export function LineChart({
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#lc-fill)" />
+        {hasGoal && (
+          <line
+            x1={padX}
+            y1={sy(goal as number)}
+            x2={W - padX}
+            y2={sy(goal as number)}
+            stroke="#34d399"
+            strokeWidth="1.5"
+            strokeDasharray="5 4"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
         <path d={path} fill="none" stroke="#4f8ff7" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         {points.map((p, i) => (
           <circle
@@ -146,6 +162,12 @@ export function LineChart({
         <span>{first.label}</span>
         <span>{last.label}</span>
       </div>
+      {hasGoal && (
+        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-emerald-300">
+          <span className="inline-block h-0 w-4 border-t-2 border-dashed border-emerald-400" />
+          Goal {goal} {unit}
+        </div>
+      )}
     </div>
   )
 }

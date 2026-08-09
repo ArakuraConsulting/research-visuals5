@@ -48,6 +48,9 @@ export interface Settings {
   /** Bar weight, added automatically to every barbell lift. Default 8. */
   barWeightKg: number
   units: Units
+  /** Optional targets shown as a goal line on the progress charts. */
+  goalWeight?: number
+  goalBodyFatPct?: number
 }
 
 /**

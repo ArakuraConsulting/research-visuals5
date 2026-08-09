@@ -103,6 +103,53 @@ export function SettingsView({
           </div>
         </section>
 
+        {/* Goals */}
+        <section className="rounded-3xl bg-white/5 p-5">
+          <p className="mb-1 text-sm font-bold uppercase tracking-wide text-white/60">
+            Goals
+          </p>
+          <p className="mb-3 text-sm leading-relaxed text-white/60">
+            Shown as a target line on the progress charts, with how far you have
+            to go. Leave blank to hide.
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50">
+                Weight goal ({settings.units})
+              </span>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                aria-label={`Weight goal (${settings.units})`}
+                value={settings.goalWeight ?? ''}
+                onChange={(e) => {
+                  const n = Number.parseFloat(e.target.value)
+                  onUpdate({ goalWeight: Number.isFinite(n) ? n : undefined })
+                }}
+                className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50">
+                Body fat goal %
+              </span>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                aria-label="Body fat goal %"
+                value={settings.goalBodyFatPct ?? ''}
+                onChange={(e) => {
+                  const n = Number.parseFloat(e.target.value)
+                  onUpdate({ goalBodyFatPct: Number.isFinite(n) ? n : undefined })
+                }}
+                className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none"
+              />
+            </label>
+          </div>
+        </section>
+
         {/* Backup & restore */}
         <section className="rounded-3xl bg-white/5 p-5">
           <p className="text-sm font-bold uppercase tracking-wide text-white/60">

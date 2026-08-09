@@ -13,6 +13,8 @@ export const SEED_VERSION = 4
 export const defaultSettings: Settings = {
   barWeightKg: 8,
   units: 'kg',
+  goalWeight: 57,
+  goalBodyFatPct: 23,
 }
 
 export const seedWorkouts: Workout[] = [
