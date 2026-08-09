@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 4
+export const SEED_VERSION = 5
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -53,10 +53,10 @@ export const seedWorkouts: Workout[] = [
         name: 'Dead hang',
         category: 'Strength',
         type: 'timed',
-        durationSeconds: 60,
-        rounds: 1,
+        durationSeconds: 20,
+        rounds: 3,
         equipment: 'bodyweight',
-        cue: 'Accumulate the total, break it up as needed',
+        cue: 'Three hangs of 20 sec, rest between. Build the total over weeks',
         howTo: [
           'You simply hang from a bar with straight arms. It builds grip and shoulder strength.',
           'Reach up and grip the bar with both hands, thumbs wrapped underneath.',
