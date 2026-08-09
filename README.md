@@ -4,14 +4,26 @@ A mobile-first, single-page workout tracking app. Built with React + Vite +
 TypeScript and Tailwind CSS. No backend, no login — everything lives in your
 browser's `localStorage`.
 
-## Run it
+## Live site
+
+The app is deployed to GitHub Pages and published automatically on every push
+to `main`:
+
+**https://arakuraconsulting.github.io/research-visuals5/**
+
+Deployment is handled by `.github/workflows/deploy.yml` (build with Vite, then
+publish `dist/` to Pages). No manual steps are needed — the workflow enables
+Pages on first run.
+
+## Run it locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the printed URL (default <http://localhost:5173>). Designed for an
+Then open the printed URL (default
+<http://localhost:5173/research-visuals5/>). Designed for an
 iPhone in portrait, so for the best experience open it on your phone (use
 `npm run dev -- --host` to expose it on your local network) or switch your
 browser's dev tools to a mobile viewport.
