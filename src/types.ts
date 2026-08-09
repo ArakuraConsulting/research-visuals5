@@ -115,6 +115,9 @@ export interface BodyEntry {
   proteinPct?: number
   bmrKcal?: number
   metabolicAge?: number
+  skeletalMusclePct?: number
+  fatFreeMassKg?: number
+  subcutaneousFatPct?: number
 }
 
 /** In-progress workout state, persisted so a lock/refresh can resume. */

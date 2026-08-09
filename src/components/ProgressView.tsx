@@ -10,12 +10,15 @@ import { makeId } from '../lib/util'
 
 type MetricKey =
   | 'weight'
-  | 'bodyFatPct'
-  | 'muscleMassKg'
-  | 'bodyWaterPct'
-  | 'boneMassKg'
   | 'bmi'
+  | 'bodyFatPct'
+  | 'skeletalMusclePct'
+  | 'fatFreeMassKg'
+  | 'subcutaneousFatPct'
   | 'visceralFat'
+  | 'bodyWaterPct'
+  | 'muscleMassKg'
+  | 'boneMassKg'
   | 'proteinPct'
   | 'bmrKcal'
   | 'metabolicAge'
@@ -85,12 +88,15 @@ export function ProgressView({
   const [date, setDate] = useState(todayInput())
   const [fields, setFields] = useState<Record<MetricKey, string>>({
     weight: '',
-    bodyFatPct: '',
-    muscleMassKg: '',
-    bodyWaterPct: '',
-    boneMassKg: '',
     bmi: '',
+    bodyFatPct: '',
+    skeletalMusclePct: '',
+    fatFreeMassKg: '',
+    subcutaneousFatPct: '',
     visceralFat: '',
+    bodyWaterPct: '',
+    muscleMassKg: '',
+    boneMassKg: '',
     proteinPct: '',
     bmrKcal: '',
     metabolicAge: '',
@@ -103,14 +109,18 @@ export function ProgressView({
   const weekly = useMemo(() => weeklyBuckets(history, 8), [history])
   const u = settings.units
 
+  // Ordered to match the Renpho "Health Status" panel top-to-bottom.
   const metrics: { key: MetricKey; label: string; unit: string; field: string }[] = [
     { key: 'weight', label: 'Weight', unit: u, field: `Weight (${u})` },
-    { key: 'bodyFatPct', label: 'Body fat', unit: '%', field: 'Body fat %' },
-    { key: 'muscleMassKg', label: 'Muscle', unit: u, field: `Muscle mass (${u})` },
-    { key: 'bodyWaterPct', label: 'Water', unit: '%', field: 'Body water %' },
-    { key: 'boneMassKg', label: 'Bone', unit: u, field: `Bone mass (${u})` },
     { key: 'bmi', label: 'BMI', unit: '', field: 'BMI' },
+    { key: 'bodyFatPct', label: 'Body fat', unit: '%', field: 'Body fat %' },
+    { key: 'skeletalMusclePct', label: 'Skeletal', unit: '%', field: 'Skeletal muscle %' },
+    { key: 'fatFreeMassKg', label: 'Fat-free', unit: u, field: `Fat-free mass (${u})` },
+    { key: 'subcutaneousFatPct', label: 'Subcut.', unit: '%', field: 'Subcutaneous fat %' },
     { key: 'visceralFat', label: 'Visceral', unit: '', field: 'Visceral fat' },
+    { key: 'bodyWaterPct', label: 'Water', unit: '%', field: 'Body water %' },
+    { key: 'muscleMassKg', label: 'Muscle', unit: u, field: `Muscle mass (${u})` },
+    { key: 'boneMassKg', label: 'Bone', unit: u, field: `Bone mass (${u})` },
     { key: 'proteinPct', label: 'Protein', unit: '%', field: 'Protein %' },
     { key: 'bmrKcal', label: 'BMR', unit: 'kcal', field: 'BMR (kcal)' },
     { key: 'metabolicAge', label: 'Metab. age', unit: 'yr', field: 'Metabolic age (yr)' },
@@ -126,16 +136,10 @@ export function ProgressView({
       id: makeId('body'),
       dateISO: new Date(`${date}T12:00:00`).toISOString(),
       units: u,
-      weight: num(fields.weight),
-      bodyFatPct: num(fields.bodyFatPct),
-      muscleMassKg: num(fields.muscleMassKg),
-      bodyWaterPct: num(fields.bodyWaterPct),
-      boneMassKg: num(fields.boneMassKg),
-      bmi: num(fields.bmi),
-      visceralFat: num(fields.visceralFat),
-      proteinPct: num(fields.proteinPct),
-      bmrKcal: num(fields.bmrKcal),
-      metabolicAge: num(fields.metabolicAge),
+    }
+    for (const m of metrics) {
+      const v = num(fields[m.key])
+      if (v !== undefined) (entry as unknown as Record<string, unknown>)[m.key] = v
     }
     onAddBody(entry)
     setFields((prev) => {
@@ -147,18 +151,13 @@ export function ProgressView({
   }
 
   const summarise = (e: BodyEntry): string =>
-    [
-      e.weight != null && `${e.weight} ${e.units}`,
-      e.bodyFatPct != null && `${e.bodyFatPct}% fat`,
-      e.muscleMassKg != null && `${e.muscleMassKg} ${e.units} muscle`,
-      e.bodyWaterPct != null && `${e.bodyWaterPct}% water`,
-      e.boneMassKg != null && `${e.boneMassKg} ${e.units} bone`,
-      e.bmi != null && `BMI ${e.bmi}`,
-      e.visceralFat != null && `visceral ${e.visceralFat}`,
-      e.proteinPct != null && `${e.proteinPct}% protein`,
-      e.bmrKcal != null && `BMR ${e.bmrKcal}`,
-      e.metabolicAge != null && `age ${e.metabolicAge}`,
-    ]
+    metrics
+      .map((m) => {
+        const v = (e as unknown as Record<string, unknown>)[m.key]
+        if (typeof v !== 'number') return null
+        const suffix = m.unit === '%' ? '%' : m.unit ? ` ${m.unit}` : ''
+        return `${m.label} ${v}${suffix}`
+      })
       .filter(Boolean)
       .join(' · ')
 
