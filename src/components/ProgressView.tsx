@@ -125,6 +125,12 @@ export function ProgressView({
     { key: 'metabolicAge', label: 'Metab. age', unit: 'yr', field: 'Metabolic age (yr)' },
   ]
   const activeMetric = metrics.find((m) => m.key === metric)!
+  const goalFor =
+    metric === 'weight'
+      ? settings.goalWeight
+      : metric === 'bodyFatPct'
+        ? settings.goalBodyFatPct
+        : undefined
   const series = useMemo(() => bodySeries(bodyEntries, metric), [bodyEntries, metric])
 
   const canSave = metrics.some((m) => num(fields[m.key]) !== undefined)
@@ -202,7 +208,17 @@ export function ProgressView({
               </button>
             ))}
           </div>
-          <LineChart points={series} unit={activeMetric.unit} />
+          <LineChart points={series} unit={activeMetric.unit} goal={goalFor} />
+          {goalFor != null && series.length > 0 && (
+            <div className="mt-2 rounded-2xl bg-emerald-500/10 px-4 py-2.5 text-center text-sm font-semibold text-emerald-200">
+              {(() => {
+                const latest = series[series.length - 1].y
+                const remaining = latest - goalFor
+                if (remaining <= 0.05) return `${activeMetric.label} goal reached — nice work.`
+                return `${remaining.toFixed(1)} ${activeMetric.unit} to your ${activeMetric.label.toLowerCase()} goal of ${goalFor}${activeMetric.unit === '%' ? '%' : ` ${activeMetric.unit}`}`
+              })()}
+            </div>
+          )}
 
           {/* Logger */}
           <div className="mt-5 border-t border-white/10 pt-4">
