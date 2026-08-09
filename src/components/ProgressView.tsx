@@ -3,7 +3,7 @@ import type { BodyEntry, HistoryEntry, Settings } from '../types'
 import { BackButton, PrimaryButton } from './ui'
 import { ConfirmDialog } from './ConfirmDialog'
 import { BarChart, LineChart } from './charts'
-import { dailyBuckets, weeklyBuckets, bodySeries } from '../lib/progress'
+import { weeklyBuckets, bodySeries } from '../lib/progress'
 import { computeStats } from '../lib/stats'
 import { formatDate } from '../lib/time'
 import { makeId } from '../lib/util'
@@ -105,7 +105,6 @@ export function ProgressView({
     setFields((prev) => ({ ...prev, [k]: v }))
 
   const stats = useMemo(() => computeStats(history), [history])
-  const daily = useMemo(() => dailyBuckets(history, 14), [history])
   const weekly = useMemo(() => weeklyBuckets(history, 8), [history])
   const u = settings.units
 
@@ -178,20 +177,16 @@ export function ProgressView({
           />
         </div>
 
-        <Section title="Daily" subtitle="Minutes trained · last 14 days">
-          <BarChart
-            bars={daily.map((d) => ({ label: d.label, value: d.minutes, sub: `${d.sessions} session(s)` }))}
-            unit=" min"
-          />
-        </Section>
-
-        <Section title="Weekly" subtitle="Sessions · last 8 weeks">
+        <Section title="Weekly training" subtitle="Sessions per week · last 8 weeks">
           <BarChart
             bars={weekly.map((w) => ({ label: w.label, value: w.sessions, sub: `${w.minutes} min` }))}
           />
         </Section>
 
-        <Section title="Body measurements" subtitle="Log your scale reading to correlate with training">
+        <Section
+          title="Weekly weigh-in"
+          subtitle="Log weight and scale metrics — about once a week is ideal"
+        >
           <div className="mb-3 flex flex-wrap gap-1.5">
             {metrics.map((m) => (
               <button
