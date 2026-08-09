@@ -18,6 +18,8 @@ export interface Exercise {
   repRange?: string
   /** One line cue, shown under the name in the list */
   cue?: string
+  /** Plain-language steps explaining what the movement is and how to do it */
+  howTo?: string[]
   /** Array of form points, shown in the active workout view */
   form?: string[]
   /** What the movement is loaded with */
