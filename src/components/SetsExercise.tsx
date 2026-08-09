@@ -8,19 +8,17 @@ const REST_SECONDS = 90
 
 /**
  * A set-based exercise: one circle per set, no target duration. Completing a
- * set offers an optional 90s rest countdown that never auto-advances. A free
- * text weight field is saved into history.
+ * set offers an optional 90s rest countdown that never auto-advances.
+ * (Weight logging is handled separately by <WeightLog />.)
  */
 export function SetsExercise({
   exercise,
   completedSets,
-  weight,
-  onChange,
+  onSetsChange,
 }: {
   exercise: Exercise
   completedSets: number
-  weight: string
-  onChange: (next: { completedSets: number; weight: string }) => void
+  onSetsChange: (completedSets: number) => void
 }) {
   const totalSets = Math.max(1, exercise.sets ?? 1)
   const [restRemaining, setRestRemaining] = useState<number | null>(null)
@@ -40,7 +38,7 @@ export function SetsExercise({
 
   const fillNext = () => {
     if (completedSets >= totalSets) return
-    onChange({ completedSets: completedSets + 1, weight })
+    onSetsChange(completedSets + 1)
     setRestRemaining(REST_SECONDS)
   }
 
@@ -48,7 +46,7 @@ export function SetsExercise({
     // index is 0-based. Filled circles are those with index < completedSets.
     if (index < completedSets) {
       // Un-fill this one (and any after it) — mis-tap recovery.
-      onChange({ completedSets: index, weight })
+      onSetsChange(index)
       setRestRemaining(null)
     } else if (index === completedSets) {
       fillNext()
@@ -123,25 +121,6 @@ export function SetsExercise({
         <PrimaryButton onClick={fillNext} disabled={allDone}>
           {allDone ? 'All sets complete' : 'Complete set'}
         </PrimaryButton>
-      </div>
-
-      {/* Weight field */}
-      <div className="mt-5 w-full">
-        <label
-          htmlFor={`weight-${exercise.id}`}
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-white/50"
-        >
-          Weight used
-        </label>
-        <input
-          id={`weight-${exercise.id}`}
-          type="text"
-          inputMode="text"
-          value={weight}
-          onChange={(e) => onChange({ completedSets, weight: e.target.value })}
-          placeholder="e.g. 12.5 kg dumbbells"
-          className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-white/30 focus:border-accent-400 focus:outline-none"
-        />
       </div>
     </div>
   )

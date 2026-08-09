@@ -1,61 +1,98 @@
 import { useEffect, useMemo, useState } from 'react'
 import type {
   ActiveSession,
+  ExerciseLog,
   ExerciseProgress,
   HistoryEntry,
   LoggedWeight,
+  Settings,
   Workout,
 } from '../types'
 import { CategoryPill, PrimaryButton, SecondaryButton } from './ui'
 import { ConfirmDialog } from './ConfirmDialog'
 import { TimedExercise } from './TimedExercise'
 import { SetsExercise } from './SetsExercise'
+import { WeightLog } from './WeightLog'
+import { LoadNote } from './LoadNote'
 import { CompletionScreen } from './CompletionScreen'
 import { formatClock } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
 import { useWakeLock } from '../lib/useWakeLock'
 import { makeId } from '../lib/util'
+import {
+  buildLog,
+  isLoggable,
+  lastTimeLabel,
+  prefillNum,
+  prefillText,
+  sameAsLastWeight,
+} from '../lib/equipment'
 
 function defaultProgress(): ExerciseProgress {
-  return { completedSets: 0, weight: '', completed: false }
+  return { completedSets: 0, completed: false, entryNum: '', entryText: '' }
 }
 
 export function ActiveWorkout({
   workout,
   session,
+  settings,
+  exerciseLog,
+  loadNoteAcks,
+  onAckLoadNote,
   onChange,
   onDiscard,
   onFinish,
 }: {
   workout: Workout
   session: ActiveSession
+  settings: Settings
+  exerciseLog: Record<string, ExerciseLog>
+  loadNoteAcks: Record<string, boolean>
+  onAckLoadNote: (id: string) => void
   /** Persist structural changes (index/progress) to storage. */
   onChange: (session: ActiveSession) => void
   /** Abandon: clear the session, write nothing to history. */
   onDiscard: () => void
-  /** Complete: write a history entry and return home. */
-  onFinish: (entry: HistoryEntry) => void
+  /** Complete: write a history entry + updated logs and return home. */
+  onFinish: (entry: HistoryEntry, logs: Record<string, ExerciseLog>) => void
 }) {
-  const [index, setIndex] = useState(session.currentIndex)
+  // Initial progress: reuse anything the session already has (resume), else seed
+  // loggable exercises with their last-session values so they pre-fill.
   const [progress, setProgress] = useState<Record<string, ExerciseProgress>>(
-    session.progress,
+    () => {
+      const seeded: Record<string, ExerciseProgress> = {}
+      for (const ex of workout.exercises) {
+        const existing = session.progress[ex.id]
+        if (existing) {
+          seeded[ex.id] = { ...defaultProgress(), ...existing }
+        } else if (isLoggable(ex)) {
+          seeded[ex.id] = {
+            ...defaultProgress(),
+            entryNum: prefillNum(exerciseLog[ex.id]),
+            entryText: prefillText(exerciseLog[ex.id]),
+          }
+        }
+      }
+      return seeded
+    },
   )
+  const [index, setIndex] = useState(session.currentIndex)
   const [now, setNow] = useState(() => Date.now())
   const [confirmEnd, setConfirmEnd] = useState(false)
   const [finished, setFinished] = useState(false)
+  const [dismissedPrompts, setDismissedPrompts] = useState<
+    Record<string, boolean>
+  >({})
 
   const total = workout.exercises.length
   const exercise = workout.exercises[index]
   const current = progress[exercise.id] ?? defaultProgress()
+  const last = exerciseLog[exercise.id]
 
-  // Keep the screen awake while training (until the completion screen).
   useWakeLock(!finished)
-
-  // Session clock ticks up from the moment Start was pressed.
   useInterval(() => setNow(Date.now()), finished ? null : 250)
   const elapsedSeconds = Math.max(0, Math.floor((now - session.startedAt) / 1000))
 
-  // Persist index + progress changes back to the store.
   useEffect(() => {
     onChange({ ...session, currentIndex: index, progress })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,8 +110,14 @@ export function ActiveWorkout({
     exercise.type === 'sets'
       ? current.completedSets >= (exercise.sets ?? 1)
       : true
-  // For timed exercises Next is always available; for sets, gate on completion.
   const canAdvance = exercise.type === 'timed' ? true : setsComplete
+
+  // Progression prompt: sets done + same weight as last session.
+  const showProgressionPrompt =
+    exercise.type === 'sets' &&
+    setsComplete &&
+    sameAsLastWeight(exercise, current.entryNum, last) &&
+    !dismissedPrompts[exercise.id]
 
   const completedCount = useMemo(
     () =>
@@ -88,33 +131,27 @@ export function ActiveWorkout({
   )
 
   const goNext = () => {
-    if (isLast) {
-      setFinished(true)
-      return
-    }
+    if (isLast) return setFinished(true)
     setIndex((i) => Math.min(total - 1, i + 1))
   }
-
   const goBack = () => setIndex((i) => Math.max(0, i - 1))
-
-  // Skip: move on without marking the exercise completed.
   const skip = () => {
-    if (isLast) {
-      setFinished(true)
-      return
-    }
+    if (isLast) return setFinished(true)
     setIndex((i) => Math.min(total - 1, i + 1))
   }
 
   const handleFinish = () => {
-    const weights: LoggedWeight[] = workout.exercises
-      .filter((ex) => ex.type === 'sets')
-      .map((ex) => ({
-        exerciseName: ex.name,
-        weight: (progress[ex.id]?.weight ?? '').trim(),
-      }))
-      .filter((w) => w.weight.length > 0)
-
+    const logs: Record<string, ExerciseLog> = {}
+    const weights: LoggedWeight[] = []
+    for (const ex of workout.exercises) {
+      const p = progress[ex.id]
+      if (!p) continue
+      const log = buildLog(ex, p.entryNum, p.entryText, settings)
+      if (log) {
+        logs[ex.id] = log
+        weights.push({ exerciseName: ex.name, weight: lastTimeLabel(log, ex) })
+      }
+    }
     const entry: HistoryEntry = {
       id: makeId('hist'),
       workoutId: workout.id,
@@ -124,7 +161,7 @@ export function ActiveWorkout({
       completedExerciseCount: completedCount,
       weights: weights.length > 0 ? weights : undefined,
     }
-    onFinish(entry)
+    onFinish(entry, logs)
   }
 
   if (finished) {
@@ -143,7 +180,6 @@ export function ActiveWorkout({
 
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col">
-      {/* Top bar: progress + clock + end */}
       <header className="sticky top-0 z-10 bg-navy-950/95 px-4 pb-3 pt-4 backdrop-blur safe-top">
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
           <div
@@ -169,7 +205,6 @@ export function ActiveWorkout({
         </div>
       </header>
 
-      {/* Exercise body */}
       <div className="flex-1 px-4 pb-32 pt-4">
         <div className="mb-2 flex items-center gap-3">
           <CategoryPill category={exercise.category} />
@@ -181,7 +216,18 @@ export function ActiveWorkout({
           <p className="mt-1 text-base text-white/60">{exercise.cue}</p>
         )}
 
-        {/* Form points — always visible, never hidden behind a tap. */}
+        {/* Equipment loading / clearance note (one-time on first use) */}
+        {exercise.loadNote && exercise.loadNote.length > 0 && (
+          <div className="mt-4">
+            <LoadNote
+              points={exercise.loadNote}
+              acked={!!loadNoteAcks[exercise.id]}
+              onAck={() => onAckLoadNote(exercise.id)}
+            />
+          </div>
+        )}
+
+        {/* Form points — always visible. */}
         {exercise.form && exercise.form.length > 0 && (
           <ul className="mt-4 space-y-2 rounded-3xl bg-white/5 p-4">
             {exercise.form.map((point, i) => (
@@ -210,16 +256,49 @@ export function ActiveWorkout({
               key={exercise.id}
               exercise={exercise}
               completedSets={current.completedSets}
-              weight={current.weight}
-              onChange={({ completedSets, weight }) =>
-                updateProgress(exercise.id, { completedSets, weight })
+              onSetsChange={(completedSets) =>
+                updateProgress(exercise.id, { completedSets })
               }
             />
           )}
         </div>
+
+        {/* Weight / load logging */}
+        {isLoggable(exercise) && (
+          <div className="mt-6">
+            <WeightLog
+              exercise={exercise}
+              settings={settings}
+              last={last}
+              entryNum={current.entryNum}
+              entryText={current.entryText}
+              onChange={(entryNum, entryText) =>
+                updateProgress(exercise.id, { entryNum, entryText })
+              }
+            />
+          </div>
+        )}
+
+        {/* Progression prompt — one line, one session, dismissible */}
+        {showProgressionPrompt && (
+          <div className="mt-5 flex items-start gap-3 rounded-2xl bg-accent-500/10 px-4 py-3">
+            <p className="flex-1 text-sm leading-relaxed text-accent-200">
+              Same weight as last time. If the last set had two reps left in it,
+              go up next session.
+            </p>
+            <button
+              onClick={() =>
+                setDismissedPrompts((p) => ({ ...p, [exercise.id]: true }))
+              }
+              aria-label="Dismiss"
+              className="shrink-0 rounded-lg px-2 py-1 text-accent-300 active:text-white"
+            >
+              ✕
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Bottom nav */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-navy-950/95 px-4 pb-6 pt-3 backdrop-blur safe-bottom">
         <div className="mx-auto flex max-w-md gap-3">
           <SecondaryButton

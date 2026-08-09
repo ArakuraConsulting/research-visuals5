@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Exercise, Workout } from '../types'
 import { BackButton, CategoryPill, PrimaryButton } from './ui'
 import { exerciseSummary } from '../lib/time'
+import { equipmentSummary } from '../lib/equipment'
 
 function ExerciseRow({ exercise }: { exercise: Exercise }) {
   const [open, setOpen] = useState(false)
@@ -85,6 +86,24 @@ export function DetailView({
           </div>
         </div>
         <p className="mt-2 px-1 text-sm text-white/60">{workout.description}</p>
+        <div className="mt-2 flex items-start gap-2 px-1 text-xs text-white/40">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="mt-0.5 shrink-0"
+          >
+            <path d="M6.5 6.5h11v11h-11z" />
+            <path d="M3 9v6M21 9v6M9 3h6M9 21h6" />
+          </svg>
+          <span>{equipmentSummary(workout)}</span>
+        </div>
       </header>
 
       <div className="flex-1 space-y-3 px-4 pb-32 pt-2">

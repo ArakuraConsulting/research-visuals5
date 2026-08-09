@@ -1,21 +1,25 @@
 import { useState } from 'react'
-import type { ActiveSession, HistoryEntry } from './types'
+import type { ActiveSession, ExerciseLog, HistoryEntry } from './types'
 import { useStore } from './lib/useStore'
 import { primeAudio } from './lib/feedback'
 import { HomeView } from './components/HomeView'
 import { DetailView } from './components/DetailView'
 import { ActiveWorkout } from './components/ActiveWorkout'
 import { HistoryView } from './components/HistoryView'
+import { SettingsView } from './components/SettingsView'
+import { GuideView } from './components/GuideView'
 import { FormNoticeModal, FormNoticeSheet } from './components/FormNotice'
 import { ConfirmDialog } from './components/ConfirmDialog'
 
-type View = 'home' | 'detail' | 'active' | 'history'
+type View = 'home' | 'detail' | 'active' | 'history' | 'settings' | 'guide'
 
 export default function App() {
   const store = useStore()
   const [view, setView] = useState<View>('home')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [showNoticeSheet, setShowNoticeSheet] = useState(false)
+  // Where "back" returns to from the guide (home or the first-run notice).
+  const [guideReturn, setGuideReturn] = useState<View>('home')
   // Offer to resume a session that was in progress at load time.
   const [resumeCandidate, setResumeCandidate] = useState<ActiveSession | null>(
     () => store.activeSession,
@@ -54,7 +58,11 @@ export default function App() {
     setView('home')
   }
 
-  const finishActive = (entry: HistoryEntry) => {
+  const finishActive = (
+    entry: HistoryEntry,
+    logs: Record<string, ExerciseLog>,
+  ) => {
+    store.recordExerciseLogs(logs)
     store.addHistoryEntry(entry)
     store.setActiveSession(null)
     setResumeCandidate(null)
@@ -71,8 +79,13 @@ export default function App() {
     setResumeCandidate(null)
   }
 
+  const openGuide = (from: View) => {
+    setGuideReturn(from)
+    setView('guide')
+  }
+
   // First-launch safety notice takes over the screen until dismissed.
-  const showFirstRunNotice = !store.formNoticeDismissed
+  const showFirstRunNotice = !store.formNoticeDismissed && view !== 'guide'
 
   return (
     <div className="min-h-full">
@@ -83,6 +96,8 @@ export default function App() {
           onOpenWorkout={openWorkout}
           onOpenHistory={() => setView('history')}
           onOpenNotice={() => setShowNoticeSheet(true)}
+          onOpenSettings={() => setView('settings')}
+          onOpenGuide={() => openGuide('home')}
         />
       )}
 
@@ -98,6 +113,10 @@ export default function App() {
         <ActiveWorkout
           workout={activeWorkout}
           session={store.activeSession}
+          settings={store.settings}
+          exerciseLog={store.exerciseLog}
+          loadNoteAcks={store.loadNoteAcks}
+          onAckLoadNote={store.ackLoadNote}
           onChange={(s) => store.setActiveSession(s)}
           onDiscard={discardActive}
           onFinish={finishActive}
@@ -117,8 +136,23 @@ export default function App() {
         />
       )}
 
+      {view === 'settings' && (
+        <SettingsView
+          settings={store.settings}
+          onBack={() => setView('home')}
+          onUpdate={store.updateSettings}
+        />
+      )}
+
+      {view === 'guide' && (
+        <GuideView onBack={() => setView(guideReturn)} />
+      )}
+
       {showFirstRunNotice && (
-        <FormNoticeModal onDismiss={store.dismissFormNotice} />
+        <FormNoticeModal
+          onDismiss={store.dismissFormNotice}
+          onOpenGuide={() => openGuide('home')}
+        />
       )}
 
       {showNoticeSheet && (
@@ -140,7 +174,8 @@ export default function App() {
             {resumeCandidate ? (
               <>
                 {' '}
-                for <span className="font-semibold text-white">
+                for{' '}
+                <span className="font-semibold text-white">
                   {resumeCandidate.workoutName}
                 </span>
               </>

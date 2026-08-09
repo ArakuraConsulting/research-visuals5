@@ -1,7 +1,13 @@
 const NOTICE_TEXT = `These form notes are general guidance, not personal coaching. They do not replace having your technique checked in person, which is worth doing for the deadlift, the overhead press and the wall walk in particular. Stop any movement that produces sharp pain, and check with a doctor before starting if you have any joint, back or bone density history.`
 
 /** Full-screen dismissible notice shown once on first launch. */
-export function FormNoticeModal({ onDismiss }: { onDismiss: () => void }) {
+export function FormNoticeModal({
+  onDismiss,
+  onOpenGuide,
+}: {
+  onDismiss: () => void
+  onOpenGuide: () => void
+}) {
   return (
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 safe-top safe-bottom"
@@ -34,6 +40,12 @@ export function FormNoticeModal({ onDismiss }: { onDismiss: () => void }) {
           className="mt-6 w-full rounded-2xl bg-accent-500 px-6 py-4 text-base font-semibold text-white active:scale-[0.98]"
         >
           Got it
+        </button>
+        <button
+          onClick={onOpenGuide}
+          className="mt-3 w-full text-sm font-semibold text-accent-300 underline underline-offset-4 active:text-accent-200"
+        >
+          New to this? Read “Finding your weight”
         </button>
       </div>
     </div>

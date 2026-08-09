@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { ActiveSession, HistoryEntry, Workout } from '../types'
-import { SEED_VERSION, seedWorkouts } from '../data/seed'
+import type {
+  ActiveSession,
+  ExerciseLog,
+  HistoryEntry,
+  Settings,
+  Workout,
+} from '../types'
+import { SEED_VERSION, defaultSettings, seedWorkouts } from '../data/seed'
 import { STORAGE_KEYS, loadJSON, removeKey, saveJSON } from './storage'
 
 /**
@@ -23,11 +29,17 @@ export interface AppStore {
   history: HistoryEntry[]
   formNoticeDismissed: boolean
   activeSession: ActiveSession | null
+  settings: Settings
+  exerciseLog: Record<string, ExerciseLog>
+  loadNoteAcks: Record<string, boolean>
 
   dismissFormNotice: () => void
   setActiveSession: (session: ActiveSession | null) => void
   addHistoryEntry: (entry: HistoryEntry) => void
   deleteHistoryEntry: (id: string) => void
+  updateSettings: (partial: Partial<Settings>) => void
+  recordExerciseLogs: (logs: Record<string, ExerciseLog>) => void
+  ackLoadNote: (exerciseId: string) => void
 }
 
 export function useStore(): AppStore {
@@ -40,6 +52,16 @@ export function useStore(): AppStore {
   )
   const [activeSession, setActiveSessionState] = useState<ActiveSession | null>(
     () => loadJSON<ActiveSession | null>(STORAGE_KEYS.activeSession, null),
+  )
+  const [settings, setSettings] = useState<Settings>(() => ({
+    ...defaultSettings,
+    ...loadJSON<Partial<Settings>>(STORAGE_KEYS.settings, {}),
+  }))
+  const [exerciseLog, setExerciseLog] = useState<Record<string, ExerciseLog>>(
+    () => loadJSON<Record<string, ExerciseLog>>(STORAGE_KEYS.exerciseLog, {}),
+  )
+  const [loadNoteAcks, setLoadNoteAcks] = useState<Record<string, boolean>>(() =>
+    loadJSON<Record<string, boolean>>(STORAGE_KEYS.loadNoteAcks, {}),
   )
 
   // Persist history whenever it changes.
@@ -69,14 +91,48 @@ export function useStore(): AppStore {
     setHistory((prev) => prev.filter((h) => h.id !== id))
   }, [])
 
+  const updateSettings = useCallback((partial: Partial<Settings>) => {
+    setSettings((prev) => {
+      const next = { ...prev, ...partial }
+      saveJSON(STORAGE_KEYS.settings, next)
+      return next
+    })
+  }, [])
+
+  const recordExerciseLogs = useCallback(
+    (logs: Record<string, ExerciseLog>) => {
+      setExerciseLog((prev) => {
+        const next = { ...prev, ...logs }
+        saveJSON(STORAGE_KEYS.exerciseLog, next)
+        return next
+      })
+    },
+    [],
+  )
+
+  const ackLoadNote = useCallback((exerciseId: string) => {
+    setLoadNoteAcks((prev) => {
+      if (prev[exerciseId]) return prev
+      const next = { ...prev, [exerciseId]: true }
+      saveJSON(STORAGE_KEYS.loadNoteAcks, next)
+      return next
+    })
+  }, [])
+
   return {
     workouts,
     history,
     formNoticeDismissed,
     activeSession,
+    settings,
+    exerciseLog,
+    loadNoteAcks,
     dismissFormNotice,
     setActiveSession,
     addHistoryEntry,
     deleteHistoryEntry,
+    updateSettings,
+    recordExerciseLogs,
+    ackLoadNote,
   }
 }

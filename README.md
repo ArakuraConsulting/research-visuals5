@@ -30,8 +30,10 @@ src/data/seed.ts
 ```
 
 Edit that file to change exercises, cues, form points, durations, sets, rep
-ranges, categories, or the `timed` flag on a workout. The `Workout` and
-`Exercise` shapes are documented in `src/types.ts`.
+ranges, categories, the `timed` flag on a workout, or per-exercise
+`equipment` / `startingLoadHint` / `loadNote` / `perHand`. The `Workout` and
+`Exercise` shapes are documented in `src/types.ts`. Default settings (bar
+weight, units) are also in `src/data/seed.ts` as `defaultSettings`.
 
 Because workouts are copied into `localStorage` on first run, an existing
 install won't pick up your edits automatically. To force a re-seed, bump
@@ -58,6 +60,18 @@ keys are prefixed `wt.` (see `src/lib/storage.ts`).
     free-text weight field saved into history.
   - "Back" preserves the progress you already recorded; "End workout" asks for
     confirmation and discards the session without writing history.
+- **Weight logging** — the load field adapts to each exercise's equipment:
+  barbell shows a "Plates" input with a live "Total = plates + bar"; dumbbell
+  shows "Per hand" (or "Dumbbell" for single-dumbbell lifts like the goblet
+  squat); bodyweight shows a "Rung or variation" text field. The last value is
+  saved per exercise and **pre-filled next session**, with a "Last time: …"
+  chip for instant comparison. Equipment-specific loading warnings (e.g. the
+  hip-thrust clearance check) surface once on first use, then collapse.
+- **Settings** (gear icon on the home header) — editable bar weight (added
+  automatically to every barbell lift) and a kg/lb unit toggle.
+- **Finding your weight** — a short guide on reading "3 x 6-8", picking a
+  weight by reps-in-reserve, and when to add load. Reachable from the home
+  screen and linked from the first-run notice.
 - **History** — reverse-chronological, grouped by month, with a summary
   (sessions this week / this month / current streak) and per-entry delete.
 

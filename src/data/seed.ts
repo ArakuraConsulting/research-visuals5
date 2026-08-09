@@ -1,4 +1,4 @@
-import type { Workout } from '../types'
+import type { Settings, Workout } from '../types'
 
 /**
  * Seed workout data.
@@ -8,7 +8,12 @@ import type { Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 1
+export const SEED_VERSION = 2
+
+export const defaultSettings: Settings = {
+  barWeightKg: 8,
+  units: 'kg',
+}
 
 export const seedWorkouts: Workout[] = [
   {
@@ -24,6 +29,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 60,
         rounds: 1,
+        equipment: 'none',
         cue: 'Kneeling circles, then flexion and extension holds',
         form: [
           'Always the first thing you do. Never load the hands cold',
@@ -39,6 +45,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 60,
         rounds: 1,
+        equipment: 'bodyweight',
         cue: 'Accumulate the total, break it up as needed',
         form: [
           'Full grip with the thumb wrapped around the bar, not hooked alongside the fingers',
@@ -55,6 +62,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 20,
         rounds: 3,
+        equipment: 'bodyweight',
         cue: 'Low back pressed to the floor',
         form: [
           'Low back must stay in contact with the floor for the whole hold. That is the whole exercise',
@@ -70,6 +78,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 600,
         rounds: 1,
+        equipment: 'none',
       },
       {
         id: 'dp-pilates',
@@ -78,6 +87,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 600,
         rounds: 1,
+        equipment: 'none',
       },
       {
         id: 'dp-rebounding',
@@ -86,6 +96,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 900,
         rounds: 1,
+        equipment: 'none',
         form: [
           'Land through the middle of the foot with soft knees',
           'Never land on a locked knee',
@@ -99,6 +110,7 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 600,
         rounds: 1,
+        equipment: 'none',
       },
     ],
   },
@@ -115,6 +127,7 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 4,
         repRange: '3-5',
+        equipment: 'bodyweight',
         cue: 'Current rung: hang, scapular pulls, negatives, band, or strict',
         form: [
           'Before pulling, draw the shoulders down and away from the ears. Every rep starts there',
@@ -131,8 +144,14 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 3,
         repRange: '6-8',
+        equipment: 'barbell',
+        startingLoadHint: 'Empty bar to start',
         cue: 'Ribs down, do not arch the low back',
         form: [
+          'Standard bar, no rack. Clean the bar to your shoulders from the floor, press, then lower to the shoulders and set it down from there',
+          'Never lower the bar behind your neck',
+          'There is no way to bail out of this lift alone. Stop each set with two reps still in you. Do not train this one to failure',
+          'Collars on every set',
           'Squeeze the glutes and brace the stomach before the weight moves',
           'The low back must not arch to get the weight up. If it does, the weight is too heavy',
           'Press so the dumbbells finish over the middle of the foot, not out in front',
@@ -147,6 +166,7 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 3,
         repRange: '5-8',
+        equipment: 'bodyweight',
         cue: 'Feet on a low step, hips high',
         form: [
           'Hips stay high throughout. As soon as they drop it becomes a normal push up',
@@ -162,6 +182,9 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 3,
         repRange: '8 reps each side',
+        equipment: 'dumbbell',
+        perHand: true,
+        startingLoadHint: '8 to 10 kg per hand',
         cue: 'Elbow to hip, not out wide',
         form: [
           'Hinge at the hips with a flat back. The spine does not round',
@@ -179,12 +202,32 @@ export const seedWorkouts: Workout[] = [
     timed: false,
     exercises: [
       {
+        id: 'sb-goblet-squat',
+        name: 'Goblet squat',
+        category: 'Strength',
+        type: 'sets',
+        sets: 3,
+        repRange: '6-8',
+        equipment: 'dumbbell',
+        perHand: false,
+        startingLoadHint: '10 to 14 kg, one dumbbell at the chest',
+        cue: 'One dumbbell at the chest, sit down between the hips',
+        form: [
+          'One dumbbell held at the chest, not one in each hand',
+          'Barbell back squats are not appropriate here because there is no rack to unrack from or fail into',
+          'Sit down between the hips with the chest tall and the heels flat',
+          'Knees track over the toes, not caving inward',
+        ],
+      },
+      {
         id: 'sb-romanian-deadlift',
         name: 'Romanian deadlift',
         category: 'Strength',
         type: 'sets',
         sets: 3,
         repRange: '6-8',
+        equipment: 'barbell',
+        startingLoadHint: '20 to 25 kg total including bar',
         cue: 'Push the hips back, do not squat down',
         form: [
           'This is a hip hinge. Push the hips backward, do not bend the knees to lower',
@@ -192,6 +235,8 @@ export const seedWorkouts: Workout[] = [
           'Weights stay close to the legs, brushing the thighs on the way down',
           'Stop when the hamstrings reach tension or the back starts to round, whichever comes first',
           'Neutral neck. Do not look up in the mirror at the bottom',
+          'Bar starts from the floor, so no rack is needed',
+          'Collars on every set. Standard sleeves are short and a sliding plate mid-rep is the real risk here',
         ],
       },
       {
@@ -201,6 +246,14 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 3,
         repRange: '8-10',
+        equipment: 'barbell',
+        startingLoadHint: 'See the clearance check below',
+        loadNote: [
+          'Clearance check before you load the bar. Sit on the floor with your back against the bench and put the bar beside your leg. If the plates are too small in diameter for the bar to pass over your thighs, do not use the barbell',
+          'If it does not clear, use a heavy dumbbell across the hips instead',
+          'When the dumbbell runs out of load, switch to single leg hip thrusts. One leg at a time roughly doubles the load without adding any weight',
+          'Pad the bar or dumbbell across the hips with a folded towel',
+        ],
         cue: 'Chin tucked, ribs down',
         form: [
           'Drive through the heels and squeeze the glutes at the top',
@@ -216,6 +269,7 @@ export const seedWorkouts: Workout[] = [
         type: 'sets',
         sets: 3,
         repRange: '1 rep',
+        equipment: 'bodyweight',
         cue: 'Walk in only as far as stays controlled',
         form: [
           'Start in a plank with the feet on the wall, then walk the hands in slowly',
@@ -232,6 +286,9 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 30,
         rounds: 3,
+        equipment: 'dumbbell',
+        perHand: true,
+        startingLoadHint: '10 to 12 kg per hand',
         cue: 'Tall posture, walk normally',
         form: [
           'Shoulders back and down, chest open',

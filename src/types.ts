@@ -1,5 +1,7 @@
 export type Category = 'Strength' | 'Cardio' | 'Flexibility' | 'Mindfulness'
 export type ExerciseType = 'timed' | 'sets'
+export type Equipment = 'barbell' | 'dumbbell' | 'bodyweight' | 'none'
+export type Units = 'kg' | 'lb'
 
 export interface Exercise {
   id: string
@@ -18,6 +20,14 @@ export interface Exercise {
   cue?: string
   /** Array of form points, shown in the active workout view */
   form?: string[]
+  /** What the movement is loaded with */
+  equipment?: Equipment
+  /** Placeholder text for the weight field */
+  startingLoadHint?: string
+  /** Equipment-specific warning, surfaced on first use */
+  loadNote?: string[]
+  /** For dumbbell lifts: true = one per hand, false = a single dumbbell */
+  perHand?: boolean
 }
 
 export interface Workout {
@@ -29,8 +39,33 @@ export interface Workout {
   exercises: Exercise[]
 }
 
+/** User settings, persisted to localStorage. */
+export interface Settings {
+  /** Bar weight, added automatically to every barbell lift. Default 8. */
+  barWeightKg: number
+  units: Units
+}
+
+/**
+ * Last logged load for an exercise, keyed by exercise id and persisted so the
+ * value pre-fills next session. Which fields are set depends on equipment.
+ */
+export interface ExerciseLog {
+  equipment: Equipment
+  units: Units
+  /** barbell: plate weight entered (excludes the bar) */
+  plates?: number
+  /** barbell: plates + bar weight at the time it was logged */
+  total?: number
+  /** dumbbell: per-hand or single-dumbbell value */
+  weight?: number
+  /** bodyweight: rung / variation text */
+  variation?: string
+}
+
 export interface LoggedWeight {
   exerciseName: string
+  /** Pre-formatted for display, e.g. "22 kg" or "12 kg per hand" */
   weight: string
 }
 
@@ -49,10 +84,12 @@ export interface HistoryEntry {
 export interface ExerciseProgress {
   /** For "sets" exercises: how many sets have been filled */
   completedSets: number
-  /** For "sets" exercises: free-text weight used */
-  weight: string
   /** Whether the exercise was finished (not skipped) */
   completed: boolean
+  /** Raw numeric weight field as typed (plates or dumbbell), '' if none */
+  entryNum: string
+  /** Raw text field as typed (bodyweight rung / variation), '' if none */
+  entryText: string
 }
 
 /** In-progress workout state, persisted so a lock/refresh can resume. */
