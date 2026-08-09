@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 2
+export const SEED_VERSION = 3
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -31,6 +31,12 @@ export const seedWorkouts: Workout[] = [
         rounds: 1,
         equipment: 'none',
         cue: 'Kneeling circles, then flexion and extension holds',
+        howTo: [
+          'This is gentle mobility to warm up the wrists before anything loads the hands.',
+          'Kneel and place both palms flat on the floor with the fingers pointing back toward your knees. Gently rock backward to feel a light stretch in the forearms, then ease off.',
+          'Turn the hands over so the backs of the hands are on the floor and rock gently the other way.',
+          'Finish with slow circles of the wrists in each direction. Keep everything light — no forcing.',
+        ],
         form: [
           'Always the first thing you do. Never load the hands cold',
           'Move to the edge of the stretch, not into pain. A sharp signal means back off',
@@ -47,6 +53,12 @@ export const seedWorkouts: Workout[] = [
         rounds: 1,
         equipment: 'bodyweight',
         cue: 'Accumulate the total, break it up as needed',
+        howTo: [
+          'You simply hang from a bar with straight arms. It builds grip and shoulder strength.',
+          'Reach up and grip the bar with both hands, thumbs wrapped underneath.',
+          'Let your weight settle so your arms are straight and your feet leave the floor (or stay lightly touching if the bar is low).',
+          'Hang with the shoulders slightly engaged rather than fully limp, then step down under control. Break the total time into shorter hangs if your grip tires.',
+        ],
         form: [
           'Full grip with the thumb wrapped around the bar, not hooked alongside the fingers',
           'Keep a slight engagement through the shoulders rather than hanging fully limp',
@@ -64,6 +76,12 @@ export const seedWorkouts: Workout[] = [
         rounds: 3,
         equipment: 'bodyweight',
         cue: 'Low back pressed to the floor',
+        howTo: [
+          'A core hold where your body makes a shallow curved "banana" shape, face up.',
+          'Lie on your back and press your lower back firmly into the floor so there is no gap.',
+          'Lift your shoulders and your legs a few inches off the floor, and reach your arms overhead (or by your sides to make it easier).',
+          'Hold that dished shape and keep breathing. If your lower back pops off the floor, bring your arms and legs in closer until it stays flat.',
+        ],
         form: [
           'Low back must stay in contact with the floor for the whole hold. That is the whole exercise',
           'If the back lifts, bring the arms and legs closer in until it stays down',
@@ -79,6 +97,11 @@ export const seedWorkouts: Workout[] = [
         durationSeconds: 600,
         rounds: 1,
         equipment: 'none',
+        howTo: [
+          'This is your own yoga practice — the app just times it.',
+          'Move through your usual sequence of poses and stretches for the time shown, breathing steadily.',
+          'If you do not have a set routine yet, a simple flow of gentle stretches for the whole body is plenty to start.',
+        ],
       },
       {
         id: 'dp-pilates',
@@ -88,6 +111,11 @@ export const seedWorkouts: Workout[] = [
         durationSeconds: 600,
         rounds: 1,
         equipment: 'none',
+        howTo: [
+          'Your own Pilates practice — a set of controlled mat exercises for core and control.',
+          'Work through your usual mat routine for the time shown, moving slowly and with control rather than rushing.',
+          'A follow-along mat Pilates video is a good option if you do not have a routine memorised yet.',
+        ],
       },
       {
         id: 'dp-rebounding',
@@ -97,6 +125,12 @@ export const seedWorkouts: Workout[] = [
         durationSeconds: 900,
         rounds: 1,
         equipment: 'none',
+        howTo: [
+          'Light, springy bouncing on a mini-trampoline (a rebounder). Easy cardio that is gentle on the joints.',
+          'Stand in the middle of the rebounder and start with a small "health bounce" — staying light on your feet, barely leaving the mat.',
+          'Once warm you can bounce a little higher if you like, always landing softly through the middle of the foot with soft knees.',
+          'Keep it going for the time shown, staying over the centre of the mat.',
+        ],
         form: [
           'Land through the middle of the foot with soft knees',
           'Never land on a locked knee',
@@ -111,6 +145,11 @@ export const seedWorkouts: Workout[] = [
         durationSeconds: 600,
         rounds: 1,
         equipment: 'none',
+        howTo: [
+          'Quiet, seated breathing to settle the mind — the app just holds the time.',
+          'Sit comfortably, close your eyes, and breathe slowly and naturally.',
+          'When your attention wanders, gently bring it back to your breath. That returning is the practice; you are not doing it wrong.',
+        ],
       },
     ],
   },
@@ -129,6 +168,13 @@ export const seedWorkouts: Workout[] = [
         repRange: '3-5',
         equipment: 'bodyweight',
         cue: 'Current rung: hang, scapular pulls, negatives, band, or strict',
+        howTo: [
+          'Working toward a pull-up, at whatever step ("rung") you are currently on. Pick the hardest one you can do with good form:',
+          'Dead hang — just hang from the bar. Scapular pulls — hanging, make small shrugs pulling your shoulders down without bending the arms.',
+          'Negatives — start at the top (jump or step up so your chin is over the bar) and lower yourself as slowly as you can.',
+          'Band-assisted — loop a resistance band on the bar and put a foot or knee in it to help you up. Strict — a full pull-up with no help.',
+          'Do your sets on your current rung; move up a rung when it starts to feel easy.',
+        ],
         form: [
           'Before pulling, draw the shoulders down and away from the ears. Every rep starts there',
           'No swinging and no kicking. If a rep needs momentum, drop back a rung',
@@ -147,6 +193,12 @@ export const seedWorkouts: Workout[] = [
         equipment: 'barbell',
         startingLoadHint: 'Empty bar to start',
         cue: 'Ribs down, do not arch the low back',
+        howTo: [
+          'You press a weight from your shoulders up to overhead until your arms are straight.',
+          'With no rack here, first "clean" the bar: lift it from the floor and flip it up to rest across the front of your shoulders.',
+          'Stand tall, squeeze your glutes and brace your stomach, then press the bar straight up overhead.',
+          'Lower it back down to your shoulders under control. When your sets are done, set it back on the floor from the shoulders.',
+        ],
         form: [
           'Standard bar, no rack. Clean the bar to your shoulders from the floor, press, then lower to the shoulders and set it down from there',
           'Never lower the bar behind your neck',
@@ -168,6 +220,12 @@ export const seedWorkouts: Workout[] = [
         repRange: '5-8',
         equipment: 'bodyweight',
         cue: 'Feet on a low step, hips high',
+        howTo: [
+          'A shoulder-focused push-up done in an upside-down V shape.',
+          'Start on hands and feet with your hips pushed high so your body makes an inverted V (put your feet on a low step to make it harder).',
+          'Bend your elbows to lower the top of your head toward the floor, aiming for a point just in front of your hands.',
+          'Press back up to the start. Keep the hips high the whole time.',
+        ],
         form: [
           'Hips stay high throughout. As soon as they drop it becomes a normal push up',
           'Elbows at roughly forty five degrees to the body, not flared straight out to the sides',
@@ -186,6 +244,12 @@ export const seedWorkouts: Workout[] = [
         perHand: true,
         startingLoadHint: '8 to 10 kg per hand',
         cue: 'Elbow to hip, not out wide',
+        howTo: [
+          'You "row" a dumbbell up to your side to work the back — one arm at a time.',
+          'Support yourself with one hand and knee on a bench (or rest a hand on your thigh) and hinge forward with a flat back.',
+          'Let the dumbbell hang straight down from your other arm, then pull your elbow back toward your hip.',
+          'Lower it all the way down under control. Do the reps on one side, then swap.',
+        ],
         form: [
           'Hinge at the hips with a flat back. The spine does not round',
           'Pull the elbow back toward the hip rather than out to the side',
@@ -212,6 +276,12 @@ export const seedWorkouts: Workout[] = [
         perHand: false,
         startingLoadHint: '10 to 14 kg, one dumbbell at the chest',
         cue: 'One dumbbell at the chest, sit down between the hips',
+        howTo: [
+          'A squat while holding a single dumbbell against your chest (the "goblet" position).',
+          'Hold one dumbbell vertically against your chest, cupping the top end with both hands. Stand with feet about shoulder-width apart.',
+          'Sit straight down between your hips, keeping your chest tall and your heels flat, letting your knees travel out over your toes.',
+          'Go as low as you comfortably can, then stand back up. That is one rep.',
+        ],
         form: [
           'One dumbbell held at the chest, not one in each hand',
           'Barbell back squats are not appropriate here because there is no rack to unrack from or fail into',
@@ -229,6 +299,12 @@ export const seedWorkouts: Workout[] = [
         equipment: 'barbell',
         startingLoadHint: '20 to 25 kg total including bar',
         cue: 'Push the hips back, do not squat down',
+        howTo: [
+          'A "hip hinge" that works the back of the legs and the glutes. You bend at the hips, not the knees.',
+          'Hold the bar against the front of your thighs, feet about hip-width, knees slightly soft.',
+          'Push your hips backward (like closing a car door with your bottom), letting the bar slide down close to your legs.',
+          'Stop when you feel a stretch in the back of your thighs or your back is about to round — then drive your hips forward to stand tall again.',
+        ],
         form: [
           'This is a hip hinge. Push the hips backward, do not bend the knees to lower',
           'Knees stay soft but mostly fixed. They do not travel forward',
@@ -255,6 +331,12 @@ export const seedWorkouts: Workout[] = [
           'Pad the bar or dumbbell across the hips with a folded towel',
         ],
         cue: 'Chin tucked, ribs down',
+        howTo: [
+          'You drive your hips upward with your upper back resting on a bench or sofa edge. It targets the glutes.',
+          'Sit on the floor with your shoulder blades against the edge of a bench or sofa, knees bent and feet flat.',
+          'Rest the weight across your hips (pad it with a folded towel — see the loading note), holding it steady.',
+          'Push through your heels to lift your hips until your body is straight from knees to shoulders, then lower back down.',
+        ],
         form: [
           'Drive through the heels and squeeze the glutes at the top',
           'Stop at the point where the body forms a straight line. Do not push past it into an arch',
@@ -271,6 +353,12 @@ export const seedWorkouts: Workout[] = [
         repRange: '1 rep',
         equipment: 'bodyweight',
         cue: 'Walk in only as far as stays controlled',
+        howTo: [
+          'You walk your feet up a wall while walking your hands in toward it — building toward a handstand.',
+          'Start in a plank (face down) with your feet against the base of the wall.',
+          'Walk your feet up the wall a step at a time while walking your hands backward toward the wall, so you get more upright.',
+          'Go only as far up as you can stay in control, decide your stopping point in advance, then carefully walk both hands and feet back out the way you came.',
+        ],
         form: [
           'Start in a plank with the feet on the wall, then walk the hands in slowly',
           'Ribs down and stomach braced. Do not let the low back sag as you get steeper',
@@ -290,6 +378,12 @@ export const seedWorkouts: Workout[] = [
         perHand: true,
         startingLoadHint: '10 to 12 kg per hand',
         cue: 'Tall posture, walk normally',
+        howTo: [
+          'You walk while carrying a heavy weight in each hand — simple but excellent for grip and whole-body strength.',
+          'Hold a dumbbell in each hand at your sides. Stand tall with your shoulders back and your stomach braced.',
+          'Walk with a normal, steady stride for the time shown, keeping your posture upright and even.',
+          'When the timer ends, set the weights down deliberately rather than dropping them.',
+        ],
         form: [
           'Shoulders back and down, chest open',
           'Brace the stomach and walk with a normal stride',

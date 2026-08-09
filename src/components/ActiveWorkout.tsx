@@ -14,6 +14,7 @@ import { TimedExercise } from './TimedExercise'
 import { SetsExercise } from './SetsExercise'
 import { WeightLog } from './WeightLog'
 import { LoadNote } from './LoadNote'
+import { HowTo } from './HowTo'
 import { CompletionScreen } from './CompletionScreen'
 import { formatClock } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
@@ -214,6 +215,13 @@ export function ActiveWorkout({
         </h1>
         {exercise.cue && (
           <p className="mt-1 text-base text-white/60">{exercise.cue}</p>
+        )}
+
+        {/* How to do it — beginner-friendly steps */}
+        {exercise.howTo && exercise.howTo.length > 0 && (
+          <div className="mt-4">
+            <HowTo key={exercise.id} steps={exercise.howTo} />
+          </div>
         )}
 
         {/* Equipment loading / clearance note (one-time on first use) */}

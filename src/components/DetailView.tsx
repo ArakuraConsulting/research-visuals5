@@ -7,6 +7,8 @@ import { equipmentSummary } from '../lib/equipment'
 function ExerciseRow({ exercise }: { exercise: Exercise }) {
   const [open, setOpen] = useState(false)
   const hasForm = (exercise.form?.length ?? 0) > 0
+  const hasHowTo = (exercise.howTo?.length ?? 0) > 0
+  const hasDetails = hasForm || hasHowTo
   return (
     <div className="rounded-3xl bg-white p-4 text-navy-950 shadow-soft">
       <div className="flex items-start justify-between gap-3">
@@ -23,13 +25,13 @@ function ExerciseRow({ exercise }: { exercise: Exercise }) {
 
       <div className="mt-3 flex items-center justify-between">
         <CategoryPill category={exercise.category} />
-        {hasForm && (
+        {hasDetails && (
           <button
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             className="inline-flex items-center gap-1 text-sm font-semibold text-accent-600 active:opacity-70"
           >
-            Form
+            {open ? 'Hide' : 'How-to & form'}
             <svg
               width="16"
               height="16"
@@ -48,18 +50,47 @@ function ExerciseRow({ exercise }: { exercise: Exercise }) {
         )}
       </div>
 
-      {hasForm && open && (
-        <ul className="mt-3 space-y-2 border-t border-navy-950/10 pt-3">
-          {exercise.form!.map((point, i) => (
-            <li
-              key={i}
-              className="flex gap-2 text-sm leading-relaxed text-navy-800"
-            >
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
-              <span>{point}</span>
-            </li>
-          ))}
-        </ul>
+      {hasDetails && open && (
+        <div className="mt-3 space-y-4 border-t border-navy-950/10 pt-3">
+          {hasHowTo && (
+            <div>
+              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-accent-600">
+                How to do it
+              </h4>
+              <ol className="space-y-2">
+                {exercise.howTo!.map((step, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-2.5 text-sm leading-relaxed text-navy-800"
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-500/15 text-xs font-bold text-accent-700">
+                      {i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+          {hasForm && (
+            <div>
+              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-navy-700/60">
+                Form
+              </h4>
+              <ul className="space-y-2">
+                {exercise.form!.map((point, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-2 text-sm leading-relaxed text-navy-800"
+                  >
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
