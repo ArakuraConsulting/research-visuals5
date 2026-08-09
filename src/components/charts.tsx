@@ -13,31 +13,32 @@ export interface Bar {
 export function BarChart({
   bars,
   unit = '',
-  height = 140,
+  height = 150,
 }: {
   bars: Bar[]
   unit?: string
   height?: number
 }) {
   const max = Math.max(1, ...bars.map((b) => b.value))
+  // Reserve room for the value label (top) and axis label (bottom); the rest
+  // is the plot area. Bars use explicit pixel heights so they never collapse.
+  const area = Math.max(40, height - 32)
   return (
-    <div className="flex items-end gap-1.5" style={{ height }}>
+    <div className="flex items-end gap-1.5">
       {bars.map((b, i) => {
-        const pct = b.value > 0 ? Math.max(6, (b.value / max) * 100) : 0
+        const barPx = b.value > 0 ? Math.max(4, (b.value / max) * area) : 3
         return (
-          <div key={i} className="flex flex-1 flex-col items-center justify-end gap-1">
-            <span className="text-[10px] font-semibold tabular-nums text-white/60">
+          <div key={i} className="flex flex-1 flex-col items-center gap-1">
+            <span className="h-3 text-[10px] font-semibold leading-3 tabular-nums text-white/60">
               {b.value > 0 ? b.value : ''}
             </span>
-            <div className="flex w-full items-end justify-center" style={{ height: '100%' }}>
-              <div
-                className={`w-full max-w-[22px] rounded-t-md ${
-                  b.value > 0 ? 'bg-accent-500' : 'bg-white/10'
-                }`}
-                style={{ height: b.value > 0 ? `${pct}%` : '3px' }}
-                title={`${b.value}${unit}${b.sub ? ` · ${b.sub}` : ''}`}
-              />
-            </div>
+            <div
+              className={`w-full max-w-[22px] rounded-t-md ${
+                b.value > 0 ? 'bg-accent-500' : 'bg-white/10'
+              }`}
+              style={{ height: barPx }}
+              title={`${b.value}${unit}${b.sub ? ` · ${b.sub}` : ''}`}
+            />
             <span className="text-[10px] font-medium text-white/40">{b.label}</span>
           </div>
         )
