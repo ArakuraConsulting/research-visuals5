@@ -121,6 +121,7 @@ export function HomeView({
   history,
   onOpenWorkout,
   onOpenHistory,
+  onOpenProgress,
   onOpenNotice,
   onOpenSettings,
   onOpenGuide,
@@ -129,6 +130,7 @@ export function HomeView({
   history: HistoryEntry[]
   onOpenWorkout: (id: string) => void
   onOpenHistory: () => void
+  onOpenProgress: () => void
   onOpenNotice: () => void
   onOpenSettings: () => void
   onOpenGuide: () => void
@@ -142,22 +144,29 @@ export function HomeView({
             Workouts
           </h1>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenHistory}
-            className="rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white active:scale-95"
-          >
-            History
-          </button>
-          <button
-            onClick={onOpenSettings}
-            aria-label="Settings"
-            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white active:scale-95"
-          >
-            <GearIcon />
-          </button>
-        </div>
+        <button
+          onClick={onOpenSettings}
+          aria-label="Settings"
+          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white active:scale-95"
+        >
+          <GearIcon />
+        </button>
       </header>
+
+      <div className="mb-5 grid grid-cols-2 gap-3">
+        <button
+          onClick={onOpenProgress}
+          className="rounded-2xl bg-accent-500/15 px-4 py-3 text-sm font-bold text-accent-200 ring-1 ring-inset ring-accent-400/30 active:scale-[0.98]"
+        >
+          Progress
+        </button>
+        <button
+          onClick={onOpenHistory}
+          className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
+        >
+          History
+        </button>
+      </div>
 
       <div className="space-y-4">
         {workouts.map((w) => (

@@ -213,8 +213,11 @@ export function ActiveWorkout({
         <h1 className="text-3xl font-extrabold leading-tight text-white">
           {exercise.name}
         </h1>
+        {exercise.blurb && (
+          <p className="mt-1 text-base text-white/75">{exercise.blurb}</p>
+        )}
         {exercise.cue && (
-          <p className="mt-1 text-base text-white/60">{exercise.cue}</p>
+          <p className="mt-0.5 text-sm italic text-white/50">{exercise.cue}</p>
         )}
 
         {/* How to do it — beginner-friendly steps */}

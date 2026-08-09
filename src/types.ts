@@ -16,6 +16,8 @@ export interface Exercise {
   sets?: number
   /** When type is "sets": e.g. "6-8" */
   repRange?: string
+  /** Short one-line explanation of what the activity is, shown under the title */
+  blurb?: string
   /** One line cue, shown under the name in the list */
   cue?: string
   /** Plain-language steps explaining what the movement is and how to do it */
@@ -92,6 +94,23 @@ export interface ExerciseProgress {
   entryNum: string
   /** Raw text field as typed (bodyweight rung / variation), '' if none */
   entryText: string
+}
+
+/**
+ * A dated body measurement. `weight` is the primary field; the rest mirror what
+ * a body-composition scale (e.g. Renpho) reports and are all optional, so an
+ * entry can be just a weight or a full scale reading.
+ */
+export interface BodyEntry {
+  id: string
+  dateISO: string
+  units: Units
+  weight?: number
+  bodyFatPct?: number
+  muscleMassKg?: number
+  bodyWaterPct?: number
+  boneMassKg?: number
+  bmi?: number
 }
 
 /** In-progress workout state, persisted so a lock/refresh can resume. */
