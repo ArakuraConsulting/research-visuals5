@@ -91,8 +91,8 @@ export interface HistoryEntry {
 export interface ExerciseProgress {
   /** For "sets" exercises: how many sets have been filled */
   completedSets: number
-  /** Whether the exercise was finished (not skipped) */
-  completed: boolean
+  /** Marked done — by finishing the timer, filling all sets, or tapping "done" */
+  done: boolean
   /** Raw numeric weight field as typed (plates or dumbbell), '' if none */
   entryNum: string
   /** Raw text field as typed (bodyweight rung / variation), '' if none */
