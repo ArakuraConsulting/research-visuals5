@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 7
+export const SEED_VERSION = 8
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -26,6 +26,7 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'dp-vibration-plate',
+        emoji: '📳',
         externalTimer: true,
         blurb: 'A gentle whole-body vibration warm-up to start the morning.',
         name: 'Vibration plate',
@@ -48,6 +49,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-yoga',
+        emoji: '🧘',
         externalTimer: true,
         blurb: 'Your own yoga flow for the time shown.',
         name: 'Yoga',
@@ -64,6 +66,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-pilates',
+        emoji: '🤸',
         externalTimer: true,
         blurb: 'Your own mat Pilates routine for the time shown.',
         name: 'Pilates',
@@ -80,6 +83,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-meditation',
+        emoji: '🧠',
         externalTimer: true,
         blurb: 'Quiet seated breathing to settle the mind.',
         name: 'Meditation',
@@ -96,6 +100,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-rebounding',
+        emoji: '🦘',
         externalTimer: true,
         blurb: 'Light bouncing on a mini-trampoline for easy, low-impact cardio.',
         name: 'Rebounding',
@@ -118,6 +123,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-wrist-prep',
+        emoji: '🖐️',
         blurb: 'Gentle wrist mobility to warm the hands up before loading them.',
         name: 'Wrist prep',
         category: 'Flexibility',
@@ -141,6 +147,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-dead-hang',
+        emoji: '💪',
         blurb: 'Hanging from a bar to build grip and shoulder strength.',
         name: 'Dead hang',
         category: 'Strength',
@@ -165,6 +172,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-hollow-hold',
+        emoji: '🍌',
         blurb: 'A core hold where the body makes a curved, dished shape.',
         name: 'Hollow hold',
         category: 'Strength',
@@ -196,6 +204,7 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'sa-pull-up',
+        emoji: '🧗',
         blurb: 'Working toward a pull-up at your current level.',
         name: 'Pull up progression',
         category: 'Strength',
@@ -221,6 +230,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sa-overhead-press',
+        emoji: '🏋️',
         blurb: 'Pressing a barbell from the shoulders up to overhead.',
         name: 'Overhead press',
         category: 'Strength',
@@ -250,6 +260,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sa-pike-push-up',
+        emoji: '🔻',
         blurb: 'A shoulder-focused push-up done in an upside-down V.',
         name: 'Pike push up',
         category: 'Strength',
@@ -273,6 +284,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sa-dumbbell-row',
+        emoji: '🚣',
         blurb: 'Rowing a dumbbell up to your side to work the back.',
         name: 'Dumbbell row',
         category: 'Strength',
@@ -306,6 +318,7 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'sb-goblet-squat',
+        emoji: '🏆',
         blurb: 'A squat holding one dumbbell against your chest.',
         name: 'Goblet squat',
         category: 'Strength',
@@ -331,6 +344,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-romanian-deadlift',
+        emoji: '🦵',
         blurb: 'A hip hinge that works the hamstrings and glutes.',
         name: 'Romanian deadlift',
         category: 'Strength',
@@ -358,6 +372,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-hip-thrust',
+        emoji: '🍑',
         blurb: 'Driving your hips up off a bench to work the glutes.',
         name: 'Hip thrust',
         category: 'Strength',
@@ -388,6 +403,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-wall-walk',
+        emoji: '🙃',
         blurb: 'Walking your feet up a wall toward a handstand.',
         name: 'Wall walk',
         category: 'Strength',
@@ -412,6 +428,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-farmers-carry',
+        emoji: '🧳',
         blurb: 'Walking while carrying a heavy weight in each hand.',
         name: "Farmer's carry",
         category: 'Strength',

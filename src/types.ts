@@ -6,6 +6,8 @@ export type Units = 'kg' | 'lb'
 export interface Exercise {
   id: string
   name: string
+  /** Fun little icon shown next to the name */
+  emoji?: string
   category: Category
   type: ExerciseType
   /** When type is "timed": seconds per round */
