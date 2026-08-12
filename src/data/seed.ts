@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 6
+export const SEED_VERSION = 7
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -26,6 +26,7 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'dp-vibration-plate',
+        externalTimer: true,
         blurb: 'A gentle whole-body vibration warm-up to start the morning.',
         name: 'Vibration plate',
         category: 'Flexibility',
@@ -47,6 +48,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-yoga',
+        externalTimer: true,
         blurb: 'Your own yoga flow for the time shown.',
         name: 'Yoga',
         category: 'Flexibility',
@@ -62,6 +64,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-pilates',
+        externalTimer: true,
         blurb: 'Your own mat Pilates routine for the time shown.',
         name: 'Pilates',
         category: 'Strength',
@@ -77,6 +80,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-meditation',
+        externalTimer: true,
         blurb: 'Quiet seated breathing to settle the mind.',
         name: 'Meditation',
         category: 'Mindfulness',
@@ -92,6 +96,7 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-rebounding',
+        externalTimer: true,
         blurb: 'Light bouncing on a mini-trampoline for easy, low-impact cardio.',
         name: 'Rebounding',
         category: 'Cardio',
