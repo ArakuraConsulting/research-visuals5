@@ -39,6 +39,12 @@ export default function App() {
     : null
 
   const openWorkout = (id: string) => {
+    // If there's already a session for this workout, jump back into it.
+    if (store.activeSession && store.activeSession.workoutId === id) {
+      setResumeCandidate(null)
+      setView('active')
+      return
+    }
     setSelectedId(id)
     setView('detail')
   }
@@ -46,6 +52,15 @@ export default function App() {
   const startWorkout = () => {
     if (!selectedWorkout) return
     primeAudio() // unlock audio from this user gesture (iOS)
+    // Resume an existing session for this workout rather than restarting it.
+    if (
+      store.activeSession &&
+      store.activeSession.workoutId === selectedWorkout.id
+    ) {
+      setResumeCandidate(null)
+      setView('active')
+      return
+    }
     const nowIso = new Date().toISOString()
     const session: ActiveSession = {
       workoutId: selectedWorkout.id,
@@ -58,6 +73,12 @@ export default function App() {
     store.setActiveSession(session)
     setResumeCandidate(null)
     setView('active')
+  }
+
+  // Leave the active view but keep the session so it can be resumed.
+  const goHomeKeepSession = () => {
+    setResumeCandidate(null)
+    setView('home')
   }
 
   const discardActive = () => {
@@ -101,6 +122,12 @@ export default function App() {
         <HomeView
           workouts={store.workouts}
           history={store.history}
+          resumeName={
+            store.activeSession && activeWorkout
+              ? store.activeSession.workoutName
+              : null
+          }
+          onResume={() => setView('active')}
           onOpenWorkout={openWorkout}
           onOpenHistory={() => setView('history')}
           onOpenProgress={() => setView('progress')}
@@ -127,6 +154,7 @@ export default function App() {
           loadNoteAcks={store.loadNoteAcks}
           onAckLoadNote={store.ackLoadNote}
           onChange={(s) => store.setActiveSession(s)}
+          onHome={goHomeKeepSession}
           onDiscard={discardActive}
           onFinish={finishActive}
         />

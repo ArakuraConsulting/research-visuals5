@@ -119,6 +119,8 @@ function GearIcon() {
 export function HomeView({
   workouts,
   history,
+  resumeName,
+  onResume,
   onOpenWorkout,
   onOpenHistory,
   onOpenProgress,
@@ -128,6 +130,8 @@ export function HomeView({
 }: {
   workouts: Workout[]
   history: HistoryEntry[]
+  resumeName: string | null
+  onResume: () => void
   onOpenWorkout: (id: string) => void
   onOpenHistory: () => void
   onOpenProgress: () => void
@@ -167,6 +171,25 @@ export function HomeView({
           History
         </button>
       </div>
+
+      {resumeName && (
+        <button
+          onClick={onResume}
+          className="mb-5 flex w-full items-center justify-between rounded-3xl bg-accent-500 px-5 py-4 text-left shadow-soft active:scale-[0.99]"
+        >
+          <span className="min-w-0">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-white/80">
+              In progress
+            </span>
+            <span className="block truncate text-lg font-bold text-white">
+              Continue {resumeName}
+            </span>
+          </span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-white" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+      )}
 
       <div className="space-y-4">
         {workouts.map((w) => (
