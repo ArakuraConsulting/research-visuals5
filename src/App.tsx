@@ -3,6 +3,7 @@ import type { ActiveSession, ExerciseLog, HistoryEntry } from './types'
 import { useStore } from './lib/useStore'
 import { primeAudio } from './lib/feedback'
 import { doneCountFor } from './lib/session'
+import { resolveWorkout } from './lib/travel'
 import { HomeView } from './components/HomeView'
 import { ActiveWorkout } from './components/ActiveWorkout'
 import { HistoryView } from './components/HistoryView'
@@ -20,9 +21,16 @@ export default function App() {
   const [showNoticeSheet, setShowNoticeSheet] = useState(false)
   const [guideReturn, setGuideReturn] = useState<View>('home')
 
+  const travelMode = !!store.settings.travelMode
+  // In Travel mode, swap each exercise for its no-equipment substitute.
+  const workouts = useMemo(
+    () => store.workouts.map((w) => resolveWorkout(w, travelMode)),
+    [store.workouts, travelMode],
+  )
+
   const activeWorkout =
     currentWorkoutId != null
-      ? store.workouts.find((w) => w.id === currentWorkoutId) ?? null
+      ? workouts.find((w) => w.id === currentWorkoutId) ?? null
       : null
   const activeSession =
     currentWorkoutId != null ? store.sessions[currentWorkoutId] ?? null : null
@@ -30,16 +38,16 @@ export default function App() {
   // Per-workout done/total for the home cards.
   const progressByWorkout = useMemo(() => {
     const map: Record<string, { done: number; total: number }> = {}
-    for (const w of store.workouts) {
+    for (const w of workouts) {
       const s = store.sessions[w.id]
       if (s) map[w.id] = { done: doneCountFor(w, s.progress), total: w.exercises.length }
     }
     return map
-  }, [store.workouts, store.sessions])
+  }, [workouts, store.sessions])
 
   // Open a workout straight into its checklist, creating a session if needed.
   const openWorkout = (id: string) => {
-    const workout = store.workouts.find((w) => w.id === id)
+    const workout = workouts.find((w) => w.id === id)
     if (!workout) return
     primeAudio() // unlock audio from this user gesture (iOS)
     if (!store.sessions[id]) {
@@ -86,9 +94,11 @@ export default function App() {
     <div className="min-h-full">
       {view === 'home' && (
         <HomeView
-          workouts={store.workouts}
+          workouts={workouts}
           history={store.history}
           progressByWorkout={progressByWorkout}
+          travelMode={travelMode}
+          onToggleTravel={(on) => store.updateSettings({ travelMode: on })}
           onOpenWorkout={openWorkout}
           onOpenHistory={() => setView('history')}
           onOpenProgress={() => setView('progress')}

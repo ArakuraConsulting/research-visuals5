@@ -40,6 +40,11 @@ export interface Exercise {
    * and you just mark it done when finished.
    */
   externalTimer?: boolean
+  /**
+   * No-equipment substitute used in Travel mode. Overrides the given fields
+   * (name, howTo, sets, etc.) while keeping the same id, category and emoji.
+   */
+  travel?: Partial<Exercise>
 }
 
 export interface Workout {
@@ -59,6 +64,8 @@ export interface Settings {
   /** Optional targets shown as a goal line on the progress charts. */
   goalWeight?: number
   goalBodyFatPct?: number
+  /** true = away from home, no equipment: use bodyweight substitutions. */
+  travelMode?: boolean
 }
 
 /**
