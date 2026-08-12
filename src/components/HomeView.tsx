@@ -133,6 +133,8 @@ export function HomeView({
   workouts,
   history,
   progressByWorkout,
+  travelMode,
+  onToggleTravel,
   onOpenWorkout,
   onOpenHistory,
   onOpenProgress,
@@ -143,6 +145,8 @@ export function HomeView({
   workouts: Workout[]
   history: HistoryEntry[]
   progressByWorkout: Record<string, { done: number; total: number }>
+  travelMode: boolean
+  onToggleTravel: (on: boolean) => void
   onOpenWorkout: (id: string) => void
   onOpenHistory: () => void
   onOpenProgress: () => void
@@ -167,6 +171,37 @@ export function HomeView({
           <GearIcon />
         </button>
       </header>
+
+      {/* Home / Travel mode */}
+      <div className="mb-5">
+        <div className="flex gap-1.5 rounded-2xl bg-white/5 p-1">
+          <button
+            onClick={() => onToggleTravel(false)}
+            className={`flex-1 rounded-xl py-3 text-base font-bold transition ${
+              !travelMode
+                ? 'bg-accent-500 text-white shadow-soft'
+                : 'text-white/60 active:text-white'
+            }`}
+          >
+            🏠 Home
+          </button>
+          <button
+            onClick={() => onToggleTravel(true)}
+            className={`flex-1 rounded-xl py-3 text-base font-bold transition ${
+              travelMode
+                ? 'bg-accent-500 text-white shadow-soft'
+                : 'text-white/60 active:text-white'
+            }`}
+          >
+            ✈️ Travel
+          </button>
+        </div>
+        <p className="mt-1.5 px-1 text-xs text-white/40">
+          {travelMode
+            ? 'Travel mode — bodyweight versions, no equipment needed.'
+            : 'Home — full equipment (weights, bands, mat, bar).'}
+        </p>
+      </div>
 
       <div className="mb-5 grid grid-cols-2 gap-3">
         <button

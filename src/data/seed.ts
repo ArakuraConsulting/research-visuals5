@@ -8,11 +8,12 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 8
+export const SEED_VERSION = 9
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
   units: 'kg',
+  travelMode: false,
   goalWeight: 57,
   goalBodyFatPct: 23,
 }
@@ -26,6 +27,22 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'dp-vibration-plate',
+        travel: {
+          name: 'Morning mobility',
+          emoji: '🤸',
+          equipment: 'none',
+          blurb: 'A gentle moving warm-up to wake the body up — no plate needed.',
+          cue: 'Easy circles and marching to get the blood moving',
+          howTo: [
+            'No vibration plate when travelling, so do a gentle moving warm-up instead.',
+            'March on the spot, roll the shoulders and hips, swing the arms, and do slow joint circles.',
+            'Keep it light and continuous for the time shown to warm up circulation and joints.',
+          ],
+          form: [
+            'Stay relaxed and keep moving',
+            'Nothing forced — this is just a warm-up',
+          ],
+        },
         emoji: '📳',
         externalTimer: true,
         blurb: 'A gentle whole-body vibration warm-up to start the morning.',
@@ -100,6 +117,22 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-rebounding',
+        travel: {
+          name: 'Low-impact cardio',
+          emoji: '🏃',
+          equipment: 'none',
+          blurb: 'Springy cardio without the trampoline — easy on the joints.',
+          cue: 'March, step side to side, or low jacks — steady and springy',
+          howTo: [
+            'No trampoline when travelling, so keep the heart rate up with light cardio.',
+            'Mix easy options: march or jog on the spot, step side to side, low jumping jacks, or fast feet.',
+            'Stay light and springy through the feet with soft knees for the time shown.',
+          ],
+          form: [
+            'Land softly through the middle of the foot, soft knees',
+            'Keep it low-impact for joints or quiet floors',
+          ],
+        },
         emoji: '🦘',
         externalTimer: true,
         blurb: 'Light bouncing on a mini-trampoline for easy, low-impact cardio.',
@@ -147,6 +180,22 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'dp-dead-hang',
+        travel: {
+          name: 'Grip & forearm holds',
+          emoji: '✊',
+          equipment: 'bodyweight',
+          blurb: 'Grip work without a bar — squeeze and hold hard.',
+          cue: 'Use a solid ledge or towel if you can; otherwise squeeze hard',
+          howTo: [
+            'No pull-up bar when travelling. If there is a sturdy ledge or a towel looped over a door you trust, do short hangs there.',
+            'Otherwise, crush a rolled towel or make tight fists and hold maximal tension for each 20-second round.',
+            'Rest between rounds and build the total over time.',
+          ],
+          form: [
+            'Only hang from something you are certain will hold your weight',
+            'Squeeze hard — the tension is the exercise',
+          ],
+        },
         emoji: '💪',
         blurb: 'Hanging from a bar to build grip and shoulder strength.',
         name: 'Dead hang',
@@ -204,6 +253,26 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'sa-pull-up',
+        travel: {
+          name: 'Table row',
+          emoji: '🪑',
+          type: 'sets',
+          sets: 4,
+          repRange: '6-10',
+          equipment: 'bodyweight',
+          blurb: 'Pulling with no bar — row your chest to the edge of a sturdy table.',
+          cue: 'Lie under a solid table and pull the chest to the edge',
+          howTo: [
+            'Find a sturdy table that will not tip. Lie underneath and grip the edge with both hands, arms straight.',
+            'Keep your body straight from head to heels and pull your chest up toward the edge.',
+            'Lower under control. The flatter your body, the harder it is; bend the knees to make it easier.',
+          ],
+          form: [
+            'Only use a table you are certain is stable and strong enough',
+            'Draw the shoulders down and back, no shrugging',
+            'Body stays in a straight line — no sagging hips',
+          ],
+        },
         emoji: '🧗',
         blurb: 'Working toward a pull-up at your current level.',
         name: 'Pull up progression',
@@ -230,6 +299,26 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sa-overhead-press',
+        travel: {
+          name: 'Pike push-up press',
+          emoji: '🔻',
+          type: 'sets',
+          sets: 3,
+          repRange: '6-10',
+          equipment: 'bodyweight',
+          blurb: 'Press your own bodyweight overhead in a pike position.',
+          cue: 'Hips high; lower the crown of the head toward the floor',
+          howTo: [
+            'With no weights, press your bodyweight overhead in a pike.',
+            'Hands and feet on the floor, hips high in an upside-down V. Rest the feet on a chair or bed to make it harder.',
+            'Bend the elbows to lower the crown of your head toward the floor, then press back up.',
+          ],
+          form: [
+            'Hips stay high throughout',
+            'Elbows about forty five degrees to the body',
+            'Stop where the shoulders stay comfortable',
+          ],
+        },
         emoji: '🏋️',
         blurb: 'Pressing a barbell from the shoulders up to overhead.',
         name: 'Overhead press',
@@ -284,6 +373,25 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sa-dumbbell-row',
+        travel: {
+          name: 'Single-arm table row',
+          emoji: '🪑',
+          type: 'sets',
+          sets: 3,
+          repRange: '8-12 each side',
+          equipment: 'bodyweight',
+          blurb: 'One-arm rowing using a sturdy table edge.',
+          cue: 'Row one side at a time; hinge with a flat back',
+          howTo: [
+            'Grip the edge of a sturdy table (or a towel looped around a solid post) with one hand.',
+            'Hinge back with a flat back so the arm is straight, then pull the elbow toward the hip.',
+            'Do all reps on one side, then swap. Lean further back to make it harder.',
+          ],
+          form: [
+            'Flat back, no rounding or twisting',
+            'Pull the elbow to the hip, not out wide',
+          ],
+        },
         emoji: '🚣',
         blurb: 'Rowing a dumbbell up to your side to work the back.',
         name: 'Dumbbell row',
@@ -318,6 +426,26 @@ export const seedWorkouts: Workout[] = [
     exercises: [
       {
         id: 'sb-goblet-squat',
+        travel: {
+          name: 'Split squat',
+          emoji: '🦵',
+          type: 'sets',
+          sets: 3,
+          repRange: '8-12 each side',
+          equipment: 'bodyweight',
+          blurb: 'One leg at a time, so bodyweight is plenty.',
+          cue: 'Rear foot back (on a chair to progress); drop straight down',
+          howTo: [
+            'Working one leg at a time makes bodyweight challenging — no dumbbell needed.',
+            'Split stance, rear foot behind you (rest it on a chair or bed for a harder Bulgarian split squat).',
+            'Drop straight down so the front thigh works, then drive back up. All reps one side, then swap.',
+          ],
+          form: [
+            'Front knee tracks over the foot',
+            'Torso tall, drop straight down',
+            'Slow it to three seconds down for more challenge',
+          ],
+        },
         emoji: '🏆',
         blurb: 'A squat holding one dumbbell against your chest.',
         name: 'Goblet squat',
@@ -344,6 +472,26 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-romanian-deadlift',
+        travel: {
+          name: 'Single-leg RDL',
+          emoji: '🦵',
+          type: 'sets',
+          sets: 3,
+          repRange: '8-10 each side',
+          equipment: 'bodyweight',
+          blurb: 'Bodyweight hip hinge on one leg — hamstrings and balance.',
+          cue: 'Hinge over one leg, back leg reaching behind',
+          howTo: [
+            'One leg makes the hinge hard enough without weight.',
+            'Stand on one leg with a soft knee. Push the hips back and reach the other leg straight behind you.',
+            'Feel the standing hamstring stretch, keep a flat back, then return to standing. All reps one side, then swap.',
+          ],
+          form: [
+            'Push the hips back — it is a hinge, not a squat',
+            'Flat back, hips level (do not open to the side)',
+            'Slow and controlled for balance',
+          ],
+        },
         emoji: '🦵',
         blurb: 'A hip hinge that works the hamstrings and glutes.',
         name: 'Romanian deadlift',
@@ -372,6 +520,25 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-hip-thrust',
+        travel: {
+          name: 'Single-leg glute bridge',
+          emoji: '🍑',
+          type: 'sets',
+          sets: 3,
+          repRange: '10-15 each side',
+          equipment: 'bodyweight',
+          blurb: 'Bodyweight glute work, one leg at a time.',
+          cue: 'One foot down, drive the hips up; ribs down',
+          howTo: [
+            'Lie on your back, knees bent. Extend one leg and drive through the other heel to lift the hips.',
+            'Squeeze the glutes at the top so the body is a straight line from knee to shoulder; do not arch the low back.',
+            'Lower under control. All reps one side, then swap. Rest your shoulders on a bed or sofa for more range.',
+          ],
+          form: [
+            'Drive through the heel, squeeze the glute at the top',
+            'Ribs down — lift from the glute, not the low back',
+          ],
+        },
         emoji: '🍑',
         blurb: 'Driving your hips up off a bench to work the glutes.',
         name: 'Hip thrust',
@@ -428,6 +595,22 @@ export const seedWorkouts: Workout[] = [
       },
       {
         id: 'sb-farmers-carry',
+        travel: {
+          name: 'Loaded carry',
+          emoji: '🧳',
+          equipment: 'bodyweight',
+          blurb: 'Carry whatever you have — a packed bag, water bottles — tall and steady.',
+          cue: 'Load your bag or bottles; walk tall and braced',
+          howTo: [
+            'No dumbbells when travelling, so load what you have: a packed backpack or bag in each hand, water bottles, or your suitcase.',
+            'Stand tall, shoulders back, brace the stomach and walk with a normal stride for the time.',
+            'If you truly have nothing to hold, do a slow tall march squeezing everything tight, or hold a wall sit instead.',
+          ],
+          form: [
+            'Shoulders back and down, chest open',
+            'Brace and walk normally — do not lean away from the load',
+          ],
+        },
         emoji: '🧳',
         blurb: 'Walking while carrying a heavy weight in each hand.',
         name: "Farmer's carry",
