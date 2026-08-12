@@ -270,7 +270,19 @@ export function ActiveWorkout({
 
           {/* Optional timer / sets */}
           <div className="mt-8">
-            {exercise.type === 'timed' ? (
+            {exercise.type === 'timed' && exercise.externalTimer ? (
+              <div className="rounded-3xl bg-white/5 p-5 text-center">
+                <p className="text-[15px] leading-relaxed text-white/70">
+                  You time this with your own app or device
+                  {exercise.durationSeconds
+                    ? ` (about ${Math.round(exercise.durationSeconds / 60)} min)`
+                    : ''}
+                  . Tap{' '}
+                  <span className="font-semibold text-white">Mark as done</span>{' '}
+                  below when you’ve finished.
+                </p>
+              </div>
+            ) : exercise.type === 'timed' ? (
               <TimedExercise
                 key={exercise.id}
                 exercise={exercise}

@@ -32,6 +32,12 @@ export interface Exercise {
   loadNote?: string[]
   /** For dumbbell lifts: true = one per hand, false = a single dumbbell */
   perHand?: boolean
+  /**
+   * true = this is timed by an external app or device (e.g. a fitness app,
+   * a video, or the vibration plate itself), so the in-app countdown is hidden
+   * and you just mark it done when finished.
+   */
+  externalTimer?: boolean
 }
 
 export interface Workout {
