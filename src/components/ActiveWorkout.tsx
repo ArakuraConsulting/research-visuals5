@@ -232,6 +232,7 @@ export function ActiveWorkout({
             <CategoryPill category={exercise.category} />
           </div>
           <h1 className="text-3xl font-extrabold leading-tight text-white">
+            {exercise.emoji && <span className="mr-2">{exercise.emoji}</span>}
             {exercise.name}
           </h1>
           {exercise.blurb && (
@@ -397,6 +398,7 @@ export function ActiveWorkout({
                 >
                   <div className="min-w-0">
                     <p className={`truncate font-bold ${done ? 'text-white/70' : 'text-white'}`}>
+                      {ex.emoji && <span className="mr-1.5">{ex.emoji}</span>}
                       {ex.name}
                     </p>
                     <p className="mt-0.5 flex items-center gap-2 text-xs text-white/50">

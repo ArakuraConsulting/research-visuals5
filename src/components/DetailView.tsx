@@ -13,7 +13,10 @@ function ExerciseRow({ exercise }: { exercise: Exercise }) {
     <div className="rounded-3xl bg-white p-4 text-navy-950 shadow-soft">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-lg font-bold leading-tight">{exercise.name}</h3>
+          <h3 className="text-lg font-bold leading-tight">
+            {exercise.emoji && <span className="mr-1.5">{exercise.emoji}</span>}
+            {exercise.name}
+          </h3>
           {exercise.blurb && (
             <p className="mt-0.5 text-sm text-navy-800">{exercise.blurb}</p>
           )}
