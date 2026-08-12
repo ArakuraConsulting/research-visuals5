@@ -1,89 +1,67 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { ActiveSession, ExerciseLog, HistoryEntry } from './types'
 import { useStore } from './lib/useStore'
 import { primeAudio } from './lib/feedback'
+import { doneCountFor } from './lib/session'
 import { HomeView } from './components/HomeView'
-import { DetailView } from './components/DetailView'
 import { ActiveWorkout } from './components/ActiveWorkout'
 import { HistoryView } from './components/HistoryView'
 import { ProgressView } from './components/ProgressView'
 import { SettingsView } from './components/SettingsView'
 import { GuideView } from './components/GuideView'
 import { FormNoticeModal, FormNoticeSheet } from './components/FormNotice'
-import { ConfirmDialog } from './components/ConfirmDialog'
 
-type View =
-  | 'home'
-  | 'detail'
-  | 'active'
-  | 'history'
-  | 'progress'
-  | 'settings'
-  | 'guide'
+type View = 'home' | 'active' | 'history' | 'progress' | 'settings' | 'guide'
 
 export default function App() {
   const store = useStore()
   const [view, setView] = useState<View>('home')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [currentWorkoutId, setCurrentWorkoutId] = useState<string | null>(null)
   const [showNoticeSheet, setShowNoticeSheet] = useState(false)
-  // Where "back" returns to from the guide (home or the first-run notice).
   const [guideReturn, setGuideReturn] = useState<View>('home')
-  // Offer to resume a session that was in progress at load time.
-  const [resumeCandidate, setResumeCandidate] = useState<ActiveSession | null>(
-    () => store.activeSession,
-  )
 
-  const selectedWorkout = store.workouts.find((w) => w.id === selectedId) ?? null
-  const activeWorkout = store.activeSession
-    ? store.workouts.find((w) => w.id === store.activeSession!.workoutId) ?? null
-    : null
+  const activeWorkout =
+    currentWorkoutId != null
+      ? store.workouts.find((w) => w.id === currentWorkoutId) ?? null
+      : null
+  const activeSession =
+    currentWorkoutId != null ? store.sessions[currentWorkoutId] ?? null : null
 
+  // Per-workout done/total for the home cards.
+  const progressByWorkout = useMemo(() => {
+    const map: Record<string, { done: number; total: number }> = {}
+    for (const w of store.workouts) {
+      const s = store.sessions[w.id]
+      if (s) map[w.id] = { done: doneCountFor(w, s.progress), total: w.exercises.length }
+    }
+    return map
+  }, [store.workouts, store.sessions])
+
+  // Open a workout straight into its checklist, creating a session if needed.
   const openWorkout = (id: string) => {
-    // If there's already a session for this workout, jump back into it.
-    if (store.activeSession && store.activeSession.workoutId === id) {
-      setResumeCandidate(null)
-      setView('active')
-      return
-    }
-    setSelectedId(id)
-    setView('detail')
-  }
-
-  const startWorkout = () => {
-    if (!selectedWorkout) return
+    const workout = store.workouts.find((w) => w.id === id)
+    if (!workout) return
     primeAudio() // unlock audio from this user gesture (iOS)
-    // Resume an existing session for this workout rather than restarting it.
-    if (
-      store.activeSession &&
-      store.activeSession.workoutId === selectedWorkout.id
-    ) {
-      setResumeCandidate(null)
-      setView('active')
-      return
+    if (!store.sessions[id]) {
+      const session: ActiveSession = {
+        workoutId: id,
+        workoutName: workout.name,
+        startedAt: Date.now(),
+        dateISO: new Date().toISOString(),
+        currentIndex: 0,
+        progress: {},
+      }
+      store.setSession(session)
     }
-    const nowIso = new Date().toISOString()
-    const session: ActiveSession = {
-      workoutId: selectedWorkout.id,
-      workoutName: selectedWorkout.name,
-      startedAt: Date.now(),
-      dateISO: nowIso,
-      currentIndex: 0,
-      progress: {},
-    }
-    store.setActiveSession(session)
-    setResumeCandidate(null)
+    setCurrentWorkoutId(id)
     setView('active')
   }
 
-  // Leave the active view but keep the session so it can be resumed.
-  const goHomeKeepSession = () => {
-    setResumeCandidate(null)
-    setView('home')
-  }
+  // Leave the checklist, keeping its progress to resume later.
+  const goHomeKeepSession = () => setView('home')
 
   const discardActive = () => {
-    store.setActiveSession(null)
-    setResumeCandidate(null)
+    if (currentWorkoutId) store.clearSession(currentWorkoutId)
     setView('home')
   }
 
@@ -93,19 +71,8 @@ export default function App() {
   ) => {
     store.recordExerciseLogs(logs)
     store.addHistoryEntry(entry)
-    store.setActiveSession(null)
-    setResumeCandidate(null)
+    if (currentWorkoutId) store.clearSession(currentWorkoutId)
     setView('home')
-  }
-
-  const resumeSession = () => {
-    setResumeCandidate(null)
-    setView('active')
-  }
-
-  const declineResume = () => {
-    store.setActiveSession(null)
-    setResumeCandidate(null)
   }
 
   const openGuide = (from: View) => {
@@ -113,7 +80,6 @@ export default function App() {
     setView('guide')
   }
 
-  // First-launch safety notice takes over the screen until dismissed.
   const showFirstRunNotice = !store.formNoticeDismissed && view !== 'guide'
 
   return (
@@ -122,12 +88,7 @@ export default function App() {
         <HomeView
           workouts={store.workouts}
           history={store.history}
-          resumeName={
-            store.activeSession && activeWorkout
-              ? store.activeSession.workoutName
-              : null
-          }
-          onResume={() => setView('active')}
+          progressByWorkout={progressByWorkout}
           onOpenWorkout={openWorkout}
           onOpenHistory={() => setView('history')}
           onOpenProgress={() => setView('progress')}
@@ -137,31 +98,22 @@ export default function App() {
         />
       )}
 
-      {view === 'detail' && selectedWorkout && (
-        <DetailView
-          workout={selectedWorkout}
-          onBack={() => setView('home')}
-          onStart={startWorkout}
-        />
-      )}
-
-      {view === 'active' && store.activeSession && activeWorkout && (
+      {view === 'active' && activeSession && activeWorkout && (
         <ActiveWorkout
           workout={activeWorkout}
-          session={store.activeSession}
+          session={activeSession}
           settings={store.settings}
           exerciseLog={store.exerciseLog}
           loadNoteAcks={store.loadNoteAcks}
           onAckLoadNote={store.ackLoadNote}
-          onChange={(s) => store.setActiveSession(s)}
+          onChange={(s) => store.setSession(s)}
           onHome={goHomeKeepSession}
           onDiscard={discardActive}
           onFinish={finishActive}
         />
       )}
 
-      {/* Guard: active view with no valid session/workout falls back home. */}
-      {view === 'active' && !(store.activeSession && activeWorkout) && (
+      {view === 'active' && !(activeSession && activeWorkout) && (
         <FallbackHome onGoHome={() => setView('home')} />
       )}
 
@@ -192,9 +144,7 @@ export default function App() {
         />
       )}
 
-      {view === 'guide' && (
-        <GuideView onBack={() => setView(guideReturn)} />
-      )}
+      {view === 'guide' && <GuideView onBack={() => setView(guideReturn)} />}
 
       {showFirstRunNotice && (
         <FormNoticeModal
@@ -206,36 +156,6 @@ export default function App() {
       {showNoticeSheet && (
         <FormNoticeSheet onClose={() => setShowNoticeSheet(false)} />
       )}
-
-      {/* Resume prompt — only on the home screen, once per load. */}
-      <ConfirmDialog
-        open={
-          view === 'home' &&
-          !showFirstRunNotice &&
-          resumeCandidate !== null &&
-          store.activeSession !== null
-        }
-        title="Resume workout?"
-        message={
-          <>
-            You have an unfinished session
-            {resumeCandidate ? (
-              <>
-                {' '}
-                for{' '}
-                <span className="font-semibold text-white">
-                  {resumeCandidate.workoutName}
-                </span>
-              </>
-            ) : null}
-            . Pick up where you left off?
-          </>
-        }
-        confirmLabel="Resume"
-        cancelLabel="Discard"
-        onConfirm={resumeSession}
-        onCancel={declineResume}
-      />
     </div>
   )
 }

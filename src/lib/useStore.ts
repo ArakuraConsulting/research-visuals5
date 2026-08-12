@@ -29,14 +29,16 @@ export interface AppStore {
   workouts: Workout[]
   history: HistoryEntry[]
   formNoticeDismissed: boolean
-  activeSession: ActiveSession | null
+  /** In-progress checklist per workout id, so each can be resumed independently. */
+  sessions: Record<string, ActiveSession>
   settings: Settings
   exerciseLog: Record<string, ExerciseLog>
   loadNoteAcks: Record<string, boolean>
   bodyEntries: BodyEntry[]
 
   dismissFormNotice: () => void
-  setActiveSession: (session: ActiveSession | null) => void
+  setSession: (session: ActiveSession) => void
+  clearSession: (workoutId: string) => void
   addHistoryEntry: (entry: HistoryEntry) => void
   deleteHistoryEntry: (id: string) => void
   updateSettings: (partial: Partial<Settings>) => void
@@ -54,9 +56,17 @@ export function useStore(): AppStore {
   const [formNoticeDismissed, setFormNoticeDismissed] = useState<boolean>(() =>
     loadJSON<boolean>(STORAGE_KEYS.formNoticeDismissed, false),
   )
-  const [activeSession, setActiveSessionState] = useState<ActiveSession | null>(
-    () => loadJSON<ActiveSession | null>(STORAGE_KEYS.activeSession, null),
-  )
+  const [sessions, setSessions] = useState<Record<string, ActiveSession>>(() => {
+    const map = loadJSON<Record<string, ActiveSession>>(STORAGE_KEYS.sessions, {})
+    // One-time migration from the old single-session key.
+    const legacy = loadJSON<ActiveSession | null>(STORAGE_KEYS.activeSession, null)
+    if (legacy && !map[legacy.workoutId]) {
+      map[legacy.workoutId] = legacy
+      removeKey(STORAGE_KEYS.activeSession)
+      saveJSON(STORAGE_KEYS.sessions, map)
+    }
+    return map
+  })
   const [settings, setSettings] = useState<Settings>(() => ({
     ...defaultSettings,
     ...loadJSON<Partial<Settings>>(STORAGE_KEYS.settings, {}),
@@ -86,13 +96,22 @@ export function useStore(): AppStore {
     saveJSON(STORAGE_KEYS.formNoticeDismissed, true)
   }, [])
 
-  const setActiveSession = useCallback((session: ActiveSession | null) => {
-    setActiveSessionState(session)
-    if (session) {
-      saveJSON(STORAGE_KEYS.activeSession, session)
-    } else {
-      removeKey(STORAGE_KEYS.activeSession)
-    }
+  const setSession = useCallback((session: ActiveSession) => {
+    setSessions((prev) => {
+      const next = { ...prev, [session.workoutId]: session }
+      saveJSON(STORAGE_KEYS.sessions, next)
+      return next
+    })
+  }, [])
+
+  const clearSession = useCallback((workoutId: string) => {
+    setSessions((prev) => {
+      if (!(workoutId in prev)) return prev
+      const next = { ...prev }
+      delete next[workoutId]
+      saveJSON(STORAGE_KEYS.sessions, next)
+      return next
+    })
   }, [])
 
   const addHistoryEntry = useCallback((entry: HistoryEntry) => {
@@ -147,12 +166,13 @@ export function useStore(): AppStore {
     workouts,
     history,
     formNoticeDismissed,
-    activeSession,
+    sessions,
     settings,
     exerciseLog,
     loadNoteAcks,
     dismissFormNotice,
-    setActiveSession,
+    setSession,
+    clearSession,
     addHistoryEntry,
     deleteHistoryEntry,
     updateSettings,

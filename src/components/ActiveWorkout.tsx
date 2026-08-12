@@ -23,6 +23,7 @@ import { useWakeLock } from '../lib/useWakeLock'
 import { makeId } from '../lib/util'
 import {
   buildLog,
+  equipmentSummary,
   isLoggable,
   lastTimeLabel,
   prefillNum,
@@ -359,12 +360,14 @@ export function ActiveWorkout({
     <div className="mx-auto flex min-h-full max-w-md flex-col">
       <TopBar />
       <div className="flex-1 px-4 pb-36 pt-2">
-        <div className="mb-1 flex items-baseline justify-between px-1">
-          <h1 className="text-xl font-extrabold text-white">{workout.name}</h1>
-        </div>
-        <p className="mb-4 px-1 text-sm text-white/50">
-          Tap any exercise to do it, or tick it off. Any order, any time — come
-          back with “Home”.
+        <h1 className="px-1 text-xl font-extrabold text-white">{workout.name}</h1>
+        <p className="mt-0.5 px-1 text-sm text-white/60">{workout.description}</p>
+        <p className="mt-1 px-1 text-xs text-white/40">
+          {equipmentSummary(workout)}
+        </p>
+        <p className="mb-4 mt-3 px-1 text-sm text-white/50">
+          Tap any exercise to do it or tick it off — any order, any time. “Home”
+          saves your ticks to come back to.
         </p>
 
         <div className="space-y-2.5">
@@ -401,8 +404,13 @@ export function ActiveWorkout({
                       {ex.emoji && <span className="mr-1.5">{ex.emoji}</span>}
                       {ex.name}
                     </p>
-                    <p className="mt-0.5 flex items-center gap-2 text-xs text-white/50">
-                      <span>{exerciseSummary(ex)}</span>
+                    {ex.blurb && (
+                      <p className="mt-0.5 truncate text-xs text-white/45">
+                        {ex.blurb}
+                      </p>
+                    )}
+                    <p className="mt-0.5 text-xs font-semibold text-white/50">
+                      {exerciseSummary(ex)}
                     </p>
                   </div>
                   <span className="flex items-center gap-1 text-xs font-semibold text-accent-300">
