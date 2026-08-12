@@ -66,6 +66,7 @@ export const STORAGE_KEYS = {
   history: 'wt.history',
   formNoticeDismissed: 'wt.formNoticeDismissed',
   activeSession: 'wt.activeSession',
+  sessions: 'wt.sessions',
   settings: 'wt.settings',
   exerciseLog: 'wt.exerciseLog',
   loadNoteAcks: 'wt.loadNoteAcks',

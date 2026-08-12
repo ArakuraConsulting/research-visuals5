@@ -42,13 +42,23 @@ function ListIcon() {
 function WorkoutCard({
   workout,
   onOpen,
+  progress,
 }: {
   workout: Workout
   onOpen: () => void
+  progress?: { done: number; total: number }
 }) {
+  const inProgress = progress && progress.done > 0
   return (
     <Card as="button" onClick={onOpen} className="p-5">
-      <h2 className="text-xl font-bold leading-tight">{workout.name}</h2>
+      <div className="flex items-start justify-between gap-3">
+        <h2 className="text-xl font-bold leading-tight">{workout.name}</h2>
+        {inProgress && (
+          <span className="shrink-0 rounded-full bg-accent-500 px-2.5 py-1 text-xs font-bold text-white">
+            {progress!.done}/{progress!.total} done
+          </span>
+        )}
+      </div>
       <p className="mt-1 text-sm text-navy-700/70">{workout.description}</p>
       <div className="mt-4 flex items-center gap-4 text-sm font-semibold text-navy-700">
         <span className="inline-flex items-center gap-1.5">
@@ -59,6 +69,9 @@ function WorkoutCard({
           <ClockIcon />
           {workout.timed ? workoutTotalLabel(workout) : 'Untimed'}
         </span>
+        {inProgress && (
+          <span className="font-bold text-accent-600">Continue →</span>
+        )}
       </div>
     </Card>
   )
@@ -119,8 +132,7 @@ function GearIcon() {
 export function HomeView({
   workouts,
   history,
-  resumeName,
-  onResume,
+  progressByWorkout,
   onOpenWorkout,
   onOpenHistory,
   onOpenProgress,
@@ -130,8 +142,7 @@ export function HomeView({
 }: {
   workouts: Workout[]
   history: HistoryEntry[]
-  resumeName: string | null
-  onResume: () => void
+  progressByWorkout: Record<string, { done: number; total: number }>
   onOpenWorkout: (id: string) => void
   onOpenHistory: () => void
   onOpenProgress: () => void
@@ -172,31 +183,13 @@ export function HomeView({
         </button>
       </div>
 
-      {resumeName && (
-        <button
-          onClick={onResume}
-          className="mb-5 flex w-full items-center justify-between rounded-3xl bg-accent-500 px-5 py-4 text-left shadow-soft active:scale-[0.99]"
-        >
-          <span className="min-w-0">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-white/80">
-              In progress
-            </span>
-            <span className="block truncate text-lg font-bold text-white">
-              Continue {resumeName}
-            </span>
-          </span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-white" aria-hidden="true">
-            <path d="M9 6l6 6-6 6" />
-          </svg>
-        </button>
-      )}
-
       <div className="space-y-4">
         {workouts.map((w) => (
           <WorkoutCard
             key={w.id}
             workout={w}
             onOpen={() => onOpenWorkout(w.id)}
+            progress={progressByWorkout[w.id]}
           />
         ))}
       </div>
