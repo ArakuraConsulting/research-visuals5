@@ -147,7 +147,7 @@ export function startMusic(): boolean {
   nextNoteTime = c.currentTime + 0.06
   master.gain.cancelScheduledValues(c.currentTime)
   master.gain.setValueAtTime(0.0001, c.currentTime)
-  master.gain.exponentialRampToValueAtTime(0.22, c.currentTime + 0.4)
+  master.gain.exponentialRampToValueAtTime(0.34, c.currentTime + 0.4)
   timer = window.setInterval(scheduler, LOOKAHEAD_MS)
   return true
 }
