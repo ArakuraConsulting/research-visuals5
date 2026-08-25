@@ -21,6 +21,8 @@ export function CompletionScreen({
     vibrate([200, 80, 200])
   }, [])
 
+  const allDone = completedCount >= totalCount
+
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col items-center justify-center px-6 py-16 text-center safe-top safe-bottom">
       <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-500/20">
@@ -40,8 +42,16 @@ export function CompletionScreen({
         </svg>
       </div>
 
-      <h1 className="mt-6 text-3xl font-extrabold text-white">Workout done</h1>
+      <h1 className="mt-6 text-3xl font-extrabold text-white">
+        {allDone ? 'Workout done' : 'Progress saved'}
+      </h1>
       <p className="mt-1 text-white/60">{workoutName}</p>
+      {!allDone && (
+        <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/50">
+          Your ticks are saved. Reopen this workout any time today to finish the
+          rest — it’ll pick up right where you left off.
+        </p>
+      )}
 
       <div className="mt-8 grid w-full grid-cols-2 gap-3">
         <div className="rounded-3xl bg-white/5 p-5">
@@ -64,7 +74,9 @@ export function CompletionScreen({
       </div>
 
       <div className="mt-10 w-full">
-        <PrimaryButton onClick={onDone}>Save &amp; finish</PrimaryButton>
+        <PrimaryButton onClick={onDone}>
+          {allDone ? 'Save & finish' : 'Save & back to workouts'}
+        </PrimaryButton>
       </div>
     </div>
   )

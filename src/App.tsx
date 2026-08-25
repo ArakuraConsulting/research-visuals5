@@ -3,6 +3,7 @@ import type { ActiveSession, ExerciseLog, HistoryEntry } from './types'
 import { useStore } from './lib/useStore'
 import { primeAudio } from './lib/feedback'
 import { doneCountFor } from './lib/session'
+import { isSameDay } from './lib/time'
 import { resolveWorkout } from './lib/travel'
 import { HomeView } from './components/HomeView'
 import { ActiveWorkout } from './components/ActiveWorkout'
@@ -45,12 +46,16 @@ export default function App() {
     return map
   }, [workouts, store.sessions])
 
-  // Open a workout straight into its checklist, creating a session if needed.
+  // Open a workout straight into its checklist. Resume today's saved progress
+  // if there is any; only start fresh when there's no session or it's from a
+  // previous day (yesterday's result is already saved to history).
   const openWorkout = (id: string) => {
     const workout = workouts.find((w) => w.id === id)
     if (!workout) return
     primeAudio() // unlock audio from this user gesture (iOS)
-    if (!store.sessions[id]) {
+    const existing = store.sessions[id]
+    const resumable = existing && isSameDay(existing.dateISO, new Date().toISOString())
+    if (!resumable) {
       const session: ActiveSession = {
         workoutId: id,
         workoutName: workout.name,
@@ -73,13 +78,16 @@ export default function App() {
     setView('home')
   }
 
+  // Save the session: record today's result to history/progress but KEEP the
+  // checklist so you can reopen it and tick off anything you missed. Repeated
+  // saves in a day update the same entry rather than duplicating it. The
+  // session is only cleared by "End & discard" or replaced on a new day.
   const finishActive = (
     entry: HistoryEntry,
     logs: Record<string, ExerciseLog>,
   ) => {
     store.recordExerciseLogs(logs)
-    store.addHistoryEntry(entry)
-    if (currentWorkoutId) store.clearSession(currentWorkoutId)
+    store.upsertHistoryEntry(entry)
     setView('home')
   }
 

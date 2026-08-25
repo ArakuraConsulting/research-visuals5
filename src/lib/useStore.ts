@@ -40,6 +40,8 @@ export interface AppStore {
   setSession: (session: ActiveSession) => void
   clearSession: (workoutId: string) => void
   addHistoryEntry: (entry: HistoryEntry) => void
+  /** Record today's result, replacing an existing same-day entry for the workout. */
+  upsertHistoryEntry: (entry: HistoryEntry) => void
   deleteHistoryEntry: (id: string) => void
   updateSettings: (partial: Partial<Settings>) => void
   recordExerciseLogs: (logs: Record<string, ExerciseLog>) => void
@@ -118,6 +120,21 @@ export function useStore(): AppStore {
     setHistory((prev) => [entry, ...prev])
   }, [])
 
+  const upsertHistoryEntry = useCallback((entry: HistoryEntry) => {
+    setHistory((prev) => {
+      // One entry per workout per day: if today's already recorded, replace it
+      // (keeping its id) so repeated saves don't pile up duplicates.
+      const day = entry.dateISO.slice(0, 10)
+      const idx = prev.findIndex(
+        (h) => h.workoutId === entry.workoutId && h.dateISO.slice(0, 10) === day,
+      )
+      if (idx === -1) return [entry, ...prev]
+      const next = [...prev]
+      next[idx] = { ...entry, id: prev[idx].id }
+      return next
+    })
+  }, [])
+
   const deleteHistoryEntry = useCallback((id: string) => {
     setHistory((prev) => prev.filter((h) => h.id !== id))
   }, [])
@@ -174,6 +191,7 @@ export function useStore(): AppStore {
     setSession,
     clearSession,
     addHistoryEntry,
+    upsertHistoryEntry,
     deleteHistoryEntry,
     updateSettings,
     recordExerciseLogs,

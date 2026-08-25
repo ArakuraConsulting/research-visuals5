@@ -400,8 +400,9 @@ export function ActiveWorkout({
           {equipmentSummary(workout)}
         </p>
         <p className="mb-4 mt-3 px-1 text-sm text-white/50">
-          Tap any exercise to do it or tick it off — any order, any time. “Home”
-          saves your ticks to come back to.
+          Tap any exercise to do it or tick it off — any order. Your ticks are
+          saved as you go, so you can leave and come back any time today to
+          finish the rest.
         </p>
 
         <div className="space-y-2.5">

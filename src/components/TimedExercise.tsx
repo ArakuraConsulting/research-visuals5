@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import type { Exercise } from '../types'
 import { formatClock } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
-import { beepComplete, vibrate } from '../lib/feedback'
+import { countdownTick, ding, primeAudio, vibrate } from '../lib/feedback'
 import { PrimaryButton, SecondaryButton } from './ui'
 
 const REST_BETWEEN_ROUNDS = 10 // seconds
@@ -36,7 +36,13 @@ export function TimedExercise({
 
   const tick = () => {
     setRemaining((r) => {
-      if (r > 1) return r - 1
+      if (r > 1) {
+        const next = r - 1
+        // Audible "3… 2… 1…" lead-in so you know the round is about to end
+        // without watching the clock. Only during work rounds.
+        if (!isRest && next <= 3) countdownTick()
+        return next
+      }
       // Reached zero — resolve the current phase.
       if (isRest) {
         // Rest finished: begin the next round's work.
@@ -44,8 +50,8 @@ export function TimedExercise({
         setPhase('work')
         return duration
       }
-      // A work round just finished.
-      beepComplete()
+      // A work round just finished — ring the bell.
+      ding()
       vibrate([120, 60, 120])
       if (round < totalRounds) {
         setPhase('rest')
@@ -63,6 +69,9 @@ export function TimedExercise({
 
   const start = () => {
     if (isDone) return
+    // Unlock/resume audio from this tap so the bell + countdown are guaranteed
+    // to sound on iOS (which blocks audio until a user gesture).
+    primeAudio()
     if (phase === 'idle') setPhase('work')
     setRunning(true)
   }

@@ -56,6 +56,17 @@ export function exerciseSummary(ex: Exercise): string {
   return ex.repRange ? `${sets} x ${ex.repRange}` : `${sets} sets`
 }
 
+/** True if two ISO timestamps fall on the same local calendar day. */
+export function isSameDay(a: string, b: string): boolean {
+  const x = new Date(a)
+  const y = new Date(b)
+  return (
+    x.getFullYear() === y.getFullYear() &&
+    x.getMonth() === y.getMonth() &&
+    x.getDate() === y.getDate()
+  )
+}
+
 /** Local date, e.g. "9 Aug 2026". */
 export function formatDate(dateISO: string): string {
   const d = new Date(dateISO)
