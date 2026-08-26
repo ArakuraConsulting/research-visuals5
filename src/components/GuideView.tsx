@@ -3,9 +3,9 @@ import { BackButton } from './ui'
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="rounded-3xl bg-white/5 p-5">
-      <h2 className="text-base font-bold text-white">{title}</h2>
-      <div className="mt-2 space-y-2 text-[15px] leading-relaxed text-white/75">
+    <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+      <h2 className="text-base font-bold text-ink">{title}</h2>
+      <div className="mt-2 space-y-2 text-[15px] leading-relaxed text-ink-soft">
         {children}
       </div>
     </section>
@@ -18,7 +18,7 @@ export function GuideView({ onBack }: { onBack: () => void }) {
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-white">
+        <h1 className="text-2xl font-extrabold text-ink font-display">
           Finding your weight
         </h1>
       </header>

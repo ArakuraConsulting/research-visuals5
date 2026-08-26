@@ -1,12 +1,35 @@
 import type { HistoryEntry, Workout } from '../types'
-import { Card } from './ui'
 import { formatDate, formatElapsedShort, workoutTotalLabel } from '../lib/time'
+
+/** Soft per-workout identity: a gradient cover tile, a deep tone, an emoji. */
+const TONES: Record<string, { grad: string; tone: string; emoji: string }> = {
+  'daily-practice': {
+    grad: 'from-sage-light to-[#d7e5d8]',
+    tone: 'text-sage-deep',
+    emoji: '🌅',
+  },
+  'session-a': {
+    grad: 'from-blush-light to-[#f0d8d1]',
+    tone: 'text-blush-deep',
+    emoji: '💪',
+  },
+  'session-b': {
+    grad: 'from-lav-light to-[#ded8ed]',
+    tone: 'text-lav-deep',
+    emoji: '🦵',
+  },
+}
+const FALLBACK = {
+  grad: 'from-gold-light to-[#efe0c3]',
+  tone: 'text-gold-deep',
+  emoji: '🏋️',
+}
 
 function ClockIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -24,8 +47,8 @@ function ClockIcon() {
 function ListIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -48,32 +71,60 @@ function WorkoutCard({
   onOpen: () => void
   progress?: { done: number; total: number }
 }) {
+  const tone = TONES[workout.id] ?? FALLBACK
   const inProgress = progress && progress.done > 0
+  const pct = progress ? Math.round((progress.done / progress.total) * 100) : 0
   return (
-    <Card as="button" onClick={onOpen} className="p-5">
-      <div className="flex items-start justify-between gap-3">
-        <h2 className="text-xl font-bold leading-tight">{workout.name}</h2>
-        {inProgress && (
-          <span className="shrink-0 rounded-full bg-accent-500 px-2.5 py-1 text-xs font-bold text-white">
-            {progress!.done}/{progress!.total} done
+    <button
+      onClick={onOpen}
+      className="group w-full rounded-3xl bg-white p-3 text-left shadow-card ring-1 ring-ink-line/60 transition active:scale-[0.99]"
+    >
+      <div className="flex items-stretch gap-3.5">
+        <div
+          className={`flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${tone.grad}`}
+        >
+          <span className="text-4xl leading-none" aria-hidden="true">
+            {tone.emoji}
           </span>
-        )}
+        </div>
+        <div className="min-w-0 flex-1 py-0.5">
+          <div className="flex items-start justify-between gap-2">
+            <h2 className="font-display text-xl font-semibold leading-tight text-ink">
+              {workout.name}
+            </h2>
+            {inProgress && (
+              <span className="mt-0.5 shrink-0 rounded-full bg-accent-tint px-2 py-0.5 text-[11px] font-bold text-accent-600">
+                {progress!.done}/{progress!.total}
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-ink-soft">
+            {workout.description}
+          </p>
+          <div className="mt-2 flex items-center gap-3.5 text-[12px] font-semibold text-ink-faint">
+            <span className="inline-flex items-center gap-1">
+              <ListIcon />
+              {workout.exercises.length}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <ClockIcon />
+              {workout.timed ? workoutTotalLabel(workout) : 'Untimed'}
+            </span>
+            <span className="ml-auto font-bold text-accent-600">
+              {inProgress ? 'Continue' : 'Start'} →
+            </span>
+          </div>
+        </div>
       </div>
-      <p className="mt-1 text-sm text-navy-700/70">{workout.description}</p>
-      <div className="mt-4 flex items-center gap-4 text-sm font-semibold text-navy-700">
-        <span className="inline-flex items-center gap-1.5">
-          <ListIcon />
-          {workout.exercises.length} exercises
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <ClockIcon />
-          {workout.timed ? workoutTotalLabel(workout) : 'Untimed'}
-        </span>
-        {inProgress && (
-          <span className="font-bold text-accent-600">Continue →</span>
-        )}
-      </div>
-    </Card>
+      {inProgress && (
+        <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-cream-200">
+          <div
+            className="h-full rounded-full bg-accent-500 transition-all"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      )}
+    </button>
   )
 }
 
@@ -81,27 +132,27 @@ function RecentActivity({ history }: { history: HistoryEntry[] }) {
   const recent = history.slice(0, 5)
   if (recent.length === 0) {
     return (
-      <div className="rounded-3xl bg-white/5 p-5 text-sm text-white/50">
+      <div className="rounded-3xl bg-white p-5 text-sm text-ink-faint shadow-card ring-1 ring-ink-line/60">
         No sessions yet. Finish a workout and it will show up here.
       </div>
     )
   }
   return (
-    <div className="overflow-hidden rounded-3xl bg-white/5">
+    <div className="overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60">
       {recent.map((h, i) => (
         <div
           key={h.id}
-          className={`flex items-center justify-between px-5 py-3 ${
-            i > 0 ? 'border-t border-white/5' : ''
+          className={`flex items-center justify-between px-5 py-3.5 ${
+            i > 0 ? 'border-t border-ink-line' : ''
           }`}
         >
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">
+            <p className="truncate text-sm font-semibold text-ink">
               {h.workoutName}
             </p>
-            <p className="text-xs text-white/50">{formatDate(h.dateISO)}</p>
+            <p className="text-xs text-ink-faint">{formatDate(h.dateISO)}</p>
           </div>
-          <span className="ml-3 shrink-0 text-sm font-semibold text-accent-400">
+          <span className="ml-3 shrink-0 text-sm font-bold text-accent-600">
             {formatElapsedShort(h.elapsedSeconds)}
           </span>
         </div>
@@ -158,15 +209,17 @@ export function HomeView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-end justify-between px-1">
         <div>
-          <p className="text-sm font-medium text-accent-400">Let’s train</p>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Workouts
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-600">
+            Arakura
+          </p>
+          <h1 className="mt-1 font-display text-4xl font-semibold leading-none tracking-tight text-ink">
+            Your practice
           </h1>
         </div>
         <button
           onClick={onOpenSettings}
           aria-label="Settings"
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white active:scale-95"
+          className="flex h-10 w-10 items-center justify-center rounded-2xl border border-ink-line bg-white text-ink shadow-soft active:scale-95"
         >
           <GearIcon />
         </button>
@@ -174,29 +227,29 @@ export function HomeView({
 
       {/* Home / Travel mode */}
       <div className="mb-5">
-        <div className="flex gap-1.5 rounded-2xl bg-white/5 p-1">
+        <div className="flex gap-1 rounded-2xl bg-cream-200 p-1">
           <button
             onClick={() => onToggleTravel(false)}
-            className={`flex-1 rounded-xl py-3 text-base font-bold transition ${
+            className={`flex-1 rounded-xl py-2.5 text-[15px] font-bold transition ${
               !travelMode
-                ? 'bg-accent-500 text-white shadow-soft'
-                : 'text-white/60 active:text-white'
+                ? 'bg-white text-ink shadow-soft'
+                : 'text-ink-faint active:text-ink'
             }`}
           >
             🏠 Home
           </button>
           <button
             onClick={() => onToggleTravel(true)}
-            className={`flex-1 rounded-xl py-3 text-base font-bold transition ${
+            className={`flex-1 rounded-xl py-2.5 text-[15px] font-bold transition ${
               travelMode
-                ? 'bg-accent-500 text-white shadow-soft'
-                : 'text-white/60 active:text-white'
+                ? 'bg-white text-ink shadow-soft'
+                : 'text-ink-faint active:text-ink'
             }`}
           >
             ✈️ Travel
           </button>
         </div>
-        <p className="mt-1.5 px-1 text-xs text-white/40">
+        <p className="mt-1.5 px-1 text-xs text-ink-faint">
           {travelMode
             ? 'Travel mode — bodyweight versions, no equipment needed.'
             : 'Home — full equipment (weights, bands, mat, bar).'}
@@ -206,19 +259,19 @@ export function HomeView({
       <div className="mb-5 grid grid-cols-2 gap-3">
         <button
           onClick={onOpenProgress}
-          className="rounded-2xl bg-accent-500/15 px-4 py-3 text-sm font-bold text-accent-200 ring-1 ring-inset ring-accent-400/30 active:scale-[0.98]"
+          className="rounded-2xl bg-accent-tint px-4 py-3 text-sm font-bold text-accent-600 ring-1 ring-inset ring-accent-500/20 active:scale-[0.98]"
         >
           Progress
         </button>
         <button
           onClick={onOpenHistory}
-          className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
+          className="rounded-2xl border border-ink-line bg-white px-4 py-3 text-sm font-bold text-ink shadow-soft active:scale-[0.98]"
         >
           History
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3.5">
         {workouts.map((w) => (
           <WorkoutCard
             key={w.id}
@@ -230,7 +283,7 @@ export function HomeView({
       </div>
 
       <section className="mt-8">
-        <h2 className="mb-3 px-1 text-sm font-bold uppercase tracking-wide text-white/50">
+        <h2 className="mb-3 px-1 text-xs font-bold uppercase tracking-[0.14em] text-ink-faint">
           Recent activity
         </h2>
         <RecentActivity history={history} />
@@ -239,14 +292,14 @@ export function HomeView({
       <div className="mt-8 flex items-center justify-center gap-4 px-1 text-center">
         <button
           onClick={onOpenGuide}
-          className="text-xs font-medium text-white/40 underline underline-offset-4 active:text-white/70"
+          className="text-xs font-medium text-ink-faint underline underline-offset-4 active:text-ink"
         >
           Finding your weight
         </button>
-        <span className="text-white/20">·</span>
+        <span className="text-ink-line">·</span>
         <button
           onClick={onOpenNotice}
-          className="text-xs font-medium text-white/40 underline underline-offset-4 active:text-white/70"
+          className="text-xs font-medium text-ink-faint underline underline-offset-4 active:text-ink"
         >
           Form &amp; safety notice
         </button>

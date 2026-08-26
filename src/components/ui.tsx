@@ -24,7 +24,7 @@ export function Card({
   as?: 'div' | 'button'
 }) {
   const base =
-    'w-full rounded-3xl bg-white text-navy-950 shadow-card text-left'
+    'w-full rounded-3xl bg-white text-ink shadow-card ring-1 ring-ink-line/60 text-left'
   if (as === 'button') {
     return (
       <button
@@ -57,7 +57,7 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`w-full rounded-2xl bg-accent-500 px-6 py-4 text-lg font-semibold text-white shadow-soft transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-navy-600 disabled:text-white/50 ${className}`}
+      className={`w-full rounded-2xl bg-accent-500 px-6 py-4 text-lg font-semibold text-white shadow-soft transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-ink-faint disabled:text-white/70 ${className}`}
     >
       {children}
     </button>
@@ -79,7 +79,7 @@ export function SecondaryButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-base font-semibold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 ${className}`}
+      className={`rounded-2xl border border-ink-line bg-white px-5 py-3 text-base font-semibold text-ink shadow-soft transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 ${className}`}
     >
       {children}
     </button>
@@ -92,7 +92,7 @@ export function BackButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Back"
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white active:scale-95"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink-line bg-white text-ink shadow-soft active:scale-95"
     >
       <svg
         width="22"

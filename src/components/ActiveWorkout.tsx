@@ -172,11 +172,11 @@ export function ActiveWorkout({
 
   // Shared top bar (home / clock+done / end).
   const TopBar = () => (
-    <header className="sticky top-0 z-10 flex items-center justify-between bg-navy-950/95 px-4 pb-3 pt-4 backdrop-blur safe-top">
+    <header className="sticky top-0 z-10 flex items-center justify-between bg-cream-100/85 px-4 pb-3 pt-4 backdrop-blur safe-top">
       <button
         onClick={onHome}
         aria-label="Home"
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white active:scale-95"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink-line bg-white text-ink shadow-soft active:scale-95"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M3 10.5 12 3l9 7.5" />
@@ -184,10 +184,10 @@ export function ActiveWorkout({
         </svg>
       </button>
       <div className="flex items-baseline gap-3">
-        <span className="font-mono text-xl font-bold tabular-nums text-white/80">
+        <span className="font-mono text-xl font-bold tabular-nums text-ink-soft">
           {formatClock(elapsedSeconds)}
         </span>
-        <span className="text-sm font-semibold text-accent-300">
+        <span className="text-sm font-semibold text-accent-600">
           {doneCount}/{total} done
         </span>
       </div>
@@ -196,7 +196,7 @@ export function ActiveWorkout({
           onClick={toggleMusic}
           aria-label={music ? 'Turn music off' : 'Turn music on'}
           className={`flex h-9 w-9 items-center justify-center rounded-full transition active:scale-95 ${
-            music ? 'bg-accent-500 text-white' : 'bg-white/10 text-white/70'
+            music ? 'bg-accent-500 text-white' : 'border border-ink-line bg-white text-ink-soft'
           }`}
         >
           {music ? (
@@ -216,7 +216,7 @@ export function ActiveWorkout({
         </button>
         <button
           onClick={() => setConfirmEnd(true)}
-          className="rounded-xl bg-rose-500/15 px-3 py-2 text-sm font-semibold text-rose-300 active:scale-95"
+          className="rounded-xl bg-rose-500/12 px-3 py-2 text-sm font-semibold text-rose-600 active:scale-95"
         >
           End
         </button>
@@ -255,7 +255,7 @@ export function ActiveWorkout({
         <div className="flex-1 px-4 pb-40 pt-2">
           <button
             onClick={() => setFocusIndex(null)}
-            className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-300 active:opacity-70"
+            className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600 active:opacity-70"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M15 18l-6-6 6-6" />
@@ -266,15 +266,15 @@ export function ActiveWorkout({
           <div className="mb-2 flex items-center gap-3">
             <CategoryPill category={exercise.category} />
           </div>
-          <h1 className="text-3xl font-extrabold leading-tight text-white">
+          <h1 className="font-display text-3xl font-semibold leading-tight text-ink">
             {exercise.emoji && <span className="mr-2">{exercise.emoji}</span>}
             {exercise.name}
           </h1>
           {exercise.blurb && (
-            <p className="mt-1 text-base text-white/75">{exercise.blurb}</p>
+            <p className="mt-1 text-base text-ink-soft">{exercise.blurb}</p>
           )}
           {exercise.cue && (
-            <p className="mt-0.5 text-sm italic text-white/50">{exercise.cue}</p>
+            <p className="mt-0.5 text-sm italic text-ink-faint">{exercise.cue}</p>
           )}
 
           {exercise.howTo && exercise.howTo.length > 0 && (
@@ -294,10 +294,10 @@ export function ActiveWorkout({
           )}
 
           {exercise.form && exercise.form.length > 0 && (
-            <ul className="mt-4 space-y-2 rounded-3xl bg-white/5 p-4">
+            <ul className="mt-4 space-y-2 rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-line/60">
               {exercise.form.map((point, i) => (
-                <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-white/80">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400" />
+                <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
                   <span>{point}</span>
                 </li>
               ))}
@@ -305,14 +305,14 @@ export function ActiveWorkout({
           )}
 
           {exercise.warmUp && exercise.warmUp.length > 0 && (
-            <div className="mt-4 rounded-3xl bg-sky-500/10 p-4">
-              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-sky-300">
+            <div className="mt-4 rounded-3xl bg-sky-500/[0.08] p-4 ring-1 ring-inset ring-sky-600/15">
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-sky-700">
                 <span aria-hidden="true">🔥</span> Warm up first
               </p>
               <ul className="space-y-1.5">
                 {exercise.warmUp.map((point, i) => (
-                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-white/80">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400" />
+                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -323,14 +323,14 @@ export function ActiveWorkout({
           {/* Optional timer / sets */}
           <div className="mt-8">
             {exercise.type === 'timed' && exercise.externalTimer ? (
-              <div className="rounded-3xl bg-white/5 p-5 text-center">
-                <p className="text-[15px] leading-relaxed text-white/70">
+              <div className="rounded-3xl bg-white p-5 text-center shadow-card ring-1 ring-ink-line/60">
+                <p className="text-[15px] leading-relaxed text-ink-soft">
                   You time this with your own app or device
                   {exercise.durationSeconds
                     ? ` (about ${Math.round(exercise.durationSeconds / 60)} min)`
                     : ''}
                   . Tap{' '}
-                  <span className="font-semibold text-white">Mark as done</span>{' '}
+                  <span className="font-semibold text-ink">Mark as done</span>{' '}
                   below when you’ve finished.
                 </p>
               </div>
@@ -369,14 +369,14 @@ export function ActiveWorkout({
           )}
 
           {exercise.coolDown && exercise.coolDown.length > 0 && (
-            <div className="mt-6 rounded-3xl bg-emerald-500/10 p-4">
-              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-300">
+            <div className="mt-6 rounded-3xl bg-emerald-500/[0.08] p-4 ring-1 ring-inset ring-emerald-600/15">
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-700">
                 <span aria-hidden="true">🧘</span> Cool down &amp; stretch after
               </p>
               <ul className="space-y-1.5">
                 {exercise.coolDown.map((point, i) => (
-                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-white/80">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -385,15 +385,15 @@ export function ActiveWorkout({
           )}
 
           {showProgressionPrompt && (
-            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-accent-500/10 px-4 py-3">
-              <p className="flex-1 text-sm leading-relaxed text-accent-200">
+            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-accent-tint px-4 py-3 ring-1 ring-inset ring-accent-500/20">
+              <p className="flex-1 text-sm leading-relaxed text-accent-600">
                 Same weight as last time. If the last set had two reps left in it,
                 go up next session.
               </p>
               <button
                 onClick={() => setDismissedPrompts((p) => ({ ...p, [exercise.id]: true }))}
                 aria-label="Dismiss"
-                className="shrink-0 rounded-lg px-2 py-1 text-accent-300 active:text-white"
+                className="shrink-0 rounded-lg px-2 py-1 text-accent-600 active:text-ink"
               >
                 ✕
               </button>
@@ -402,7 +402,7 @@ export function ActiveWorkout({
         </div>
 
         {/* Bottom: mark done + back to list */}
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-navy-950/95 px-4 pb-6 pt-3 backdrop-blur safe-bottom">
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-ink-line bg-cream-100/90 px-4 pb-6 pt-3 backdrop-blur safe-bottom">
           <div className="mx-auto max-w-md">
             <PrimaryButton
               onClick={() => {
@@ -426,12 +426,12 @@ export function ActiveWorkout({
     <div className="mx-auto flex min-h-full max-w-md flex-col">
       <TopBar />
       <div className="flex-1 px-4 pb-36 pt-2">
-        <h1 className="px-1 text-xl font-extrabold text-white">{workout.name}</h1>
-        <p className="mt-0.5 px-1 text-sm text-white/60">{workout.description}</p>
-        <p className="mt-1 px-1 text-xs text-white/40">
+        <h1 className="px-1 font-display text-2xl font-semibold text-ink">{workout.name}</h1>
+        <p className="mt-0.5 px-1 text-sm text-ink-soft">{workout.description}</p>
+        <p className="mt-1 px-1 text-xs text-ink-faint">
           {equipmentSummary(workout)}
         </p>
-        <p className="mb-4 mt-3 px-1 text-sm text-white/50">
+        <p className="mb-4 mt-3 px-1 text-sm text-ink-faint">
           Tap any exercise to do it or tick it off — any order. Your ticks are
           saved as you go, so you can leave and come back any time today to
           finish the rest.
@@ -444,17 +444,17 @@ export function ActiveWorkout({
             return (
               <div
                 key={ex.id}
-                className={`flex items-center gap-3 rounded-3xl border p-3 transition ${
+                className={`flex items-center gap-3 rounded-3xl border p-3 shadow-card transition ${
                   done
-                    ? 'border-emerald-400/30 bg-emerald-500/10'
-                    : 'border-white/10 bg-white/5'
+                    ? 'border-emerald-500/25 bg-emerald-500/[0.08]'
+                    : 'border-ink-line bg-white'
                 }`}
               >
                 <button
                   onClick={() => toggleDone(ex.id)}
                   aria-label={done ? `Mark ${ex.name} not done` : `Mark ${ex.name} done`}
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-95 ${
-                    done ? 'bg-emerald-500 text-white' : 'border-2 border-white/25 text-transparent'
+                    done ? 'bg-emerald-500 text-white' : 'border-2 border-ink-line text-transparent'
                   }`}
                 >
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -467,20 +467,20 @@ export function ActiveWorkout({
                   className="flex min-w-0 flex-1 items-center justify-between gap-2 text-left"
                 >
                   <div className="min-w-0">
-                    <p className={`truncate font-bold ${done ? 'text-white/70' : 'text-white'}`}>
+                    <p className={`truncate font-bold ${done ? 'text-ink-faint line-through' : 'text-ink'}`}>
                       {ex.emoji && <span className="mr-1.5">{ex.emoji}</span>}
                       {ex.name}
                     </p>
                     {ex.blurb && (
-                      <p className="mt-0.5 truncate text-xs text-white/45">
+                      <p className="mt-0.5 truncate text-xs text-ink-faint">
                         {ex.blurb}
                       </p>
                     )}
-                    <p className="mt-0.5 text-xs font-semibold text-white/50">
+                    <p className="mt-0.5 text-xs font-semibold text-ink-faint">
                       {exerciseSummary(ex)}
                     </p>
                   </div>
-                  <span className="flex items-center gap-1 text-xs font-semibold text-accent-300">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-accent-600">
                     Open
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M9 6l6 6-6 6" />
@@ -493,7 +493,7 @@ export function ActiveWorkout({
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-navy-950/95 px-4 pb-6 pt-3 backdrop-blur safe-bottom">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-ink-line bg-cream-100/90 px-4 pb-6 pt-3 backdrop-blur safe-bottom">
         <div className="mx-auto max-w-md">
           <PrimaryButton onClick={() => setFinished(true)} disabled={doneCount === 0}>
             {doneCount === 0

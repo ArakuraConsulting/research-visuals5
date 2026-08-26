@@ -29,17 +29,17 @@ export function BarChart({
         const barPx = b.value > 0 ? Math.max(4, (b.value / max) * area) : 3
         return (
           <div key={i} className="flex flex-1 flex-col items-center gap-1">
-            <span className="h-3 text-[10px] font-semibold leading-3 tabular-nums text-white/60">
+            <span className="h-3 text-[10px] font-semibold leading-3 tabular-nums text-ink-soft">
               {b.value > 0 ? b.value : ''}
             </span>
             <div
               className={`w-full max-w-[22px] rounded-t-md ${
-                b.value > 0 ? 'bg-accent-500' : 'bg-white/10'
+                b.value > 0 ? 'bg-accent-500' : 'bg-ink-line'
               }`}
               style={{ height: barPx }}
               title={`${b.value}${unit}${b.sub ? ` · ${b.sub}` : ''}`}
             />
-            <span className="text-[10px] font-medium text-white/40">{b.label}</span>
+            <span className="text-[10px] font-medium text-ink-faint">{b.label}</span>
           </div>
         )
       })}
@@ -65,7 +65,7 @@ export function LineChart({
   if (points.length === 0) {
     return (
       <div
-        className="flex items-center justify-center rounded-2xl bg-white/5 text-sm text-white/40"
+        className="flex items-center justify-center rounded-2xl bg-white shadow-card ring-1 ring-ink-line/60 text-sm text-ink-faint"
         style={{ height }}
       >
         No data yet
@@ -105,14 +105,14 @@ export function LineChart({
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-2xl font-extrabold tabular-nums text-white">
+        <span className="text-2xl font-extrabold tabular-nums text-ink">
           {latest}
-          <span className="ml-1 text-sm font-semibold text-white/50">{unit}</span>
+          <span className="ml-1 text-sm font-semibold text-ink-faint">{unit}</span>
         </span>
         {points.length > 1 && (
           <span
             className={`text-sm font-semibold tabular-nums ${
-              delta < 0 ? 'text-emerald-400' : delta > 0 ? 'text-rose-300' : 'text-white/50'
+              delta < 0 ? 'text-emerald-700' : delta > 0 ? 'text-rose-600' : 'text-ink-faint'
             }`}
           >
             {delta > 0 ? '+' : ''}
@@ -130,8 +130,8 @@ export function LineChart({
       >
         <defs>
           <linearGradient id="lc-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#E24A28" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#E24A28" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#lc-fill)" />
@@ -147,23 +147,23 @@ export function LineChart({
             vectorEffect="non-scaling-stroke"
           />
         )}
-        <path d={path} fill="none" stroke="#4f8ff7" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <path d={path} fill="none" stroke="#E24A28" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         {points.map((p, i) => (
           <circle
             key={i}
             cx={sx(p.x)}
             cy={sy(p.y)}
             r={i === points.length - 1 ? 3.5 : 2}
-            fill={i === points.length - 1 ? '#e8eefc' : '#4f8ff7'}
+            fill={i === points.length - 1 ? '#2B2620' : '#E24A28'}
           />
         ))}
       </svg>
-      <div className="mt-1 flex justify-between text-[10px] font-medium text-white/40">
+      <div className="mt-1 flex justify-between text-[10px] font-medium text-ink-faint">
         <span>{first.label}</span>
         <span>{last.label}</span>
       </div>
       {hasGoal && (
-        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-emerald-300">
+        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-emerald-700">
           <span className="inline-block h-0 w-4 border-t-2 border-dashed border-emerald-400" />
           Goal {goal} {unit}
         </div>

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -14,14 +14,20 @@ body,
 
 body {
   margin: 0;
-  background-color: #0a1128;
-  color: #e8eefc;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+  background-color: #f7f2ea;
+  color: #2b2620;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* Respect iPhone safe areas */
   overscroll-behavior-y: none;
+}
+
+/* A soft, warm wash behind the app so the cream never reads as flat. */
+#root {
+  background:
+    radial-gradient(120% 60% at 50% -10%, #fbf6ee 0%, #f7f2ea 46%, #f3ede2 100%);
 }
 
 /* Remove tap highlight on mobile for large custom controls */

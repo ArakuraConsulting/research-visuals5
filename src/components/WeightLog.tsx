@@ -28,13 +28,13 @@ export function WeightLog({
 
   const LastTime = () =>
     lastLabel ? (
-      <span className="shrink-0 rounded-lg bg-white/5 px-2.5 py-1 text-xs font-semibold text-white/60">
+      <span className="shrink-0 rounded-lg bg-white shadow-card ring-1 ring-ink-line/60 px-2.5 py-1 text-xs font-semibold text-ink-soft">
         Last time: {lastLabel}
       </span>
     ) : null
 
   const inputClass =
-    'w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-white/30 focus:border-accent-400 focus:outline-none'
+    'w-full rounded-2xl border border-ink-line bg-white ring-1 ring-ink-line px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:border-accent-500 focus:outline-none'
 
   if (exercise.equipment === 'barbell') {
     const total = barbellTotal(entryNum, settings)
@@ -43,7 +43,7 @@ export function WeightLog({
         <div className="mb-1.5 flex items-center justify-between gap-2">
           <label
             htmlFor={`w-${exercise.id}`}
-            className="text-xs font-semibold uppercase tracking-wide text-white/50"
+            className="text-xs font-semibold uppercase tracking-wide text-ink-faint"
           >
             Plates ({unit})
           </label>
@@ -60,12 +60,12 @@ export function WeightLog({
           placeholder={exercise.startingLoadHint ?? ''}
           className={inputClass}
         />
-        <p className="mt-1.5 px-1 text-sm text-white/50">
+        <p className="mt-1.5 px-1 text-sm text-ink-faint">
           Total:{' '}
-          <span className="font-semibold text-white/80">
+          <span className="font-semibold text-ink-soft">
             {total} {unit}
           </span>{' '}
-          <span className="text-white/40">
+          <span className="text-ink-faint">
             ({entryNum ? entryNum : 0} plates + {settings.barWeightKg} bar)
           </span>
         </p>
@@ -80,7 +80,7 @@ export function WeightLog({
         <div className="mb-1.5 flex items-center justify-between gap-2">
           <label
             htmlFor={`w-${exercise.id}`}
-            className="text-xs font-semibold uppercase tracking-wide text-white/50"
+            className="text-xs font-semibold uppercase tracking-wide text-ink-faint"
           >
             {label}
           </label>
@@ -107,7 +107,7 @@ export function WeightLog({
         <div className="mb-1.5 flex items-center justify-between gap-2">
           <label
             htmlFor={`w-${exercise.id}`}
-            className="text-xs font-semibold uppercase tracking-wide text-white/50"
+            className="text-xs font-semibold uppercase tracking-wide text-ink-faint"
           >
             Rung or variation
           </label>

@@ -54,11 +54,11 @@ export function SetsExercise({
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-sm font-semibold uppercase tracking-wide text-white/50">
+      <p className="text-sm font-semibold uppercase tracking-wide text-ink-faint">
         {completedSets} of {totalSets} sets
         {exercise.repRange ? ` · ${exercise.repRange}` : ''}
       </p>
-      <p className="mt-1 max-w-xs text-center text-xs leading-relaxed text-white/45">
+      <p className="mt-1 max-w-xs text-center text-xs leading-relaxed text-ink-faint">
         Reps are self-paced — do your{' '}
         {exercise.repRange ? `${exercise.repRange} reps` : 'reps'}, then tap the
         set. The clock that follows is your rest before the next one.
@@ -76,7 +76,7 @@ export function SetsExercise({
               className={`flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold transition active:scale-95 ${
                 filled
                   ? 'bg-accent-500 text-white shadow-soft'
-                  : 'border-2 border-white/25 text-white/40'
+                  : 'border-2 border-ink-line text-ink-faint'
               }`}
             >
               {filled ? (
