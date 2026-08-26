@@ -52,6 +52,10 @@ export interface Exercise {
    * Falls back to a sensible default when omitted.
    */
   restTips?: string[]
+  /** How to warm up before this movement — shown above the timer/sets. */
+  warmUp?: string[]
+  /** How to cool down / what to stretch afterwards — shown below the work. */
+  coolDown?: string[]
   /**
    * No-equipment substitute used in Travel mode. Overrides the given fields
    * (name, howTo, sets, etc.) while keeping the same id, category and emoji.

@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 10
+export const SEED_VERSION = 11
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -205,6 +205,12 @@ export const seedWorkouts: Workout[] = [
         rounds: 3,
         equipment: 'bodyweight',
         cue: 'Three hangs of 20 sec, rest between. Build the total over weeks',
+        warmUp: [
+          'Roll the shoulders and gently circle the wrists before you hang.',
+        ],
+        coolDown: [
+          'Afterwards: shake the hands out and stretch the forearms — arm straight, gently pull the fingers back, 20-30s each.',
+        ],
         howTo: [
           'You simply hang from a bar with straight arms. It builds grip and shoulder strength.',
           'Reach up and grip the bar with both hands, thumbs wrapped underneath.',
@@ -230,6 +236,12 @@ export const seedWorkouts: Workout[] = [
         rounds: 3,
         equipment: 'bodyweight',
         cue: 'Low back pressed to the floor',
+        warmUp: [
+          'A few slow knee-to-chest tucks to wake the core up first.',
+        ],
+        coolDown: [
+          'Afterwards: a gentle cobra stretch (lie face down, press the chest up) to lengthen the front of the body, 20-30s.',
+        ],
         howTo: [
           'A core hold where your body makes a shallow curved "banana" shape, face up.',
           'Lie on your back and press your lower back firmly into the floor so there is no gap.',
@@ -288,6 +300,12 @@ export const seedWorkouts: Workout[] = [
           'Sip some water — no need to rush the next set.',
         ],
         cue: 'Current rung: hang, scapular pulls, negatives, band, or strict',
+        warmUp: [
+          'Loosen up: shoulder rolls and arm circles, then a short dead hang or an easy set on a lighter rung to prime the grip and shoulders.',
+        ],
+        coolDown: [
+          'Afterwards: reach one arm overhead and lean away for a lat and side stretch, 20-30s each side, then shake the hands out.',
+        ],
         howTo: [
           'Working toward a pull-up, at whatever step ("rung") you are currently on. Pick the hardest one you can do with good form:',
           'Dead hang — just hang from the bar. Scapular pulls — hanging, make small shrugs pulling your shoulders down without bending the arms.',
@@ -342,6 +360,12 @@ export const seedWorkouts: Workout[] = [
           'Sip some water.',
         ],
         cue: 'Ribs down, do not arch the low back',
+        warmUp: [
+          'Warm the shoulders: 10-15 band pull-aparts or slow arm circles, then press the empty bar for a set or two before adding weight.',
+        ],
+        coolDown: [
+          'Afterwards: a doorway chest stretch and an overhead triceps stretch (elbow behind the head), 20-30s each side.',
+        ],
         howTo: [
           'You press a weight from your shoulders up to overhead until your arms are straight.',
           'With no rack here, first "clean" the bar: lift it from the floor and flip it up to rest across the front of your shoulders.',
@@ -372,6 +396,12 @@ export const seedWorkouts: Workout[] = [
         equipment: 'bodyweight',
         restSeconds: 75,
         cue: 'Feet on a low step, hips high',
+        warmUp: [
+          'Warm the shoulders and wrists: slow arm circles and gentle wrist rolls before your first set.',
+        ],
+        coolDown: [
+          'Afterwards: a wrist-flexor stretch (arm straight, gently pull the fingers back) and a doorway chest stretch, 20-30s each.',
+        ],
         howTo: [
           'A shoulder-focused push-up done in an upside-down V shape.',
           'Start on hands and feet with your hips pushed high so your body makes an inverted V (put your feet on a low step to make it harder).',
@@ -423,6 +453,12 @@ export const seedWorkouts: Workout[] = [
           'Sip some water.',
         ],
         cue: 'Elbow to hip, not out wide',
+        warmUp: [
+          'Do one light set first to feel the back working before your working weight.',
+        ],
+        coolDown: [
+          "Afterwards: child's pose or a seated forward reach to lengthen the back, 20-30s.",
+        ],
         howTo: [
           'You "row" a dumbbell up to your side to work the back — one arm at a time.',
           'Support yourself with one hand and knee on a bench (or rest a hand on your thigh) and hinge forward with a flat back.',
@@ -484,6 +520,12 @@ export const seedWorkouts: Workout[] = [
           'Optional: a slow hip-flexor stretch or a few easy air squats.',
         ],
         cue: 'One dumbbell at the chest, sit down between the hips',
+        warmUp: [
+          'Warm the legs: 10 bodyweight squats and a few leg swings, then one light goblet set before your working weight.',
+        ],
+        coolDown: [
+          'Afterwards: a quad stretch (heel to your bottom) and a hip-flexor lunge stretch, 20-30s each side.',
+        ],
         howTo: [
           'A squat while holding a single dumbbell against your chest (the "goblet" position).',
           'Hold one dumbbell vertically against your chest, cupping the top end with both hands. Stand with feet about shoulder-width apart.',
@@ -536,6 +578,12 @@ export const seedWorkouts: Workout[] = [
           'Sip some water. Hinges are demanding — take the full rest.',
         ],
         cue: 'Push the hips back, do not squat down',
+        warmUp: [
+          'Warm the hips and hamstrings: leg swings and a few bodyweight hip hinges, then 1-2 light sets to groove the hinge. Never start heavy on a cold back.',
+        ],
+        coolDown: [
+          "Afterwards: a gentle standing hamstring stretch and child's pose to decompress the lower back, 20-30s each.",
+        ],
         howTo: [
           'A "hip hinge" that works the back of the legs and the glutes. You bend at the hips, not the knees.',
           'Hold the bar against the front of your thighs, feet about hip-width, knees slightly soft.',
@@ -597,6 +645,12 @@ export const seedWorkouts: Workout[] = [
           'Optional: a gentle glute or hip-flexor stretch.',
         ],
         cue: 'Chin tucked, ribs down',
+        warmUp: [
+          'Fire up the glutes: a set of 10-15 bodyweight glute bridges before you load the bar.',
+        ],
+        coolDown: [
+          'Afterwards: a figure-four glute stretch and a hip-flexor stretch, 20-30s each side.',
+        ],
         howTo: [
           'You drive your hips upward with your upper back resting on a bench or sofa edge. It targets the glutes.',
           'Sit on the floor with your shoulder blades against the edge of a bench or sofa, knees bent and feet flat.',
@@ -627,6 +681,12 @@ export const seedWorkouts: Workout[] = [
           'Sip some water.',
         ],
         cue: 'Walk in only as far as stays controlled',
+        warmUp: [
+          'Warm the wrists and shoulders well: wrist circles, gentle wrist stretches and shoulder rolls before your first wall walk.',
+        ],
+        coolDown: [
+          'Afterwards: wrist flexor and extensor stretches and a gentle chest stretch, 20-30s each.',
+        ],
         howTo: [
           'You walk your feet up a wall while walking your hands in toward it — building toward a handstand.',
           'Start in a plank (face down) with your feet against the base of the wall.',
@@ -676,6 +736,12 @@ export const seedWorkouts: Workout[] = [
         perHand: true,
         startingLoadHint: '10 to 12 kg per hand',
         cue: 'Tall posture, walk normally',
+        warmUp: [
+          'Shoulder rolls and a light, short carry to warm up before the working carries.',
+        ],
+        coolDown: [
+          'Afterwards: shake out the hands and stretch the forearms, 20-30s each side.',
+        ],
         howTo: [
           'You walk while carrying a heavy weight in each hand — simple but excellent for grip and whole-body strength.',
           'Hold a dumbbell in each hand at your sides. Stand tall with your shoulders back and your stomach braced.',

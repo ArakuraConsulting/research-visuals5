@@ -304,6 +304,22 @@ export function ActiveWorkout({
             </ul>
           )}
 
+          {exercise.warmUp && exercise.warmUp.length > 0 && (
+            <div className="mt-4 rounded-3xl bg-sky-500/10 p-4">
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-sky-300">
+                <span aria-hidden="true">🔥</span> Warm up first
+              </p>
+              <ul className="space-y-1.5">
+                {exercise.warmUp.map((point, i) => (
+                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-white/80">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Optional timer / sets */}
           <div className="mt-8">
             {exercise.type === 'timed' && exercise.externalTimer ? (
@@ -349,6 +365,22 @@ export function ActiveWorkout({
                   updateProgress(exercise.id, { entryNum, entryText })
                 }
               />
+            </div>
+          )}
+
+          {exercise.coolDown && exercise.coolDown.length > 0 && (
+            <div className="mt-6 rounded-3xl bg-emerald-500/10 p-4">
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-300">
+                <span aria-hidden="true">🧘</span> Cool down &amp; stretch after
+              </p>
+              <ul className="space-y-1.5">
+                {exercise.coolDown.map((point, i) => (
+                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-white/80">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
