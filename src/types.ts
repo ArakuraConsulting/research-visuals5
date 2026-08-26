@@ -107,6 +107,22 @@ export interface LoggedWeight {
   weight: string
 }
 
+/** How a set of an exercise felt — a simple RPE-style effort rating. */
+export type Effort = 'easy' | 'normal' | 'hard'
+
+/**
+ * The last effort rating for an exercise, with the load it was rated at, so the
+ * next session can advise whether to go up, hold, or ease off. Keyed by id.
+ */
+export interface ExerciseEffort {
+  rating: Effort
+  dateISO: string
+  /** Numeric working load in kg at the time (barbell total / dumbbell weight). */
+  loadKg?: number
+  /** Display label, e.g. "22 kg" or "12 kg per hand". */
+  loadLabel?: string
+}
+
 export interface HistoryEntry {
   id: string
   workoutId: string

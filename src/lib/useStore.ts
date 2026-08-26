@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type {
   ActiveSession,
   BodyEntry,
+  ExerciseEffort,
   ExerciseLog,
   HistoryEntry,
   Settings,
@@ -33,6 +34,7 @@ export interface AppStore {
   sessions: Record<string, ActiveSession>
   settings: Settings
   exerciseLog: Record<string, ExerciseLog>
+  effortLog: Record<string, ExerciseEffort>
   loadNoteAcks: Record<string, boolean>
   bodyEntries: BodyEntry[]
 
@@ -45,6 +47,7 @@ export interface AppStore {
   deleteHistoryEntry: (id: string) => void
   updateSettings: (partial: Partial<Settings>) => void
   recordExerciseLogs: (logs: Record<string, ExerciseLog>) => void
+  recordEffort: (exerciseId: string, effort: ExerciseEffort) => void
   ackLoadNote: (exerciseId: string) => void
   addBodyEntry: (entry: BodyEntry) => void
   deleteBodyEntry: (id: string) => void
@@ -75,6 +78,9 @@ export function useStore(): AppStore {
   }))
   const [exerciseLog, setExerciseLog] = useState<Record<string, ExerciseLog>>(
     () => loadJSON<Record<string, ExerciseLog>>(STORAGE_KEYS.exerciseLog, {}),
+  )
+  const [effortLog, setEffortLog] = useState<Record<string, ExerciseEffort>>(
+    () => loadJSON<Record<string, ExerciseEffort>>(STORAGE_KEYS.effortLog, {}),
   )
   const [loadNoteAcks, setLoadNoteAcks] = useState<Record<string, boolean>>(() =>
     loadJSON<Record<string, boolean>>(STORAGE_KEYS.loadNoteAcks, {}),
@@ -158,6 +164,17 @@ export function useStore(): AppStore {
     [],
   )
 
+  const recordEffort = useCallback(
+    (exerciseId: string, effort: ExerciseEffort) => {
+      setEffortLog((prev) => {
+        const next = { ...prev, [exerciseId]: effort }
+        saveJSON(STORAGE_KEYS.effortLog, next)
+        return next
+      })
+    },
+    [],
+  )
+
   const ackLoadNote = useCallback((exerciseId: string) => {
     setLoadNoteAcks((prev) => {
       if (prev[exerciseId]) return prev
@@ -195,6 +212,8 @@ export function useStore(): AppStore {
     deleteHistoryEntry,
     updateSettings,
     recordExerciseLogs,
+    effortLog,
+    recordEffort,
     ackLoadNote,
     bodyEntries,
     addBodyEntry,

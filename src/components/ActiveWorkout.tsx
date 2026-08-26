@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type {
   ActiveSession,
+  ExerciseEffort,
   Exercise,
   ExerciseLog,
   ExerciseProgress,
@@ -16,11 +17,13 @@ import { SetsExercise } from './SetsExercise'
 import { WeightLog } from './WeightLog'
 import { LoadNote } from './LoadNote'
 import { HowTo } from './HowTo'
+import { EffortCheckIn } from './EffortCheckIn'
 import { CompletionScreen } from './CompletionScreen'
-import { exerciseSummary, formatClock } from '../lib/time'
+import { exerciseSummary, formatClock, isSameDay } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
 import { useWakeLock } from '../lib/useWakeLock'
 import { isMusicPlaying, startMusic, stopMusic } from '../lib/music'
+import { makeEffort, nextSessionNote } from '../lib/coach'
 import { makeId } from '../lib/util'
 import {
   buildLog,
@@ -29,7 +32,6 @@ import {
   lastTimeLabel,
   prefillNum,
   prefillText,
-  sameAsLastWeight,
 } from '../lib/equipment'
 
 function defaultProgress(): ExerciseProgress {
@@ -49,8 +51,10 @@ export function ActiveWorkout({
   session,
   settings,
   exerciseLog,
+  effortLog,
   loadNoteAcks,
   onAckLoadNote,
+  onRecordEffort,
   onChange,
   onHome,
   onDiscard,
@@ -60,8 +64,10 @@ export function ActiveWorkout({
   session: ActiveSession
   settings: Settings
   exerciseLog: Record<string, ExerciseLog>
+  effortLog: Record<string, ExerciseEffort>
   loadNoteAcks: Record<string, boolean>
   onAckLoadNote: (id: string) => void
+  onRecordEffort: (exerciseId: string, effort: ExerciseEffort) => void
   /** Persist progress to storage. */
   onChange: (session: ActiveSession) => void
   /** Leave to the home screen, keeping the session to resume later. */
@@ -94,7 +100,6 @@ export function ActiveWorkout({
   const [now, setNow] = useState(() => Date.now())
   const [confirmEnd, setConfirmEnd] = useState(false)
   const [finished, setFinished] = useState(false)
-  const [dismissedPrompts, setDismissedPrompts] = useState<Record<string, boolean>>({})
   const [music, setMusic] = useState(() => isMusicPlaying())
 
   const toggleMusic = () => {
@@ -243,11 +248,25 @@ export function ActiveWorkout({
     const current = progress[exercise.id] ?? defaultProgress()
     const last = exerciseLog[exercise.id]
     const done = isDone(exercise, current)
-    const showProgressionPrompt =
+
+    // Effort check-in + weight coaching (sets exercises only).
+    const nowISO = new Date().toISOString()
+    const liveLog = isLoggable(exercise)
+      ? buildLog(exercise, current.entryNum, current.entryText, settings)
+      : null
+    const allSetsDone =
       exercise.type === 'sets' &&
-      current.completedSets >= (exercise.sets ?? 1) &&
-      sameAsLastWeight(exercise, current.entryNum, last) &&
-      !dismissedPrompts[exercise.id]
+      current.completedSets >= (exercise.sets ?? 1)
+    const lastEffort = effortLog[exercise.id]
+    const ratedToday =
+      lastEffort && isSameDay(lastEffort.dateISO, nowISO)
+        ? lastEffort.rating
+        : undefined
+    // Show last time's guidance only on a later day, not the same session.
+    const coachNote =
+      exercise.type === 'sets' && lastEffort && !ratedToday
+        ? nextSessionNote(exercise, lastEffort)
+        : null
 
     return (
       <div className="mx-auto flex min-h-full max-w-md flex-col">
@@ -275,6 +294,16 @@ export function ActiveWorkout({
           )}
           {exercise.cue && (
             <p className="mt-0.5 text-sm italic text-ink-faint">{exercise.cue}</p>
+          )}
+
+          {coachNote && (
+            <div className="mt-3 flex gap-2.5 rounded-2xl bg-accent-tint px-4 py-3 ring-1 ring-inset ring-accent-500/20">
+              <span aria-hidden="true">🎯</span>
+              <p className="text-sm leading-relaxed text-accent-600">
+                <span className="font-bold">{coachNote.headline}</span>{' '}
+                {coachNote.detail}
+              </p>
+            </div>
           )}
 
           {exercise.howTo && exercise.howTo.length > 0 && (
@@ -384,20 +413,19 @@ export function ActiveWorkout({
             </div>
           )}
 
-          {showProgressionPrompt && (
-            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-accent-tint px-4 py-3 ring-1 ring-inset ring-accent-500/20">
-              <p className="flex-1 text-sm leading-relaxed text-accent-600">
-                Same weight as last time. If the last set had two reps left in it,
-                go up next session.
-              </p>
-              <button
-                onClick={() => setDismissedPrompts((p) => ({ ...p, [exercise.id]: true }))}
-                aria-label="Dismiss"
-                className="shrink-0 rounded-lg px-2 py-1 text-accent-600 active:text-ink"
-              >
-                ✕
-              </button>
-            </div>
+          {allSetsDone && (
+            <EffortCheckIn
+              key={exercise.id}
+              exercise={exercise}
+              liveLog={liveLog}
+              initial={ratedToday}
+              onRate={(rating) =>
+                onRecordEffort(
+                  exercise.id,
+                  makeEffort(exercise, rating, liveLog, nowISO),
+                )
+              }
+            />
           )}
         </div>
 
