@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 9
+export const SEED_VERSION = 10
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -281,6 +281,12 @@ export const seedWorkouts: Workout[] = [
         sets: 4,
         repRange: '3-5',
         equipment: 'bodyweight',
+        restSeconds: 120,
+        restTips: [
+          'Shake out your hands and forearms.',
+          'Roll the shoulders back and down.',
+          'Sip some water — no need to rush the next set.',
+        ],
         cue: 'Current rung: hang, scapular pulls, negatives, band, or strict',
         howTo: [
           'Working toward a pull-up, at whatever step ("rung") you are currently on. Pick the hardest one you can do with good form:',
@@ -293,7 +299,8 @@ export const seedWorkouts: Workout[] = [
           'Before pulling, draw the shoulders down and away from the ears. Every rep starts there',
           'No swinging and no kicking. If a rep needs momentum, drop back a rung',
           'Lower slowly and under control. The lowering is where the strength is built',
-          'Chin clears the bar without craning the neck forward',
+          'Keep the ribs down and squeeze the glutes so the body hangs in one straight line — no arching the low back',
+          'Chin clears the bar without craning the neck forward — keep the neck long',
           'Check the doorframe bar is properly rated and seated before every session',
         ],
       },
@@ -328,6 +335,12 @@ export const seedWorkouts: Workout[] = [
         repRange: '6-8',
         equipment: 'barbell',
         startingLoadHint: 'Empty bar to start',
+        restSeconds: 120,
+        restTips: [
+          'Set the bar down and stand tall, shoulders rolled back.',
+          'Child’s pose or a gentle overhead reach to reset the spine.',
+          'Sip some water.',
+        ],
         cue: 'Ribs down, do not arch the low back',
         howTo: [
           'You press a weight from your shoulders up to overhead until your arms are straight.',
@@ -340,9 +353,9 @@ export const seedWorkouts: Workout[] = [
           'Never lower the bar behind your neck',
           'There is no way to bail out of this lift alone. Stop each set with two reps still in you. Do not train this one to failure',
           'Collars on every set',
-          'Squeeze the glutes and brace the stomach before the weight moves',
-          'The low back must not arch to get the weight up. If it does, the weight is too heavy',
-          'Press so the dumbbells finish over the middle of the foot, not out in front',
+          'Squeeze the glutes and brace the stomach hard before the weight moves — this locks the lower back safe',
+          'Keep the ribs stacked down over the hips. The low back must not arch to get the weight up. If it does, the weight is too heavy',
+          'Tuck the chin slightly as the bar passes your face, then press so it finishes over the middle of your feet, not out in front',
           'Let the shoulders travel up naturally at the top. Do not force them down',
           'Lower under control to the shoulder, not below',
         ],
@@ -357,6 +370,7 @@ export const seedWorkouts: Workout[] = [
         sets: 3,
         repRange: '5-8',
         equipment: 'bodyweight',
+        restSeconds: 75,
         cue: 'Feet on a low step, hips high',
         howTo: [
           'A shoulder-focused push-up done in an upside-down V shape.',
@@ -367,6 +381,7 @@ export const seedWorkouts: Workout[] = [
         form: [
           'Hips stay high throughout. As soon as they drop it becomes a normal push up',
           'Elbows at roughly forty five degrees to the body, not flared straight out to the sides',
+          'Spread the fingers and grip the floor to keep the wrists safe',
           'Lower the crown of the head toward a point slightly in front of the hands',
           'Stop the range where the shoulders stay comfortable. Depth comes later',
         ],
@@ -402,6 +417,11 @@ export const seedWorkouts: Workout[] = [
         equipment: 'dumbbell',
         perHand: true,
         startingLoadHint: '8 to 10 kg per hand',
+        restSeconds: 90,
+        restTips: [
+          'Shake out the arms and roll the shoulders.',
+          'Sip some water.',
+        ],
         cue: 'Elbow to hip, not out wide',
         howTo: [
           'You "row" a dumbbell up to your side to work the back — one arm at a time.',
@@ -410,9 +430,10 @@ export const seedWorkouts: Workout[] = [
           'Lower it all the way down under control. Do the reps on one side, then swap.',
         ],
         form: [
-          'Hinge at the hips with a flat back. The spine does not round',
+          'Hinge at the hips with a flat back and a braced stomach. The spine does not round — this keeps the low back safe',
+          'Keep the neck long: look at the floor a little ahead of you, not up',
           'Pull the elbow back toward the hip rather than out to the side',
-          'Do not rotate the torso to help the weight up',
+          'Do not rotate the torso or twist the spine to help the weight up',
           'Pause briefly at the top, then lower fully to a straight arm',
         ],
       },
@@ -456,6 +477,12 @@ export const seedWorkouts: Workout[] = [
         equipment: 'dumbbell',
         perHand: false,
         startingLoadHint: '10 to 14 kg, one dumbbell at the chest',
+        restSeconds: 90,
+        restTips: [
+          'Stand and shake out the legs.',
+          'Sip some water.',
+          'Optional: a slow hip-flexor stretch or a few easy air squats.',
+        ],
         cue: 'One dumbbell at the chest, sit down between the hips',
         howTo: [
           'A squat while holding a single dumbbell against your chest (the "goblet" position).',
@@ -466,8 +493,9 @@ export const seedWorkouts: Workout[] = [
         form: [
           'One dumbbell held at the chest, not one in each hand',
           'Barbell back squats are not appropriate here because there is no rack to unrack from or fail into',
-          'Sit down between the hips with the chest tall and the heels flat',
-          'Knees track over the toes, not caving inward',
+          'Brace your stomach as if bracing to be poked, and keep the chest tall — this protects the lower back',
+          'Sit down between the hips with the chest tall and the heels flat, weight through mid-foot',
+          'Drive the knees out in line with the toes — do not let them cave inward',
         ],
       },
       {
@@ -501,6 +529,12 @@ export const seedWorkouts: Workout[] = [
         repRange: '6-8',
         equipment: 'barbell',
         startingLoadHint: '20 to 25 kg total including bar',
+        restSeconds: 120,
+        restTips: [
+          'Stand tall and breathe — let the lower back settle.',
+          'Child’s pose or gentle cat-cow to decompress the spine.',
+          'Sip some water. Hinges are demanding — take the full rest.',
+        ],
         cue: 'Push the hips back, do not squat down',
         howTo: [
           'A "hip hinge" that works the back of the legs and the glutes. You bend at the hips, not the knees.',
@@ -509,9 +543,11 @@ export const seedWorkouts: Workout[] = [
           'Stop when you feel a stretch in the back of your thighs or your back is about to round — then drive your hips forward to stand tall again.',
         ],
         form: [
+          'Brace your core hard before every rep — think “ribs down, stomach tight” — so the lower back stays neutral, never rounded',
           'This is a hip hinge. Push the hips backward, do not bend the knees to lower',
           'Knees stay soft but mostly fixed. They do not travel forward',
-          'Weights stay close to the legs, brushing the thighs on the way down',
+          'Keep the bar touching your legs the whole way. If it drifts away from you, the lower back takes the load',
+          'The moment your back wants to round, you have gone far enough — drive the hips forward and stand tall',
           'Stop when the hamstrings reach tension or the back starts to round, whichever comes first',
           'Neutral neck. Do not look up in the mirror at the bottom',
           'Bar starts from the floor, so no rack is needed',
@@ -554,6 +590,12 @@ export const seedWorkouts: Workout[] = [
           'When the dumbbell runs out of load, switch to single leg hip thrusts. One leg at a time roughly doubles the load without adding any weight',
           'Pad the bar or dumbbell across the hips with a folded towel',
         ],
+        restSeconds: 90,
+        restTips: [
+          'Sit up and shake out the legs.',
+          'Sip some water.',
+          'Optional: a gentle glute or hip-flexor stretch.',
+        ],
         cue: 'Chin tucked, ribs down',
         howTo: [
           'You drive your hips upward with your upper back resting on a bench or sofa edge. It targets the glutes.',
@@ -563,6 +605,7 @@ export const seedWorkouts: Workout[] = [
         ],
         form: [
           'Drive through the heels and squeeze the glutes at the top',
+          'At the top, tuck the tailbone slightly under (like starting a crunch) so the glutes finish the lift — not the lower back',
           'Stop at the point where the body forms a straight line. Do not push past it into an arch',
           'Ribs stay down. The lift comes from the glutes, not from extending the low back',
           'Keep the chin tucked and eyes on the thighs throughout',
@@ -578,6 +621,11 @@ export const seedWorkouts: Workout[] = [
         sets: 3,
         repRange: '1 rep',
         equipment: 'bodyweight',
+        restSeconds: 90,
+        restTips: [
+          'Shake out the wrists and roll the shoulders.',
+          'Sip some water.',
+        ],
         cue: 'Walk in only as far as stays controlled',
         howTo: [
           'You walk your feet up a wall while walking your hands in toward it — building toward a handstand.',
@@ -618,6 +666,12 @@ export const seedWorkouts: Workout[] = [
         type: 'timed',
         durationSeconds: 30,
         rounds: 3,
+        restSeconds: 45,
+        restTips: [
+          'Set the weights down and shake out your hands.',
+          'Roll the shoulders back and stand tall.',
+          'Sip some water.',
+        ],
         equipment: 'dumbbell',
         perHand: true,
         startingLoadHint: '10 to 12 kg per hand',

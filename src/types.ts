@@ -41,6 +41,18 @@ export interface Exercise {
    */
   externalTimer?: boolean
   /**
+   * Rest between sets (for "sets" exercises) or override rest between rounds
+   * (for "timed"). The rest countdown dings when it's time for the next set.
+   * Defaults: 90s for sets, 10s between timed rounds.
+   */
+  restSeconds?: number
+  /**
+   * What to do during the rest — shown under the rest countdown. Keep each a
+   * short line (e.g. "Sip some water", "Child's pose to release the low back").
+   * Falls back to a sensible default when omitted.
+   */
+  restTips?: string[]
+  /**
    * No-equipment substitute used in Travel mode. Overrides the given fields
    * (name, howTo, sets, etc.) while keeping the same id, category and emoji.
    */
