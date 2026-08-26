@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import type { Exercise } from '../types'
-import { formatClock } from '../lib/time'
-import { useInterval } from '../lib/useInterval'
+import { primeAudio } from '../lib/feedback'
+import { RestTimer } from './RestTimer'
 import { PrimaryButton } from './ui'
 
-const REST_SECONDS = 90
+const DEFAULT_REST_SECONDS = 90
 
 /**
- * A set-based exercise: one circle per set, no target duration. Completing a
- * set offers an optional 90s rest countdown that never auto-advances.
+ * A set-based lift: do your reps at your own pace, tap to log each set, and a
+ * prominent rest countdown (with an audible 3·2·1 and a bell) tells you when
+ * it's time for the next set. Reps are self-paced — only the rest is timed.
  * (Weight logging is handled separately by <WeightLog />.)
  */
 export function SetsExercise({
@@ -21,25 +22,23 @@ export function SetsExercise({
   onSetsChange: (completedSets: number) => void
 }) {
   const totalSets = Math.max(1, exercise.sets ?? 1)
-  const [restRemaining, setRestRemaining] = useState<number | null>(null)
+  const restSeconds = exercise.restSeconds ?? DEFAULT_REST_SECONDS
+  // Bump on each rest so the countdown remounts fresh; null = not resting.
+  const [restKey, setRestKey] = useState<number | null>(null)
 
   const allDone = completedSets >= totalSets
 
-  useInterval(
-    () => {
-      setRestRemaining((r) => {
-        if (r === null) return null
-        if (r <= 1) return null // rest elapsed — just stop, never advance
-        return r - 1
-      })
-    },
-    restRemaining !== null ? 1000 : null,
-  )
+  const startRest = (justCompleted: number) => {
+    if (justCompleted < totalSets) setRestKey((k) => (k ?? 0) + 1)
+    else setRestKey(null)
+  }
 
   const fillNext = () => {
     if (completedSets >= totalSets) return
-    onSetsChange(completedSets + 1)
-    setRestRemaining(REST_SECONDS)
+    primeAudio() // unlock audio (iOS) from this tap so the rest bell will sound
+    const next = completedSets + 1
+    onSetsChange(next)
+    startRest(next)
   }
 
   const toggleCircle = (index: number) => {
@@ -47,7 +46,7 @@ export function SetsExercise({
     if (index < completedSets) {
       // Un-fill this one (and any after it) — mis-tap recovery.
       onSetsChange(index)
-      setRestRemaining(null)
+      setRestKey(null)
     } else if (index === completedSets) {
       fillNext()
     }
@@ -58,6 +57,11 @@ export function SetsExercise({
       <p className="text-sm font-semibold uppercase tracking-wide text-white/50">
         {completedSets} of {totalSets} sets
         {exercise.repRange ? ` · ${exercise.repRange}` : ''}
+      </p>
+      <p className="mt-1 max-w-xs text-center text-xs leading-relaxed text-white/45">
+        Reps are self-paced — do your{' '}
+        {exercise.repRange ? `${exercise.repRange} reps` : 'reps'}, then tap the
+        set. The clock that follows is your rest before the next one.
       </p>
 
       {/* Circles */}
@@ -97,24 +101,15 @@ export function SetsExercise({
         })}
       </div>
 
-      {/* Rest countdown (optional, never auto-advances) */}
-      {restRemaining !== null && (
-        <div className="mt-6 flex w-full items-center justify-between rounded-2xl bg-amber-500/15 px-4 py-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-amber-300/80">
-              Rest
-            </p>
-            <p className="font-mono text-2xl font-bold tabular-nums text-amber-300">
-              {formatClock(restRemaining)}
-            </p>
-          </div>
-          <button
-            onClick={() => setRestRemaining(null)}
-            className="rounded-xl bg-amber-500/20 px-4 py-2 text-sm font-semibold text-amber-200 active:scale-95"
-          >
-            Skip rest
-          </button>
-        </div>
+      {/* Rest countdown — audible, never auto-advances */}
+      {restKey !== null && !allDone && (
+        <RestTimer
+          key={restKey}
+          seconds={restSeconds}
+          nextLabel={`set ${completedSets + 1} of ${totalSets}`}
+          tips={exercise.restTips}
+          onSkip={() => setRestKey(null)}
+        />
       )}
 
       <div className="mt-6 w-full">

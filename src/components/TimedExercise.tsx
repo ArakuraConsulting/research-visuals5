@@ -7,6 +7,12 @@ import { PrimaryButton, SecondaryButton } from './ui'
 
 const REST_BETWEEN_ROUNDS = 10 // seconds
 
+const DEFAULT_REST_TIPS = [
+  'Shake out the working muscles and breathe.',
+  'Reset your position and grip.',
+  'Sip some water.',
+]
+
 type Phase = 'idle' | 'work' | 'rest' | 'done'
 
 /**
@@ -25,6 +31,7 @@ export function TimedExercise({
 }) {
   const duration = exercise.durationSeconds ?? 0
   const totalRounds = Math.max(1, exercise.rounds ?? 1)
+  const restBetween = exercise.restSeconds ?? REST_BETWEEN_ROUNDS
 
   const [round, setRound] = useState(1)
   const [phase, setPhase] = useState<Phase>('idle')
@@ -38,14 +45,16 @@ export function TimedExercise({
     setRemaining((r) => {
       if (r > 1) {
         const next = r - 1
-        // Audible "3… 2… 1…" lead-in so you know the round is about to end
-        // without watching the clock. Only during work rounds.
-        if (!isRest && next <= 3) countdownTick()
+        // Audible "3… 2… 1…" lead-in — in both work and rest — so you know the
+        // round (or the rest) is about to end without watching the clock.
+        if (next <= 3) countdownTick()
         return next
       }
       // Reached zero — resolve the current phase.
       if (isRest) {
-        // Rest finished: begin the next round's work.
+        // Rest finished — ring the bell so you know to start the next round.
+        ding()
+        vibrate([100, 50, 100])
         setRound((cur) => cur + 1)
         setPhase('work')
         return duration
@@ -55,7 +64,7 @@ export function TimedExercise({
       vibrate([120, 60, 120])
       if (round < totalRounds) {
         setPhase('rest')
-        return REST_BETWEEN_ROUNDS
+        return restBetween
       }
       // Last round done.
       setPhase('done')
@@ -123,6 +132,25 @@ export function TimedExercise({
               }`}
             />
           ))}
+        </div>
+      )}
+
+      {isRest && (
+        <div className="mt-5 w-full rounded-2xl bg-amber-500/10 px-4 py-3">
+          <ul className="space-y-1.5">
+            {(exercise.restTips && exercise.restTips.length > 0
+              ? exercise.restTips
+              : DEFAULT_REST_TIPS
+            ).map((tip, i) => (
+              <li
+                key={i}
+                className="flex gap-2 text-sm leading-relaxed text-white/70"
+              >
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-300/60" />
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
