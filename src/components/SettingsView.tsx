@@ -50,7 +50,7 @@ export function SettingsView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-ink font-display">Settings</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">Settings</h1>
       </header>
 
       <div className="space-y-6">

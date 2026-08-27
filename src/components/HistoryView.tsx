@@ -65,7 +65,7 @@ export function HistoryView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-ink font-display">History</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">History</h1>
       </header>
 
       <div className="grid grid-cols-3 gap-3">

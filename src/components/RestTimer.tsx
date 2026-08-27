@@ -48,36 +48,36 @@ export function RestTimer({
   return (
     <div
       className={`mt-6 w-full rounded-3xl p-5 ${
-        done ? 'bg-emerald-500/12' : 'bg-amber-500/12'
+        done ? 'bg-accent-tint' : 'bg-clay-tint'
       }`}
     >
       <div className="flex items-center justify-between">
         <div>
           <p
-            className={`text-xs font-bold uppercase tracking-wide ${
-              done ? 'text-emerald-700/80' : 'text-amber-700/80'
+            className={`text-xs font-semibold uppercase tracking-[0.16em] ${
+              done ? 'text-accent-600' : 'text-clay-600'
             }`}
           >
             {done ? 'Rest done' : 'Rest'}
           </p>
           <p
-            className={`font-mono text-4xl font-extrabold tabular-nums ${
-              done ? 'text-emerald-700' : 'text-amber-700'
+            className={`font-mono text-4xl font-semibold tabular-nums ${
+              done ? 'text-accent-600' : 'text-clay-600'
             }`}
             aria-live="polite"
           >
-            {done ? 'Go!' : formatClock(remaining)}
+            {done ? 'Go' : formatClock(remaining)}
           </p>
           <p className="mt-0.5 text-sm text-ink-soft">
             {done
-              ? `Start your ${nextLabel ?? 'next set'} 💪`
+              ? `Start your ${nextLabel ?? 'next set'}`
               : `Next: ${nextLabel ?? 'your next set'}`}
           </p>
         </div>
         {!done && (
           <button
             onClick={onSkip}
-            className="shrink-0 rounded-xl bg-cream-200 px-4 py-2 text-sm font-semibold text-ink-soft active:scale-95"
+            className="shrink-0 rounded-full bg-cream-50 px-4 py-2 text-sm font-medium text-ink-soft active:scale-95"
           >
             Skip rest
           </button>

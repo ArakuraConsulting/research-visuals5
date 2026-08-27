@@ -170,7 +170,7 @@ export function ProgressView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold font-display text-ink">Progress</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">Progress</h1>
       </header>
 
       <div className="space-y-4">
@@ -210,7 +210,7 @@ export function ProgressView({
           </div>
           <LineChart points={series} unit={activeMetric.unit} goal={goalFor} />
           {goalFor != null && series.length > 0 && (
-            <div className="mt-2 rounded-2xl bg-emerald-500/12 px-4 py-2.5 text-center text-sm font-semibold text-emerald-700">
+            <div className="mt-2 rounded-2xl bg-accent-tint px-4 py-2.5 text-center text-sm font-medium text-accent-600">
               {(() => {
                 const latest = series[series.length - 1].y
                 const remaining = latest - goalFor

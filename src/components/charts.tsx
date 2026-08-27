@@ -105,14 +105,14 @@ export function LineChart({
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-2xl font-extrabold tabular-nums text-ink">
+        <span className="text-2xl font-semibold tabular-nums text-ink">
           {latest}
-          <span className="ml-1 text-sm font-semibold text-ink-faint">{unit}</span>
+          <span className="ml-1 text-sm font-medium text-ink-faint">{unit}</span>
         </span>
         {points.length > 1 && (
           <span
             className={`text-sm font-semibold tabular-nums ${
-              delta < 0 ? 'text-emerald-700' : delta > 0 ? 'text-rose-600' : 'text-ink-faint'
+              delta < 0 ? 'text-accent-600' : delta > 0 ? 'text-clay-600' : 'text-ink-faint'
             }`}
           >
             {delta > 0 ? '+' : ''}
@@ -130,8 +130,8 @@ export function LineChart({
       >
         <defs>
           <linearGradient id="lc-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#E24A28" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#E24A28" stopOpacity="0" />
+            <stop offset="0%" stopColor="#6F8161" stopOpacity="0.24" />
+            <stop offset="100%" stopColor="#6F8161" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#lc-fill)" />
@@ -141,20 +141,20 @@ export function LineChart({
             y1={sy(goal as number)}
             x2={W - padX}
             y2={sy(goal as number)}
-            stroke="#34d399"
+            stroke="#96795B"
             strokeWidth="1.5"
             strokeDasharray="5 4"
             vectorEffect="non-scaling-stroke"
           />
         )}
-        <path d={path} fill="none" stroke="#E24A28" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <path d={path} fill="none" stroke="#6F8161" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         {points.map((p, i) => (
           <circle
             key={i}
             cx={sx(p.x)}
             cy={sy(p.y)}
             r={i === points.length - 1 ? 3.5 : 2}
-            fill={i === points.length - 1 ? '#2B2620' : '#E24A28'}
+            fill={i === points.length - 1 ? '#3A342B' : '#6F8161'}
           />
         ))}
       </svg>
@@ -163,8 +163,8 @@ export function LineChart({
         <span>{last.label}</span>
       </div>
       {hasGoal && (
-        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-emerald-700">
-          <span className="inline-block h-0 w-4 border-t-2 border-dashed border-emerald-400" />
+        <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-clay-600">
+          <span className="inline-block h-0 w-4 border-t-2 border-dashed border-clay-400" />
           Goal {goal} {unit}
         </div>
       )}

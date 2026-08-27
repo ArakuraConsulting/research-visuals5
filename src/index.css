@@ -14,8 +14,8 @@ body,
 
 body {
   margin: 0;
-  background-color: #f7f2ea;
-  color: #2b2620;
+  background-color: #f4eee3;
+  color: #3a342b;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -24,10 +24,10 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* A soft, warm wash behind the app so the cream never reads as flat. */
+/* A soft, tonal wash behind the app — a whisper of sage into the beige. */
 #root {
   background:
-    radial-gradient(120% 60% at 50% -10%, #fbf6ee 0%, #f7f2ea 46%, #f3ede2 100%);
+    radial-gradient(120% 60% at 50% -10%, #f7f2e7 0%, #f2ece0 52%, #ece5d6 100%);
 }
 
 /* Remove tap highlight on mobile for large custom controls */
