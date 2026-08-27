@@ -71,7 +71,13 @@ function WorkoutCard({
       className="group w-full rounded-3xl bg-cream-50 p-4 text-left shadow-card ring-1 ring-ink-line/70 transition active:scale-[0.99]"
     >
       <div className="flex items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-tint text-accent-600">
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-accent-600 ring-1 ring-inset ring-clay-600/15"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(90deg, rgba(55,48,42,0.05) 0 1px, transparent 1px 8px), linear-gradient(140deg, #ece1cd 0%, #dccdb1 100%)',
+          }}
+        >
           <Motif id={workout.id} />
         </div>
         <div className="min-w-0 flex-1">

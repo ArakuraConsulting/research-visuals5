@@ -14,8 +14,8 @@ body,
 
 body {
   margin: 0;
-  background-color: #f4eee3;
-  color: #3a342b;
+  background-color: #eee7d9;
+  color: #37302a;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -24,10 +24,12 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* A soft, tonal wash behind the app — a whisper of sage into the beige. */
+/* Warm, layered backdrop — soft ambient light spilling from the top, like the
+   cove lighting in a quiet-luxury studio, over warm greige. */
 #root {
   background:
-    radial-gradient(120% 60% at 50% -10%, #f7f2e7 0%, #f2ece0 52%, #ece5d6 100%);
+    radial-gradient(75% 38% at 82% -4%, rgba(247, 240, 226, 0.9) 0%, transparent 60%),
+    radial-gradient(150% 62% at 50% -12%, #f4ede0 0%, #ece4d5 52%, #e4dbc9 100%);
 }
 
 /* Remove tap highlight on mobile for large custom controls */
