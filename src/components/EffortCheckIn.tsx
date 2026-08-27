@@ -2,10 +2,10 @@ import { useState } from 'react'
 import type { Effort, Exercise, ExerciseLog } from '../types'
 import { adviceForRating } from '../lib/coach'
 
-const OPTIONS: { rating: Effort; emoji: string; label: string }[] = [
-  { rating: 'easy', emoji: '😌', label: 'Too easy' },
-  { rating: 'normal', emoji: '💪', label: 'Just right' },
-  { rating: 'hard', emoji: '😣', label: 'Too hard' },
+const OPTIONS: { rating: Effort; label: string }[] = [
+  { rating: 'easy', label: 'Too easy' },
+  { rating: 'normal', label: 'Just right' },
+  { rating: 'hard', label: 'Too hard' },
 ]
 
 /**
@@ -27,19 +27,15 @@ export function EffortCheckIn({
   const [selected, setSelected] = useState<Effort | undefined>(initial)
   const advice = selected ? adviceForRating(exercise, selected, liveLog) : null
   const toneClass =
-    advice?.tone === 'up'
-      ? 'text-emerald-700'
-      : advice?.tone === 'down'
-        ? 'text-amber-700'
-        : 'text-accent-600'
+    advice?.tone === 'down' ? 'text-clay-600' : 'text-ink-soft'
 
   return (
-    <div className="mt-6 rounded-3xl bg-white p-4 shadow-card ring-1 ring-ink-line/60">
-      <p className="text-sm font-bold text-ink">
-        All sets done — how did that feel?
+    <div className="mt-6 rounded-3xl bg-cream-50 p-4 shadow-card ring-1 ring-ink-line/70">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-600">
+        How did that feel?
       </p>
-      <p className="mt-0.5 text-xs text-ink-faint">
-        This tunes your weight suggestion for next time.
+      <p className="mt-1 text-xs text-ink-faint">
+        Tunes your weight suggestion for next time.
       </p>
       <div className="mt-3 grid grid-cols-3 gap-2">
         {OPTIONS.map((o) => {
@@ -52,15 +48,12 @@ export function EffortCheckIn({
                 onRate(o.rating)
               }}
               aria-pressed={on}
-              className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-3 text-xs font-bold transition active:scale-95 ${
+              className={`rounded-full px-2 py-2.5 text-xs font-medium tracking-wide transition active:scale-95 ${
                 on
                   ? 'bg-accent-500 text-white shadow-soft'
                   : 'bg-cream-200 text-ink-soft'
               }`}
             >
-              <span className="text-xl" aria-hidden="true">
-                {o.emoji}
-              </span>
               {o.label}
             </button>
           )

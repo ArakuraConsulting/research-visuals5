@@ -11,10 +11,8 @@ export function makeId(prefix = 'id'): string {
 
 /** Tailwind classes for the small coloured category pill — one hue per category. */
 export const categoryPill: Record<Category, string> = {
-  Strength: 'bg-blue-500/12 text-blue-700 ring-1 ring-inset ring-blue-500/20',
-  Cardio: 'bg-rose-500/12 text-rose-600 ring-1 ring-inset ring-rose-500/20',
-  Flexibility:
-    'bg-teal-500/12 text-teal-700 ring-1 ring-inset ring-teal-500/20',
-  Mindfulness:
-    'bg-violet-500/12 text-violet-700 ring-1 ring-inset ring-violet-500/20',
+  Strength: 'bg-cream-200 text-ink-soft ring-1 ring-inset ring-ink-line',
+  Cardio: 'bg-cream-200 text-ink-soft ring-1 ring-inset ring-ink-line',
+  Flexibility: 'bg-cream-200 text-ink-soft ring-1 ring-inset ring-ink-line',
+  Mindfulness: 'bg-cream-200 text-ink-soft ring-1 ring-inset ring-ink-line',
 }

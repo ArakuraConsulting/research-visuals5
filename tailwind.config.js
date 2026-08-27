@@ -4,43 +4,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm cream grounds
+        // Warm cream / beige grounds
         cream: {
-          50: '#FCFAF6',
-          100: '#F7F2EA',
-          200: '#F0E8DB',
-          300: '#E7DDCB',
+          50: '#FBF8F2',
+          100: '#F4EEE3',
+          200: '#EAE1D1',
+          300: '#DCD1BC',
         },
-        // Warm near-black ink + soft greys with a faint warm bias
+        // Warm brown-ink text + soft taupes
         ink: {
-          DEFAULT: '#2B2620',
-          soft: '#6E6559',
-          faint: '#9E9384',
-          line: '#E7DFD1',
+          DEFAULT: '#3A342B',
+          soft: '#726A5A',
+          faint: '#A69C8A',
+          line: '#E4DACA',
         },
-        // Arakura coral accent
+        // Muted sage — the single accent
         accent: {
-          400: '#EC6A4B',
-          500: '#E24A28',
-          600: '#C63C1E',
-          tint: '#FBEAE3',
+          400: '#93A17E',
+          500: '#6F8161',
+          600: '#55664A',
+          tint: '#E7ECDE',
         },
-        // Soft, muted tones for the per-workout cards
-        sage: { light: '#E6EEE6', deep: '#4E6B54' },
-        blush: { light: '#F6E6E2', deep: '#A15A53' },
-        lav: { light: '#EAE6F1', deep: '#615682' },
-        gold: { light: '#F5EBD6', deep: '#8A6D2E' },
+        // A warm brown / clay used sparingly as a second tonal note
+        clay: {
+          400: '#B79B7C',
+          500: '#96795B',
+          600: '#7A5F44',
+          tint: '#EEE4D5',
+        },
       },
       fontFamily: {
+        // Refined system sans, used for everything (display + body)
         display: [
-          'Iowan Old Style',
-          'Palatino',
-          'Palatino Linotype',
-          'Book Antiqua',
-          'Georgia',
-          'Cambria',
-          'Times New Roman',
-          'serif',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica',
+          'Arial',
+          'sans-serif',
         ],
         sans: [
           'system-ui',
@@ -53,9 +55,9 @@ export default {
         ],
       },
       boxShadow: {
-        card: '0 10px 30px -14px rgba(43, 38, 32, 0.16)',
-        soft: '0 4px 16px -8px rgba(43, 38, 32, 0.14)',
-        lift: '0 18px 44px -20px rgba(43, 38, 32, 0.28)',
+        card: '0 8px 26px -16px rgba(58, 52, 43, 0.14)',
+        soft: '0 3px 12px -8px rgba(58, 52, 43, 0.12)',
+        lift: '0 16px 40px -22px rgba(58, 52, 43, 0.22)',
       },
       borderRadius: {
         '2xl': '1.25rem',

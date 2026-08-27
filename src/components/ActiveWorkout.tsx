@@ -285,8 +285,7 @@ export function ActiveWorkout({
           <div className="mb-2 flex items-center gap-3">
             <CategoryPill category={exercise.category} />
           </div>
-          <h1 className="font-display text-3xl font-semibold leading-tight text-ink">
-            {exercise.emoji && <span className="mr-2">{exercise.emoji}</span>}
+          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-ink">
             {exercise.name}
           </h1>
           {exercise.blurb && (
@@ -297,10 +296,12 @@ export function ActiveWorkout({
           )}
 
           {coachNote && (
-            <div className="mt-3 flex gap-2.5 rounded-2xl bg-accent-tint px-4 py-3 ring-1 ring-inset ring-accent-500/20">
-              <span aria-hidden="true">🎯</span>
-              <p className="text-sm leading-relaxed text-accent-600">
-                <span className="font-bold">{coachNote.headline}</span>{' '}
+            <div className="mt-3 rounded-2xl bg-accent-tint px-4 py-3 ring-1 ring-inset ring-accent-500/15">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-600">
+                Coach
+              </p>
+              <p className="text-sm leading-relaxed text-ink-soft">
+                <span className="font-semibold text-ink">{coachNote.headline}</span>{' '}
                 {coachNote.detail}
               </p>
             </div>
@@ -334,14 +335,14 @@ export function ActiveWorkout({
           )}
 
           {exercise.warmUp && exercise.warmUp.length > 0 && (
-            <div className="mt-4 rounded-3xl bg-sky-500/[0.08] p-4 ring-1 ring-inset ring-sky-600/15">
-              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-sky-700">
-                <span aria-hidden="true">🔥</span> Warm up first
+            <div className="mt-4 rounded-3xl bg-accent-tint p-4 ring-1 ring-inset ring-accent-500/15">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-accent-600">
+                Warm up first
               </p>
               <ul className="space-y-1.5">
                 {exercise.warmUp.map((point, i) => (
                   <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -398,14 +399,14 @@ export function ActiveWorkout({
           )}
 
           {exercise.coolDown && exercise.coolDown.length > 0 && (
-            <div className="mt-6 rounded-3xl bg-emerald-500/[0.08] p-4 ring-1 ring-inset ring-emerald-600/15">
-              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-700">
-                <span aria-hidden="true">🧘</span> Cool down &amp; stretch after
+            <div className="mt-6 rounded-3xl bg-clay-tint p-4 ring-1 ring-inset ring-clay-500/15">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-clay-600">
+                Cool down &amp; stretch after
               </p>
               <ul className="space-y-1.5">
                 {exercise.coolDown.map((point, i) => (
                   <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay-500" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -437,9 +438,9 @@ export function ActiveWorkout({
                 toggleDone(exercise.id)
                 if (!done) setFocusIndex(null)
               }}
-              className={done ? '!bg-emerald-600' : ''}
+              className={done ? '!bg-accent-600' : ''}
             >
-              {done ? 'Done ✓ — tap to undo' : 'Mark as done'}
+              {done ? 'Done — tap to undo' : 'Mark as done'}
             </PrimaryButton>
           </div>
         </div>
@@ -454,7 +455,7 @@ export function ActiveWorkout({
     <div className="mx-auto flex min-h-full max-w-md flex-col">
       <TopBar />
       <div className="flex-1 px-4 pb-36 pt-2">
-        <h1 className="px-1 font-display text-2xl font-semibold text-ink">{workout.name}</h1>
+        <h1 className="px-1 text-2xl font-semibold tracking-tight text-ink">{workout.name}</h1>
         <p className="mt-0.5 px-1 text-sm text-ink-soft">{workout.description}</p>
         <p className="mt-1 px-1 text-xs text-ink-faint">
           {equipmentSummary(workout)}
@@ -474,15 +475,15 @@ export function ActiveWorkout({
                 key={ex.id}
                 className={`flex items-center gap-3 rounded-3xl border p-3 shadow-card transition ${
                   done
-                    ? 'border-emerald-500/25 bg-emerald-500/[0.08]'
-                    : 'border-ink-line bg-white'
+                    ? 'border-accent-500/30 bg-accent-tint'
+                    : 'border-ink-line bg-cream-50'
                 }`}
               >
                 <button
                   onClick={() => toggleDone(ex.id)}
                   aria-label={done ? `Mark ${ex.name} not done` : `Mark ${ex.name} done`}
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition active:scale-95 ${
-                    done ? 'bg-emerald-500 text-white' : 'border-2 border-ink-line text-transparent'
+                    done ? 'bg-accent-500 text-white' : 'border-2 border-ink-line text-transparent'
                   }`}
                 >
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -495,8 +496,7 @@ export function ActiveWorkout({
                   className="flex min-w-0 flex-1 items-center justify-between gap-2 text-left"
                 >
                   <div className="min-w-0">
-                    <p className={`truncate font-bold ${done ? 'text-ink-faint line-through' : 'text-ink'}`}>
-                      {ex.emoji && <span className="mr-1.5">{ex.emoji}</span>}
+                    <p className={`truncate font-medium ${done ? 'text-ink-faint line-through' : 'text-ink'}`}>
                       {ex.name}
                     </p>
                     {ex.blurb && (

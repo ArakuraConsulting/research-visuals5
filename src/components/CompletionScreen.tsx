@@ -25,24 +25,24 @@ export function CompletionScreen({
 
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col items-center justify-center px-6 py-16 text-center safe-top safe-bottom">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-500/12">
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-accent-tint">
         <svg
-          width="48"
-          height="48"
+          width="44"
+          height="44"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-emerald-700"
+          className="text-accent-600"
           aria-hidden="true"
         >
           <path d="M20 6L9 17l-5-5" />
         </svg>
       </div>
 
-      <h1 className="mt-6 text-3xl font-extrabold text-ink font-display">
+      <h1 className="mt-6 text-2xl font-semibold tracking-tight text-ink">
         {allDone ? 'Workout done' : 'Progress saved'}
       </h1>
       <p className="mt-1 text-ink-soft">{workoutName}</p>

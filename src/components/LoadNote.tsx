@@ -42,7 +42,7 @@ export function LoadNote({
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="flex items-center gap-2 rounded-2xl bg-amber-500/12 px-4 py-2.5 text-sm font-semibold text-amber-700 active:scale-[0.98]"
+        className="flex items-center gap-2 rounded-2xl bg-clay-tint px-4 py-2.5 text-sm font-semibold text-clay-600 active:scale-[0.98]"
       >
         <WarnIcon />
         Loading &amp; clearance note
@@ -51,8 +51,8 @@ export function LoadNote({
   }
 
   return (
-    <div className="rounded-3xl border border-amber-400/30 bg-amber-500/12 p-4">
-      <div className="mb-2 flex items-center gap-2 text-amber-700">
+    <div className="rounded-3xl border border-clay-500/25 bg-clay-tint p-4">
+      <div className="mb-2 flex items-center gap-2 text-clay-600">
         <WarnIcon />
         <h3 className="text-sm font-bold uppercase tracking-wide">
           Clearance &amp; loading check
@@ -62,9 +62,9 @@ export function LoadNote({
         {points.map((p, i) => (
           <li
             key={i}
-            className="flex gap-2 text-sm leading-relaxed text-amber-800"
+            className="flex gap-2 text-sm leading-relaxed text-clay-600"
           >
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay-400" />
             <span>{p}</span>
           </li>
         ))}
@@ -72,14 +72,14 @@ export function LoadNote({
       {!acked ? (
         <button
           onClick={onAck}
-          className="mt-4 w-full rounded-2xl bg-amber-500 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
+          className="mt-4 w-full rounded-2xl bg-clay-500 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
         >
           Got it
         </button>
       ) : (
         <button
           onClick={() => setExpanded(false)}
-          className="mt-3 text-sm font-semibold text-amber-700 active:text-amber-700"
+          className="mt-3 text-sm font-semibold text-clay-600 active:text-clay-600"
         >
           Collapse
         </button>

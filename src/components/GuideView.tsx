@@ -18,7 +18,7 @@ export function GuideView({ onBack }: { onBack: () => void }) {
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-ink font-display">
+        <h1 className="text-2xl font-semibold tracking-tight text-ink">
           Finding your weight
         </h1>
       </header>

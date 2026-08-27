@@ -100,10 +100,10 @@ export function TimedExercise({
   }, [isDone, isRest, round, totalRounds, running])
 
   const ringColor = isRest
-    ? 'text-amber-700'
+    ? 'text-clay-600'
     : isDone
-      ? 'text-emerald-700'
-      : 'text-accent-600'
+      ? 'text-accent-600'
+      : 'text-ink'
 
   return (
     <div className="flex flex-col items-center">
@@ -112,7 +112,7 @@ export function TimedExercise({
       </p>
 
       <div
-        className={`mt-3 font-mono text-7xl font-extrabold tabular-nums ${ringColor}`}
+        className={`mt-3 font-mono text-7xl font-semibold tabular-nums ${ringColor}`}
         aria-live="polite"
       >
         {formatClock(remaining)}
@@ -123,9 +123,9 @@ export function TimedExercise({
           {Array.from({ length: totalRounds }).map((_, i) => (
             <span
               key={i}
-              className={`h-2.5 w-2.5 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 i + 1 < round || isDone
-                  ? 'bg-emerald-400'
+                  ? 'bg-accent-500'
                   : i + 1 === round && !isDone
                     ? 'bg-accent-400'
                     : 'bg-ink-line'
@@ -136,7 +136,7 @@ export function TimedExercise({
       )}
 
       {isRest && (
-        <div className="mt-5 w-full rounded-2xl bg-amber-500/12 px-4 py-3">
+        <div className="mt-5 w-full rounded-2xl bg-clay-tint px-4 py-3">
           <ul className="space-y-1.5">
             {(exercise.restTips && exercise.restTips.length > 0
               ? exercise.restTips
@@ -146,7 +146,7 @@ export function TimedExercise({
                 key={i}
                 className="flex gap-2 text-sm leading-relaxed text-ink-soft"
               >
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-300/60" />
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-clay-400" />
                 <span>{tip}</span>
               </li>
             ))}
@@ -164,7 +164,7 @@ export function TimedExercise({
             ) : (
               <PrimaryButton
                 onClick={pause}
-                className="flex-1 !bg-amber-500"
+                className="flex-1 !bg-clay-500"
               >
                 Pause
               </PrimaryButton>
@@ -174,7 +174,7 @@ export function TimedExercise({
             </SecondaryButton>
           </div>
         ) : (
-          <div className="rounded-2xl bg-emerald-500/12 px-4 py-3 text-center text-sm font-semibold text-emerald-700">
+          <div className="rounded-2xl bg-accent-tint px-4 py-3 text-center text-sm font-medium text-accent-600">
             All rounds complete — tap Next to continue
           </div>
         )}
