@@ -4,33 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm cream / beige grounds
+        // Warm greige / cream grounds — quiet-luxury neutrals
         cream: {
-          50: '#FBF8F2',
-          100: '#F4EEE3',
-          200: '#EAE1D1',
-          300: '#DCD1BC',
+          50: '#F7F2E8',
+          100: '#EEE7D9',
+          200: '#E2D8C5',
+          300: '#D3C6AE',
         },
-        // Warm brown-ink text + soft taupes
+        // Warm espresso-ink text + soft taupes
         ink: {
-          DEFAULT: '#3A342B',
-          soft: '#726A5A',
-          faint: '#A69C8A',
-          line: '#E4DACA',
+          DEFAULT: '#37302A',
+          soft: '#6C6252',
+          faint: '#A0957F',
+          line: '#DFD4C1',
         },
-        // Muted sage — the single accent
+        // Muted sage — the single green accent
         accent: {
-          400: '#93A17E',
-          500: '#6F8161',
-          600: '#55664A',
-          tint: '#E7ECDE',
+          400: '#93A07C',
+          500: '#6E8060',
+          600: '#54654A',
+          tint: '#E5EAD9',
         },
-        // A warm brown / clay used sparingly as a second tonal note
+        // Warm oak / wood — the second natural tone
         clay: {
-          400: '#B79B7C',
-          500: '#96795B',
-          600: '#7A5F44',
-          tint: '#EEE4D5',
+          400: '#BB9C74',
+          500: '#8C6E4A',
+          600: '#6C5335',
+          tint: '#EADDC7',
         },
       },
       fontFamily: {
