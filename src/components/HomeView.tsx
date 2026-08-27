@@ -2,57 +2,19 @@ import type { HistoryEntry, Workout } from '../types'
 import { formatDate, formatElapsedShort, workoutTotalLabel } from '../lib/time'
 
 /**
- * A minimal, abstract line-mark per workout (no pictures) — thin sage strokes
- * on a soft tonal tile. Falls back to a simple mark for unknown ids.
+ * A calm cover photograph per workout, unified to the warm palette with a soft
+ * wash so the set reads as one editorial system. Falls back to the hero image.
  */
-function Motif({ id }: { id: string }) {
-  const common = {
-    width: 30,
-    height: 30,
-    viewBox: '0 0 40 40',
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: 1.6,
-    strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const,
-    'aria-hidden': true,
-  }
-  if (id === 'daily-practice') {
-    // Calm concentric arcs — a quiet sunrise.
-    return (
-      <svg {...common}>
-        <path d="M6 28h28" />
-        <path d="M12 28a8 8 0 0 1 16 0" />
-        <path d="M17 28a3 3 0 0 1 6 0" />
-      </svg>
-    )
-  }
-  if (id === 'session-a') {
-    // Ascending strokes — pull / press upward.
-    return (
-      <svg {...common}>
-        <path d="M9 30l7-9" />
-        <path d="M18 30l7-13" />
-        <path d="M27 30l4-7" />
-      </svg>
-    )
-  }
-  if (id === 'session-b') {
-    // A hinge — the fold of a deadlift / bend.
-    return (
-      <svg {...common}>
-        <path d="M8 12v11l9 7 15-9" />
-        <circle cx="8" cy="12" r="1.4" fill="currentColor" stroke="none" />
-      </svg>
-    )
-  }
-  return (
-    <svg {...common}>
-      <circle cx="20" cy="20" r="11" />
-      <path d="M12 20h16" />
-    </svg>
-  )
+const COVERS: Record<string, string> = {
+  'daily-practice': 'cover-daily.jpg',
+  'session-a': 'cover-a.jpg',
+  'session-b': 'cover-b.jpg',
 }
+function coverFor(id: string) {
+  return `${import.meta.env.BASE_URL}${COVERS[id] ?? 'hero.jpg'}`
+}
+// A gentle warm duotone so mixed photography settles into the sage/oak palette.
+const COVER_FILTER = 'saturate(0.8) contrast(1.02) brightness(1.02) sepia(0.12)'
 
 function WorkoutCard({
   workout,
@@ -68,50 +30,57 @@ function WorkoutCard({
   return (
     <button
       onClick={onOpen}
-      className="group w-full rounded-3xl bg-cream-50 p-4 text-left shadow-card ring-1 ring-ink-line/70 transition active:scale-[0.99]"
+      className="group block w-full overflow-hidden rounded-3xl bg-cream-50 text-left shadow-card ring-1 ring-ink-line/70 transition active:scale-[0.99]"
     >
-      <div className="flex items-center gap-4">
+      <div className="relative h-28 w-full overflow-hidden">
+        <img
+          src={coverFor(workout.id)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="h-full w-full object-cover transition duration-500 group-active:scale-[1.03]"
+          style={{ filter: COVER_FILTER, objectPosition: '50% 42%' }}
+        />
+        {/* Warm oak wash for palette unity + legibility of the name */}
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-accent-600 ring-1 ring-inset ring-clay-600/15"
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              'repeating-linear-gradient(90deg, rgba(55,48,42,0.05) 0 1px, transparent 1px 8px), linear-gradient(140deg, #ece1cd 0%, #dccdb1 100%)',
+            background:
+              'linear-gradient(180deg, rgba(58,48,36,0.12) 0%, rgba(46,38,28,0.04) 42%, rgba(38,30,22,0.62) 100%)',
           }}
-        >
-          <Motif id={workout.id} />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <h2 className="text-lg font-semibold tracking-tight text-ink">
-              {workout.name}
-            </h2>
-            {inProgress && (
-              <span className="mt-0.5 shrink-0 text-xs font-semibold tabular-nums text-accent-600">
-                {progress!.done}/{progress!.total}
-              </span>
-            )}
-          </div>
-          <p className="mt-0.5 line-clamp-1 text-[13px] text-ink-faint">
-            {workout.description}
-          </p>
-          <div className="mt-1.5 flex items-center gap-3 text-[12px] font-medium text-ink-faint">
-            <span>{workout.exercises.length} exercises</span>
-            <span className="text-ink-line">·</span>
-            <span>{workout.timed ? workoutTotalLabel(workout) : 'Untimed'}</span>
-            <span className="ml-auto font-semibold text-accent-600">
-              {inProgress ? 'Continue' : 'Begin'}
+        />
+        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3.5">
+          <h2 className="text-lg font-semibold tracking-tight text-white [text-shadow:0_1px_10px_rgba(28,22,16,0.45)]">
+            {workout.name}
+          </h2>
+          {inProgress && (
+            <span className="mb-0.5 shrink-0 rounded-full bg-cream-50/90 px-2 py-0.5 text-xs font-semibold tabular-nums text-accent-600 backdrop-blur-sm">
+              {progress!.done}/{progress!.total}
             </span>
-          </div>
+          )}
         </div>
       </div>
-      {inProgress && (
-        <div className="mt-3 h-[3px] overflow-hidden rounded-full bg-cream-200">
-          <div
-            className="h-full rounded-full bg-accent-500 transition-all"
-            style={{ width: `${pct}%` }}
-          />
+      <div className="p-4 pt-3">
+        <p className="line-clamp-1 text-[13px] text-ink-faint">
+          {workout.description}
+        </p>
+        <div className="mt-1.5 flex items-center gap-3 text-[12px] font-medium text-ink-faint">
+          <span>{workout.exercises.length} exercises</span>
+          <span className="text-ink-line">·</span>
+          <span>{workout.timed ? workoutTotalLabel(workout) : 'Untimed'}</span>
+          <span className="ml-auto font-semibold text-accent-600">
+            {inProgress ? 'Continue' : 'Begin'}
+          </span>
         </div>
-      )}
+        {inProgress && (
+          <div className="mt-3 h-[3px] overflow-hidden rounded-full bg-cream-200">
+            <div
+              className="h-full rounded-full bg-accent-500 transition-all"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        )}
+      </div>
     </button>
   )
 }
@@ -193,41 +162,48 @@ export function HomeView({
   onOpenSettings: () => void
   onOpenGuide: () => void
 }) {
+  const heroMask =
+    'linear-gradient(to bottom, #000 0%, #000 32%, rgba(0,0,0,0.45) 58%, transparent 82%)'
   return (
-    <div className="mx-auto min-h-full max-w-md px-5 pb-16 pt-6 safe-top">
-      <header className="mb-7">
-        <div className="relative overflow-hidden rounded-3xl shadow-card ring-1 ring-ink-line/60">
-          <img
-            src={`${import.meta.env.BASE_URL}hero.jpg`}
-            alt=""
-            aria-hidden="true"
-            className="h-52 w-full object-cover object-[50%_30%]"
-          />
-          {/* Warm wash so the title stays legible over the photograph */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(41,35,29,0.30) 0%, rgba(41,35,29,0) 32%, rgba(41,35,29,0.10) 58%, rgba(38,32,26,0.68) 100%)',
-            }}
-          />
-          <button
-            onClick={onOpenSettings}
-            aria-label="Settings"
-            className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-cream-50/85 text-ink-soft ring-1 ring-white/40 backdrop-blur-sm active:scale-95"
-          >
-            <GearIcon />
-          </button>
-          <div className="absolute inset-x-0 bottom-0 p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cream-100/90">
+    <div className="relative mx-auto min-h-full max-w-md pb-16">
+      {/* Hero photograph, dissolving into the page so it reads as a backdrop */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[300px] overflow-hidden"
+        style={{ WebkitMaskImage: heroMask, maskImage: heroMask }}
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}hero.jpg`}
+          alt=""
+          className="h-full w-full object-cover object-[50%_26%]"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(41,35,29,0.36) 0%, rgba(41,35,29,0.08) 34%, rgba(41,35,29,0) 56%)',
+          }}
+        />
+      </div>
+
+      <div className="relative px-5 pt-6 safe-top">
+        <header className="mb-8 flex items-start justify-between px-1 pt-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cream-100/95 [text-shadow:0_1px_8px_rgba(28,22,16,0.4)]">
               Arakura
             </p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-white [text-shadow:0_1px_10px_rgba(30,25,20,0.35)]">
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white [text-shadow:0_1px_12px_rgba(28,22,16,0.42)]">
               Your practice
             </h1>
           </div>
-        </div>
-      </header>
+          <button
+            onClick={onOpenSettings}
+            aria-label="Settings"
+            className="mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-cream-50/85 text-ink-soft ring-1 ring-white/40 backdrop-blur-sm active:scale-95"
+          >
+            <GearIcon />
+          </button>
+        </header>
 
       {/* Home / Travel mode */}
       <div className="mb-6">
@@ -253,7 +229,7 @@ export function HomeView({
             Travelling
           </button>
         </div>
-        <p className="mt-2 px-1 text-xs text-ink-faint">
+        <p className="mt-2 px-1 text-xs text-ink-soft">
           {travelMode
             ? 'Bodyweight versions, no equipment needed.'
             : 'Full equipment — weights, bands, mat, bar.'}
@@ -307,6 +283,7 @@ export function HomeView({
         >
           Form &amp; safety
         </button>
+      </div>
       </div>
     </div>
   )
