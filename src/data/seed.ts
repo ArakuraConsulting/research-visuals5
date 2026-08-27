@@ -8,7 +8,7 @@ import type { Settings, Workout } from '../types'
  * fresh install, edit here. To force existing installs to pick up changes,
  * bump SEED_VERSION below — the app will re-seed workouts (history is kept).
  */
-export const SEED_VERSION = 11
+export const SEED_VERSION = 12
 
 export const defaultSettings: Settings = {
   barWeightKg: 8,
@@ -223,6 +223,78 @@ export const seedWorkouts: Workout[] = [
           'Ribs down, no arching through the low back',
           'Step down under control. Never drop off the bar',
           'Stop the set before the grip gives way, not at the moment it does',
+        ],
+      },
+      {
+        id: 'dp-push-up',
+        emoji: '🆙',
+        blurb: 'A daily press to build arm, chest and shoulder strength.',
+        name: 'Push-ups',
+        category: 'Strength',
+        type: 'sets',
+        sets: 3,
+        repRange: '5-12',
+        equipment: 'bodyweight',
+        restSeconds: 60,
+        cue: 'Body in one straight line; elbows about 45°',
+        warmUp: [
+          'Roll the shoulders and circle the wrists, then a couple of easy reps against a wall to warm up.',
+        ],
+        coolDown: [
+          'Afterwards: a doorway chest stretch and a wrist-flexor stretch (arm straight, gently pull the fingers back), 20-30s each.',
+        ],
+        restTips: [
+          'Shake out the arms and breathe.',
+          'Sip some water.',
+        ],
+        howTo: [
+          'A press-up works the chest, shoulders and arms — lower your body toward the floor and push back up.',
+          'Start in a plank: hands under the shoulders, body in a straight line from head to heels.',
+          'Bend the elbows to about 45 degrees from your body and lower your chest.',
+          'Push back up to straight arms. Easier: hands on a wall, kitchen counter, or the edge of a sofa. Harder: on the floor, or lower slowly over 3 seconds.',
+        ],
+        form: [
+          'Keep the body in one straight line — brace the stomach and squeeze the glutes so the hips do not sag, which protects the lower back',
+          'Elbows track back at about 45 degrees to the body, not flared straight out to the sides',
+          'Lower under control; a slow 2-3 second lower builds the most strength',
+          'Only go as deep as you can with good form — clean partial reps beat sloppy full ones',
+          'Start on a wall or counter and drop lower (counter, then floor) as you get stronger',
+        ],
+      },
+      {
+        id: 'dp-wall-sit',
+        emoji: '🧱',
+        blurb: 'A daily hold against the wall to build leg and glute strength.',
+        name: 'Wall sit',
+        category: 'Strength',
+        type: 'timed',
+        durationSeconds: 30,
+        rounds: 2,
+        restSeconds: 30,
+        equipment: 'bodyweight',
+        cue: 'Slide down to knees at about 90°, hold still',
+        warmUp: [
+          'Loosen the legs with a few slow bodyweight squats and some ankle circles first.',
+        ],
+        coolDown: [
+          'Afterwards: a quad stretch (heel to your bottom) and a gentle hamstring stretch, 20-30s each side.',
+        ],
+        restTips: [
+          'Shake out the legs and breathe.',
+          'Sip some water.',
+        ],
+        howTo: [
+          'A wall sit builds the thighs and glutes by holding a seated position against a wall.',
+          'Stand with your back flat against a wall, feet about two shoe-lengths out in front.',
+          'Slide down the wall until your knees are bent to about 90 degrees — like sitting in an invisible chair.',
+          'Hold still and keep breathing. Easier: do not slide so low. Harder: hold longer, or sit a little deeper.',
+        ],
+        form: [
+          'Keep your whole back flat against the wall, shoulders included',
+          'Knees bent to about 90 degrees and stacked over your ankles, not caving inward',
+          'Push through your heels, weight in the middle of your feet',
+          'Breathe steadily — do not hold your breath',
+          'Come out of it before your form breaks or your knees ache, not after',
         ],
       },
       {
