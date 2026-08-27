@@ -25,7 +25,7 @@ export function CompletionScreen({
 
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col items-center justify-center px-6 py-16 text-center safe-top safe-bottom">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-500/20">
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-500/12">
         <svg
           width="48"
           height="48"
@@ -35,39 +35,39 @@ export function CompletionScreen({
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-emerald-400"
+          className="text-emerald-700"
           aria-hidden="true"
         >
           <path d="M20 6L9 17l-5-5" />
         </svg>
       </div>
 
-      <h1 className="mt-6 text-3xl font-extrabold text-white">
+      <h1 className="mt-6 text-3xl font-extrabold text-ink font-display">
         {allDone ? 'Workout done' : 'Progress saved'}
       </h1>
-      <p className="mt-1 text-white/60">{workoutName}</p>
+      <p className="mt-1 text-ink-soft">{workoutName}</p>
       {!allDone && (
-        <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/50">
+        <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-faint">
           Your ticks are saved. Reopen this workout any time today to finish the
           rest — it’ll pick up right where you left off.
         </p>
       )}
 
       <div className="mt-8 grid w-full grid-cols-2 gap-3">
-        <div className="rounded-3xl bg-white/5 p-5">
-          <p className="font-mono text-3xl font-bold tabular-nums text-accent-400">
+        <div className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+          <p className="font-mono text-3xl font-bold tabular-nums text-accent-600">
             {formatClock(elapsedSeconds)}
           </p>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-white/50">
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-faint">
             Elapsed
           </p>
         </div>
-        <div className="rounded-3xl bg-white/5 p-5">
-          <p className="text-3xl font-bold text-accent-400">
+        <div className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+          <p className="text-3xl font-bold text-accent-600">
             {completedCount}
-            <span className="text-lg text-white/40">/{totalCount}</span>
+            <span className="text-lg text-ink-faint">/{totalCount}</span>
           </p>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-white/50">
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-faint">
             Exercises
           </p>
         </div>

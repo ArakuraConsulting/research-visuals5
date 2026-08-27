@@ -7,9 +7,9 @@ import { computeStats } from '../lib/stats'
 
 function StatTile({ value, label }: { value: number | string; label: string }) {
   return (
-    <div className="rounded-3xl bg-white/5 p-4 text-center">
-      <p className="text-2xl font-extrabold text-accent-400">{value}</p>
-      <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-white/50">
+    <div className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-4 text-center">
+      <p className="text-2xl font-extrabold text-accent-600">{value}</p>
+      <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-ink-faint">
         {label}
       </p>
     </div>
@@ -65,7 +65,7 @@ export function HistoryView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-white">History</h1>
+        <h1 className="text-2xl font-extrabold text-ink font-display">History</h1>
       </header>
 
       <div className="grid grid-cols-3 gap-3">
@@ -78,26 +78,26 @@ export function HistoryView({
       </div>
 
       {history.length === 0 ? (
-        <div className="mt-8 rounded-3xl bg-white/5 p-6 text-center text-sm text-white/50">
+        <div className="mt-8 rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-6 text-center text-sm text-ink-faint">
           No sessions logged yet.
         </div>
       ) : (
         <div className="mt-8 space-y-6">
           {groups.map(([month, entries]) => (
             <section key={month}>
-              <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-white/50">
+              <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-ink-faint">
                 {month}
               </h2>
               <div className="space-y-2">
                 {entries.map((h) => (
                   <div
                     key={h.id}
-                    className="rounded-3xl bg-white/5 p-4"
+                    className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="font-bold text-white">{h.workoutName}</p>
-                        <p className="text-xs text-white/50">
+                        <p className="font-bold text-ink">{h.workoutName}</p>
+                        <p className="text-xs text-ink-faint">
                           {formatDate(h.dateISO)} ·{' '}
                           {formatElapsedShort(h.elapsedSeconds)} ·{' '}
                           {h.completedExerciseCount} done
@@ -106,20 +106,20 @@ export function HistoryView({
                       <button
                         onClick={() => setPendingDelete(h)}
                         aria-label="Delete entry"
-                        className="shrink-0 rounded-xl bg-white/5 p-2 text-white/40 active:scale-95 active:text-rose-300"
+                        className="shrink-0 rounded-xl bg-cream-200 p-2 text-ink-faint active:scale-95 active:text-rose-600"
                       >
                         <TrashIcon />
                       </button>
                     </div>
                     {h.weights && h.weights.length > 0 && (
-                      <ul className="mt-3 space-y-1 border-t border-white/5 pt-3">
+                      <ul className="mt-3 space-y-1 border-t border-ink-line pt-3">
                         {h.weights.map((w, i) => (
                           <li
                             key={i}
-                            className="flex justify-between gap-3 text-xs text-white/60"
+                            className="flex justify-between gap-3 text-xs text-ink-soft"
                           >
                             <span className="truncate">{w.exerciseName}</span>
-                            <span className="shrink-0 font-semibold text-white/80">
+                            <span className="shrink-0 font-semibold text-ink-soft">
                               {w.weight}
                             </span>
                           </li>

@@ -122,8 +122,10 @@ export default function App() {
           session={activeSession}
           settings={store.settings}
           exerciseLog={store.exerciseLog}
+          effortLog={store.effortLog}
           loadNoteAcks={store.loadNoteAcks}
           onAckLoadNote={store.ackLoadNote}
+          onRecordEffort={store.recordEffort}
           onChange={(s) => store.setSession(s)}
           onHome={goHomeKeepSession}
           onDiscard={discardActive}

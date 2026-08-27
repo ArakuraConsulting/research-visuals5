@@ -48,27 +48,27 @@ export function RestTimer({
   return (
     <div
       className={`mt-6 w-full rounded-3xl p-5 ${
-        done ? 'bg-emerald-500/15' : 'bg-amber-500/10'
+        done ? 'bg-emerald-500/12' : 'bg-amber-500/12'
       }`}
     >
       <div className="flex items-center justify-between">
         <div>
           <p
             className={`text-xs font-bold uppercase tracking-wide ${
-              done ? 'text-emerald-300/80' : 'text-amber-300/80'
+              done ? 'text-emerald-700/80' : 'text-amber-700/80'
             }`}
           >
             {done ? 'Rest done' : 'Rest'}
           </p>
           <p
             className={`font-mono text-4xl font-extrabold tabular-nums ${
-              done ? 'text-emerald-300' : 'text-amber-300'
+              done ? 'text-emerald-700' : 'text-amber-700'
             }`}
             aria-live="polite"
           >
             {done ? 'Go!' : formatClock(remaining)}
           </p>
-          <p className="mt-0.5 text-sm text-white/60">
+          <p className="mt-0.5 text-sm text-ink-soft">
             {done
               ? `Start your ${nextLabel ?? 'next set'} 💪`
               : `Next: ${nextLabel ?? 'your next set'}`}
@@ -77,20 +77,20 @@ export function RestTimer({
         {!done && (
           <button
             onClick={onSkip}
-            className="shrink-0 rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white/80 active:scale-95"
+            className="shrink-0 rounded-xl bg-cream-200 px-4 py-2 text-sm font-semibold text-ink-soft active:scale-95"
           >
             Skip rest
           </button>
         )}
       </div>
 
-      <ul className="mt-4 space-y-1.5 border-t border-white/10 pt-3">
+      <ul className="mt-4 space-y-1.5 border-t border-ink-line pt-3">
         {shownTips.map((tip, i) => (
           <li
             key={i}
-            className="flex gap-2 text-sm leading-relaxed text-white/70"
+            className="flex gap-2 text-sm leading-relaxed text-ink-soft"
           >
-            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-white/40" />
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-ink-faint" />
             <span>{tip}</span>
           </li>
         ))}

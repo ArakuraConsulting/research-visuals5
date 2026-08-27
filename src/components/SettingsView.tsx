@@ -50,15 +50,15 @@ export function SettingsView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-white">Settings</h1>
+        <h1 className="text-2xl font-extrabold text-ink font-display">Settings</h1>
       </header>
 
       <div className="space-y-6">
         {/* Bar weight */}
-        <section className="rounded-3xl bg-white/5 p-5">
+        <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
           <label
             htmlFor="bar-weight"
-            className="block text-sm font-bold uppercase tracking-wide text-white/60"
+            className="block text-sm font-bold uppercase tracking-wide text-ink-soft"
           >
             Bar weight ({settings.units})
           </label>
@@ -73,20 +73,20 @@ export function SettingsView({
               const n = Number.parseFloat(e.target.value)
               onUpdate({ barWeightKg: Number.isFinite(n) ? n : 0 })
             }}
-            className="mt-2 w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-lg font-semibold text-white focus:border-accent-400 focus:outline-none"
+            className="mt-2 w-full rounded-2xl border border-ink-line bg-white ring-1 ring-ink-line px-4 py-3.5 text-lg font-semibold text-ink focus:border-accent-500 focus:outline-none"
           />
-          <p className="mt-3 text-sm leading-relaxed text-white/60">
+          <p className="mt-3 text-sm leading-relaxed text-ink-soft">
             Bar weight is added automatically to every barbell lift, so you only
             enter the plates. The running total is shown while you log each set.
           </p>
         </section>
 
         {/* Units */}
-        <section className="rounded-3xl bg-white/5 p-5">
-          <p className="mb-3 text-sm font-bold uppercase tracking-wide text-white/60">
+        <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+          <p className="mb-3 text-sm font-bold uppercase tracking-wide text-ink-soft">
             Units
           </p>
-          <div className="flex gap-2 rounded-2xl bg-white/5 p-1">
+          <div className="flex gap-2 rounded-2xl bg-cream-200 p-1">
             {(['kg', 'lb'] as Units[]).map((u) => (
               <button
                 key={u}
@@ -94,7 +94,7 @@ export function SettingsView({
                 className={`flex-1 rounded-xl py-3 text-base font-semibold transition ${
                   settings.units === u
                     ? 'bg-accent-500 text-white shadow-soft'
-                    : 'text-white/60 active:text-white'
+                    : 'text-ink-soft active:text-ink'
                 }`}
               >
                 {u}
@@ -104,17 +104,17 @@ export function SettingsView({
         </section>
 
         {/* Goals */}
-        <section className="rounded-3xl bg-white/5 p-5">
-          <p className="mb-1 text-sm font-bold uppercase tracking-wide text-white/60">
+        <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+          <p className="mb-1 text-sm font-bold uppercase tracking-wide text-ink-soft">
             Goals
           </p>
-          <p className="mb-3 text-sm leading-relaxed text-white/60">
+          <p className="mb-3 text-sm leading-relaxed text-ink-soft">
             Shown as a target line on the progress charts, with how far you have
             to go. Leave blank to hide.
           </p>
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
-              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
                 Weight goal ({settings.units})
               </span>
               <input
@@ -127,11 +127,11 @@ export function SettingsView({
                   const n = Number.parseFloat(e.target.value)
                   onUpdate({ goalWeight: Number.isFinite(n) ? n : undefined })
                 }}
-                className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none"
+                className="w-full rounded-xl border border-ink-line bg-white ring-1 ring-ink-line px-3 py-2.5 text-base text-ink focus:border-accent-500 focus:outline-none"
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
                 Body fat goal %
               </span>
               <input
@@ -144,18 +144,18 @@ export function SettingsView({
                   const n = Number.parseFloat(e.target.value)
                   onUpdate({ goalBodyFatPct: Number.isFinite(n) ? n : undefined })
                 }}
-                className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none"
+                className="w-full rounded-xl border border-ink-line bg-white ring-1 ring-ink-line px-3 py-2.5 text-base text-ink focus:border-accent-500 focus:outline-none"
               />
             </label>
           </div>
         </section>
 
         {/* Backup & restore */}
-        <section className="rounded-3xl bg-white/5 p-5">
-          <p className="text-sm font-bold uppercase tracking-wide text-white/60">
+        <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-5">
+          <p className="text-sm font-bold uppercase tracking-wide text-ink-soft">
             Backup &amp; restore
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/60">
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
             Your data is saved on this device only. Back it up before adding the
             app to your Home Screen (the installed app can use separate storage),
             or to keep a safe copy. Restoring loads a backup into this device.
@@ -170,20 +170,20 @@ export function SettingsView({
             </button>
             <button
               onClick={downloadBackup}
-              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-base font-semibold text-white active:scale-[0.98]"
+              className="w-full rounded-2xl border border-ink-line bg-cream-200 px-4 py-3 text-base font-semibold text-ink active:scale-[0.98]"
             >
               Download backup file
             </button>
           </div>
 
-          <div className="mt-5 border-t border-white/10 pt-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-white/50">
+          <div className="mt-5 border-t border-ink-line pt-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-faint">
               Restore
             </p>
             <div className="space-y-2">
               <button
                 onClick={() => fileRef.current?.click()}
-                className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-base font-semibold text-white active:scale-[0.98]"
+                className="w-full rounded-2xl border border-ink-line bg-cream-200 px-4 py-3 text-base font-semibold text-ink active:scale-[0.98]"
               >
                 Restore from file
               </button>
@@ -196,7 +196,7 @@ export function SettingsView({
               />
               <button
                 onClick={() => setPasteOpen((v) => !v)}
-                className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-base font-semibold text-white active:scale-[0.98]"
+                className="w-full rounded-2xl border border-ink-line bg-cream-200 px-4 py-3 text-base font-semibold text-ink active:scale-[0.98]"
               >
                 Paste backup text
               </button>
@@ -207,7 +207,7 @@ export function SettingsView({
                     onChange={(e) => setPasteText(e.target.value)}
                     placeholder="Paste your copied backup here"
                     rows={4}
-                    className="w-full rounded-2xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-accent-400 focus:outline-none"
+                    className="w-full rounded-2xl border border-ink-line bg-white ring-1 ring-ink-line px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent-500 focus:outline-none"
                   />
                   <button
                     onClick={() => applyRestore(pasteText)}
@@ -220,7 +220,7 @@ export function SettingsView({
               )}
             </div>
             {restoreMsg && (
-              <p className="mt-3 text-sm font-medium text-accent-300">{restoreMsg}</p>
+              <p className="mt-3 text-sm font-medium text-accent-600">{restoreMsg}</p>
             )}
           </div>
         </section>

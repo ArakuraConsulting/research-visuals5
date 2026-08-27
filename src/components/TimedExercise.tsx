@@ -100,14 +100,14 @@ export function TimedExercise({
   }, [isDone, isRest, round, totalRounds, running])
 
   const ringColor = isRest
-    ? 'text-amber-400'
+    ? 'text-amber-700'
     : isDone
-      ? 'text-emerald-400'
-      : 'text-accent-400'
+      ? 'text-emerald-700'
+      : 'text-accent-600'
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-sm font-semibold uppercase tracking-wide text-white/50">
+      <p className="text-sm font-semibold uppercase tracking-wide text-ink-faint">
         {label}
       </p>
 
@@ -128,7 +128,7 @@ export function TimedExercise({
                   ? 'bg-emerald-400'
                   : i + 1 === round && !isDone
                     ? 'bg-accent-400'
-                    : 'bg-white/20'
+                    : 'bg-ink-line'
               }`}
             />
           ))}
@@ -136,7 +136,7 @@ export function TimedExercise({
       )}
 
       {isRest && (
-        <div className="mt-5 w-full rounded-2xl bg-amber-500/10 px-4 py-3">
+        <div className="mt-5 w-full rounded-2xl bg-amber-500/12 px-4 py-3">
           <ul className="space-y-1.5">
             {(exercise.restTips && exercise.restTips.length > 0
               ? exercise.restTips
@@ -144,7 +144,7 @@ export function TimedExercise({
             ).map((tip, i) => (
               <li
                 key={i}
-                className="flex gap-2 text-sm leading-relaxed text-white/70"
+                className="flex gap-2 text-sm leading-relaxed text-ink-soft"
               >
                 <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-300/60" />
                 <span>{tip}</span>
@@ -174,14 +174,14 @@ export function TimedExercise({
             </SecondaryButton>
           </div>
         ) : (
-          <div className="rounded-2xl bg-emerald-500/15 px-4 py-3 text-center text-sm font-semibold text-emerald-300">
+          <div className="rounded-2xl bg-emerald-500/12 px-4 py-3 text-center text-sm font-semibold text-emerald-700">
             All rounds complete — tap Next to continue
           </div>
         )}
 
         <button
           onClick={onSkip}
-          className="w-full py-2 text-sm font-semibold text-white/50 active:text-white"
+          className="w-full py-2 text-sm font-semibold text-ink-faint active:text-ink"
         >
           Skip this exercise
         </button>

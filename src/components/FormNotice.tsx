@@ -15,8 +15,8 @@ export function FormNoticeModal({
       aria-modal="true"
       aria-label="Form and safety notice"
     >
-      <div className="w-full max-w-md rounded-3xl bg-navy-800 p-6 shadow-card">
-        <div className="mb-4 flex items-center gap-2 text-accent-400">
+      <div className="w-full max-w-md rounded-3xl bg-cream-200 p-6 shadow-card">
+        <div className="mb-4 flex items-center gap-2 text-accent-600">
           <svg
             width="24"
             height="24"
@@ -32,9 +32,9 @@ export function FormNoticeModal({
             <path d="M12 17h.01" />
             <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
           </svg>
-          <h2 className="text-lg font-bold text-white">Before you start</h2>
+          <h2 className="text-lg font-bold text-ink">Before you start</h2>
         </div>
-        <p className="text-sm leading-relaxed text-white/80">{NOTICE_TEXT}</p>
+        <p className="text-sm leading-relaxed text-ink-soft">{NOTICE_TEXT}</p>
         <button
           onClick={onDismiss}
           className="mt-6 w-full rounded-2xl bg-accent-500 px-6 py-4 text-base font-semibold text-white active:scale-[0.98]"
@@ -43,7 +43,7 @@ export function FormNoticeModal({
         </button>
         <button
           onClick={onOpenGuide}
-          className="mt-3 w-full text-sm font-semibold text-accent-300 underline underline-offset-4 active:text-accent-200"
+          className="mt-3 w-full text-sm font-semibold text-accent-600 underline underline-offset-4 active:text-accent-600"
         >
           New to this? Read “Finding your weight”
         </button>
@@ -63,11 +63,11 @@ export function FormNoticeSheet({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-3xl bg-navy-800 p-6 shadow-card"
+        className="w-full max-w-md rounded-3xl bg-cream-200 p-6 shadow-card"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold text-white">Form &amp; safety notice</h2>
-        <p className="mt-3 text-sm leading-relaxed text-white/80">
+        <h2 className="text-lg font-bold text-ink">Form &amp; safety notice</h2>
+        <p className="mt-3 text-sm leading-relaxed text-ink-soft">
           {NOTICE_TEXT}
         </p>
         <button

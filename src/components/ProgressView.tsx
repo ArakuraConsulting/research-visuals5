@@ -40,10 +40,10 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-3xl bg-white/5 p-4">
+    <section className="rounded-3xl bg-white shadow-card ring-1 ring-ink-line/60 p-4">
       <div className="mb-3">
-        <h2 className="text-sm font-bold uppercase tracking-wide text-white/60">{title}</h2>
-        {subtitle && <p className="text-xs text-white/40">{subtitle}</p>}
+        <h2 className="text-sm font-bold uppercase tracking-wide text-ink-soft">{title}</h2>
+        {subtitle && <p className="text-xs text-ink-faint">{subtitle}</p>}
       </div>
       {children}
     </section>
@@ -52,9 +52,9 @@ function Section({
 
 function StatTile({ value, label }: { value: number | string; label: string }) {
   return (
-    <div className="rounded-2xl bg-white/5 p-3 text-center">
-      <p className="text-xl font-extrabold text-accent-400">{value}</p>
-      <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wide text-white/50">
+    <div className="rounded-2xl bg-white shadow-card ring-1 ring-ink-line/60 p-3 text-center">
+      <p className="text-xl font-extrabold text-accent-600">{value}</p>
+      <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
         {label}
       </p>
     </div>
@@ -170,7 +170,7 @@ export function ProgressView({
     <div className="mx-auto min-h-full max-w-md px-4 pb-16 pt-4 safe-top">
       <header className="mb-6 flex items-center gap-3">
         <BackButton onClick={onBack} />
-        <h1 className="text-2xl font-extrabold text-white">Progress</h1>
+        <h1 className="text-2xl font-extrabold font-display text-ink">Progress</h1>
       </header>
 
       <div className="space-y-4">
@@ -201,7 +201,7 @@ export function ProgressView({
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                   metric === m.key
                     ? 'bg-accent-500 text-white'
-                    : 'bg-white/5 text-white/60 active:text-white'
+                    : 'bg-cream-200 text-ink-soft active:text-ink'
                 }`}
               >
                 {m.label}
@@ -210,7 +210,7 @@ export function ProgressView({
           </div>
           <LineChart points={series} unit={activeMetric.unit} goal={goalFor} />
           {goalFor != null && series.length > 0 && (
-            <div className="mt-2 rounded-2xl bg-emerald-500/10 px-4 py-2.5 text-center text-sm font-semibold text-emerald-200">
+            <div className="mt-2 rounded-2xl bg-emerald-500/12 px-4 py-2.5 text-center text-sm font-semibold text-emerald-700">
               {(() => {
                 const latest = series[series.length - 1].y
                 const remaining = latest - goalFor
@@ -221,11 +221,11 @@ export function ProgressView({
           )}
 
           {/* Logger */}
-          <div className="mt-5 border-t border-white/10 pt-4">
+          <div className="mt-5 border-t border-ink-line pt-4">
             <div className="mb-4">
               <label
                 htmlFor="bw-date"
-                className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50"
+                className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink-faint"
               >
                 Date
               </label>
@@ -235,11 +235,11 @@ export function ProgressView({
                 value={date}
                 max={todayInput()}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none [color-scheme:dark]"
+                className="w-full rounded-xl border border-ink-line bg-white px-3 py-2.5 text-base text-ink focus:border-accent-400 focus:outline-none [color-scheme:light]"
               />
             </div>
 
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-white/40">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
               Enter any fields your scale shows
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -267,16 +267,16 @@ export function ProgressView({
               {bodyEntries.slice(0, 15).map((e) => (
                 <div
                   key={e.id}
-                  className="flex items-start justify-between gap-3 rounded-2xl bg-white/5 px-4 py-3"
+                  className="flex items-start justify-between gap-3 rounded-2xl bg-white shadow-card ring-1 ring-ink-line/60 px-4 py-3"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white">{formatDate(e.dateISO)}</p>
-                    <p className="mt-0.5 text-xs text-white/60">{summarise(e)}</p>
+                    <p className="text-sm font-semibold text-ink">{formatDate(e.dateISO)}</p>
+                    <p className="mt-0.5 text-xs text-ink-soft">{summarise(e)}</p>
                   </div>
                   <button
                     onClick={() => setPendingDelete(e)}
                     aria-label="Delete measurement"
-                    className="shrink-0 rounded-xl bg-white/5 px-2 py-1.5 text-xs font-semibold text-white/40 active:text-rose-300"
+                    className="shrink-0 rounded-xl bg-cream-200 px-2 py-1.5 text-xs font-semibold text-ink-faint active:text-rose-600"
                   >
                     Delete
                   </button>
@@ -314,7 +314,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/50">
+      <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
         {label}
       </span>
       <input
@@ -324,7 +324,7 @@ function Field({
         aria-label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-base text-white focus:border-accent-400 focus:outline-none"
+        className="w-full rounded-xl border border-ink-line bg-white px-3 py-2.5 text-base text-ink focus:border-accent-400 focus:outline-none"
       />
     </label>
   )
