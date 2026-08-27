@@ -195,22 +195,38 @@ export function HomeView({
 }) {
   return (
     <div className="mx-auto min-h-full max-w-md px-5 pb-16 pt-6 safe-top">
-      <header className="mb-7 flex items-start justify-between px-1">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-accent-600">
-            Arakura
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
-            Your practice
-          </h1>
+      <header className="mb-7">
+        <div className="relative overflow-hidden rounded-3xl shadow-card ring-1 ring-ink-line/60">
+          <img
+            src={`${import.meta.env.BASE_URL}hero.jpg`}
+            alt=""
+            aria-hidden="true"
+            className="h-52 w-full object-cover object-[50%_30%]"
+          />
+          {/* Warm wash so the title stays legible over the photograph */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(41,35,29,0.30) 0%, rgba(41,35,29,0) 32%, rgba(41,35,29,0.10) 58%, rgba(38,32,26,0.68) 100%)',
+            }}
+          />
+          <button
+            onClick={onOpenSettings}
+            aria-label="Settings"
+            className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-cream-50/85 text-ink-soft ring-1 ring-white/40 backdrop-blur-sm active:scale-95"
+          >
+            <GearIcon />
+          </button>
+          <div className="absolute inset-x-0 bottom-0 p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cream-100/90">
+              Arakura
+            </p>
+            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-white [text-shadow:0_1px_10px_rgba(30,25,20,0.35)]">
+              Your practice
+            </h1>
+          </div>
         </div>
-        <button
-          onClick={onOpenSettings}
-          aria-label="Settings"
-          className="mt-1 flex h-10 w-10 items-center justify-center rounded-full border border-ink-line bg-cream-50 text-ink-soft active:scale-95"
-        >
-          <GearIcon />
-        </button>
       </header>
 
       {/* Home / Travel mode */}
