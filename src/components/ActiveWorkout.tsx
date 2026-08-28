@@ -419,22 +419,6 @@ export function ActiveWorkout({
             </div>
           )}
 
-          {exercise.coolDown && exercise.coolDown.length > 0 && (
-            <div className="mt-6 rounded-3xl bg-clay-tint p-4 ring-1 ring-inset ring-clay-500/15">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-clay-600">
-                Cool down &amp; stretch after
-              </p>
-              <ul className="space-y-1.5">
-                {exercise.coolDown.map((point, i) => (
-                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay-500" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {allSetsDone && (
             <EffortCheckIn
               key={exercise.id}
