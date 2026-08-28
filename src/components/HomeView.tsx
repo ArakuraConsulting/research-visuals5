@@ -1,5 +1,12 @@
-import type { HistoryEntry, Workout } from '../types'
-import { formatDate, formatElapsedShort, workoutTotalLabel } from '../lib/time'
+import type { ExerciseLog, HistoryEntry, Workout } from '../types'
+import {
+  formatDate,
+  formatElapsedShort,
+  formatTime,
+  workoutTotalLabel,
+} from '../lib/time'
+import { computeStats } from '../lib/stats'
+import { currentLoads, weekTotals } from '../lib/achievements'
 
 /**
  * A calm cover photograph per workout, unified to the warm palette with a soft
@@ -85,6 +92,103 @@ function WorkoutCard({
   )
 }
 
+/** "1h 45m" / "45m" / "0m" from seconds. */
+function formatDuration(seconds: number): string {
+  const m = Math.round(seconds / 60)
+  if (m < 60) return `${m}m`
+  const h = Math.floor(m / 60)
+  return `${h}h ${m % 60}m`
+}
+
+function Stat({ value, label }: { value: string | number; label: string }) {
+  return (
+    <div className="rounded-2xl bg-cream-100 px-2 py-3 text-center">
+      <p className="text-2xl font-semibold tabular-nums text-accent-600">
+        {value}
+      </p>
+      <p className="mt-0.5 text-[11px] font-medium text-ink-faint">{label}</p>
+    </div>
+  )
+}
+
+/**
+ * A weekly achievement card: sessions, streak and training time this week, the
+ * total weight moved, and the current working load for each lift — so progress
+ * accumulates across the week instead of resetting to zero each day.
+ */
+function ThisWeek({
+  workouts,
+  history,
+  exerciseLog,
+  onOpenProgress,
+}: {
+  workouts: Workout[]
+  history: HistoryEntry[]
+  exerciseLog: Record<string, ExerciseLog>
+  onOpenProgress: () => void
+}) {
+  const week = weekTotals(history)
+  const stats = computeStats(history)
+  const loads = currentLoads(workouts, exerciseLog)
+  const nothingYet = week.sessions === 0 && loads.length === 0
+
+  return (
+    <section className="mb-6 rounded-3xl bg-cream-50 p-4 shadow-card ring-1 ring-ink-line/70">
+      <div className="flex items-center justify-between px-1">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
+          This week
+        </p>
+        <button
+          onClick={onOpenProgress}
+          className="text-xs font-semibold text-accent-600 active:opacity-70"
+        >
+          Details
+        </button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-3 gap-2.5">
+        <Stat value={week.sessions} label="Sessions" />
+        <Stat value={stats.streak} label="Day streak" />
+        <Stat value={formatDuration(week.seconds)} label="Trained" />
+      </div>
+
+      {week.kg > 0 && (
+        <p className="mt-3 px-1 text-sm text-ink-soft">
+          <span className="font-semibold text-ink">
+            ~{week.kg.toLocaleString()} kg
+          </span>{' '}
+          moved this week — nice work.
+        </p>
+      )}
+
+      {loads.length > 0 && (
+        <div className="mt-4 border-t border-ink-line pt-3">
+          <p className="px-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
+            Current loads
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {loads.map((r) => (
+              <span
+                key={r.id}
+                className="rounded-full bg-cream-200 px-2.5 py-1 text-[12px] font-medium text-ink-soft"
+              >
+                {r.name} · <span className="font-semibold text-ink">{r.label}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {nothingYet && (
+        <p className="mt-3 px-1 text-sm leading-relaxed text-ink-faint">
+          Finish a session and your weekly totals and current loads will build
+          up here — you don’t have to do everything every day.
+        </p>
+      )}
+    </section>
+  )
+}
+
 function RecentActivity({ history }: { history: HistoryEntry[] }) {
   const recent = history.slice(0, 5)
   if (recent.length === 0) {
@@ -107,7 +211,9 @@ function RecentActivity({ history }: { history: HistoryEntry[] }) {
             <p className="truncate text-sm font-medium text-ink">
               {h.workoutName}
             </p>
-            <p className="text-xs text-ink-faint">{formatDate(h.dateISO)}</p>
+            <p className="text-xs text-ink-faint">
+              {formatDate(h.dateISO)} · started {formatTime(h.dateISO)}
+            </p>
           </div>
           <span className="ml-3 shrink-0 text-sm font-medium tabular-nums text-accent-600">
             {formatElapsedShort(h.elapsedSeconds)}
@@ -140,6 +246,7 @@ function GearIcon() {
 export function HomeView({
   workouts,
   history,
+  exerciseLog,
   progressByWorkout,
   travelMode,
   onToggleTravel,
@@ -152,6 +259,7 @@ export function HomeView({
 }: {
   workouts: Workout[]
   history: HistoryEntry[]
+  exerciseLog: Record<string, ExerciseLog>
   progressByWorkout: Record<string, { done: number; total: number }>
   travelMode: boolean
   onToggleTravel: (on: boolean) => void
@@ -235,6 +343,13 @@ export function HomeView({
             : 'Full equipment — weights, bands, mat, bar.'}
         </p>
       </div>
+
+      <ThisWeek
+        workouts={workouts}
+        history={history}
+        exerciseLog={exerciseLog}
+        onOpenProgress={onOpenProgress}
+      />
 
       <div className="mb-6 grid grid-cols-2 gap-3">
         <button

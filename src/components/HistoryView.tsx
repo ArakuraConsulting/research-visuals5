@@ -2,7 +2,12 @@ import { useMemo, useState } from 'react'
 import type { HistoryEntry } from '../types'
 import { BackButton } from './ui'
 import { ConfirmDialog } from './ConfirmDialog'
-import { formatDate, formatElapsedShort, formatMonth } from '../lib/time'
+import {
+  formatDate,
+  formatElapsedShort,
+  formatMonth,
+  formatTime,
+} from '../lib/time'
 import { computeStats } from '../lib/stats'
 
 function StatTile({ value, label }: { value: number | string; label: string }) {
@@ -99,6 +104,11 @@ export function HistoryView({
                         <p className="font-bold text-ink">{h.workoutName}</p>
                         <p className="text-xs text-ink-faint">
                           {formatDate(h.dateISO)} ·{' '}
+                          <span className="font-semibold text-ink-soft">
+                            started {formatTime(h.dateISO)}
+                          </span>
+                        </p>
+                        <p className="mt-0.5 text-xs text-ink-faint">
                           {formatElapsedShort(h.elapsedSeconds)} ·{' '}
                           {h.completedExerciseCount} done
                         </p>

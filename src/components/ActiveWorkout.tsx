@@ -23,7 +23,8 @@ import { exerciseSummary, formatClock, isSameDay } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
 import { useWakeLock } from '../lib/useWakeLock'
 import { isMusicPlaying, startMusic, stopMusic } from '../lib/music'
-import { makeEffort, nextSessionNote } from '../lib/coach'
+import { logLoadKg, makeEffort, nextSessionNote } from '../lib/coach'
+import { computeSessionStats } from '../lib/achievements'
 import { makeId } from '../lib/util'
 import {
   buildLog,
@@ -139,18 +140,35 @@ export function ActiveWorkout({
     [workout.exercises, progress],
   )
 
-  const handleFinish = () => {
+  // Everything derived from what's been logged this session: the logs to
+  // persist, the weight list, the training tally, and any lift that beat its
+  // previous load (a small "personal best" to celebrate on the finish screen).
+  const result = useMemo(() => {
     const logs: Record<string, ExerciseLog> = {}
     const weights: LoggedWeight[] = []
+    const highlights: string[] = []
+    const fmtKg = (n: number) =>
+      Number.isInteger(n) ? String(n) : (Math.round(n * 10) / 10).toFixed(1)
     for (const ex of workout.exercises) {
       const p = progress[ex.id]
       if (!p) continue
       const log = buildLog(ex, p.entryNum, p.entryText, settings)
-      if (log) {
-        logs[ex.id] = log
-        weights.push({ exerciseName: ex.name, weight: lastTimeLabel(log, ex) })
+      if (!log) continue
+      logs[ex.id] = log
+      weights.push({ exerciseName: ex.name, weight: lastTimeLabel(log, ex) })
+      const prevKg = logLoadKg(exerciseLog[ex.id])
+      const nowKg = logLoadKg(log)
+      if (prevKg != null && nowKg != null && nowKg > prevKg) {
+        highlights.push(
+          `${ex.name} — ${lastTimeLabel(log, ex)}, up ${fmtKg(nowKg - prevKg)} kg`,
+        )
       }
     }
+    const stats = computeSessionStats(workout, progress, logs)
+    return { logs, weights, stats, highlights }
+  }, [workout, progress, settings, exerciseLog])
+
+  const handleFinish = () => {
     const entry: HistoryEntry = {
       id: makeId('hist'),
       workoutId: workout.id,
@@ -158,18 +176,22 @@ export function ActiveWorkout({
       dateISO: session.dateISO,
       elapsedSeconds,
       completedExerciseCount: doneCount,
-      weights: weights.length > 0 ? weights : undefined,
+      weights: result.weights.length > 0 ? result.weights : undefined,
+      stats: result.stats,
     }
-    onFinish(entry, logs)
+    onFinish(entry, result.logs)
   }
 
   if (finished) {
     return (
       <CompletionScreen
         workoutName={workout.name}
+        startedAtISO={session.dateISO}
         elapsedSeconds={elapsedSeconds}
         completedCount={doneCount}
         totalCount={total}
+        stats={result.stats}
+        highlights={result.highlights}
         onDone={handleFinish}
       />
     )
@@ -395,22 +417,6 @@ export function ActiveWorkout({
                   updateProgress(exercise.id, { entryNum, entryText })
                 }
               />
-            </div>
-          )}
-
-          {exercise.coolDown && exercise.coolDown.length > 0 && (
-            <div className="mt-6 rounded-3xl bg-clay-tint p-4 ring-1 ring-inset ring-clay-500/15">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-clay-600">
-                Cool down &amp; stretch after
-              </p>
-              <ul className="space-y-1.5">
-                {exercise.coolDown.map((point, i) => (
-                  <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-clay-500" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
 

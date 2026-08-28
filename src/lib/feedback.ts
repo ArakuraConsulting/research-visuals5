@@ -1,9 +1,17 @@
 /**
- * Audible beep (Web Audio API) and haptic buzz (Vibration API).
+ * Audible cues (Web Audio API) and haptic buzz (Vibration API).
  * Both degrade silently when unsupported or blocked.
+ *
+ * The hard part is iOS: it suspends the AudioContext whenever the screen sleeps
+ * or the app is backgrounded — which is exactly when a rest timer is counting
+ * down and you've put the phone down. So every cue resumes the context first
+ * and, if it was asleep, schedules the sound *after* the resume resolves rather
+ * than firing into a suspended context (which is silent). We also re-arm on the
+ * page becoming visible again.
  */
 
 let audioCtx: AudioContext | null = null
+let listenersBound = false
 
 function getCtx(): AudioContext | null {
   try {
@@ -14,44 +22,92 @@ function getCtx(): AudioContext | null {
         .webkitAudioContext
     if (!Ctor) return null
     if (!audioCtx) audioCtx = new Ctor()
+    bindResumeListeners()
     return audioCtx
   } catch {
     return null
   }
 }
 
+/** Keep the context alive across screen sleeps / tab switches. */
+function bindResumeListeners() {
+  if (listenersBound || typeof document === 'undefined') return
+  listenersBound = true
+  const resume = () => {
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {})
+    }
+  }
+  document.addEventListener('visibilitychange', resume)
+  window.addEventListener('focus', resume)
+  window.addEventListener('pageshow', resume)
+}
+
 /**
- * Prime the audio context from a user gesture (e.g. the Start button).
- * iOS Safari requires this before any programmatic sound will play.
+ * Play a sound. `schedule(ctx, at)` builds the nodes starting at time `at`.
+ * If the context is suspended (iOS after a screen sleep), we resume first and
+ * schedule once it's actually running, so the cue is never fired into silence.
  */
-export function primeAudio(): void {
+function play(schedule: (ctx: AudioContext, at: number) => void): void {
   const ctx = getCtx()
-  if (ctx && ctx.state === 'suspended') {
-    ctx.resume().catch(() => {})
+  if (!ctx) return
+  const run = () => {
+    try {
+      schedule(ctx, ctx.currentTime + 0.02)
+    } catch {
+      /* ignore */
+    }
+  }
+  if (ctx.state === 'running') {
+    run()
+  } else {
+    // Resume, then play. Also attempt immediately in case resume is instant.
+    ctx.resume().then(run).catch(() => {})
   }
 }
 
-export function beep(durationMs = 180, frequency = 880, peak = 0.3): void {
+/**
+ * Prime the audio context from a user gesture (e.g. the Start button, or
+ * opening a workout). iOS requires a gesture before any sound will play, so we
+ * resume and push a one-sample silent buffer through to fully unlock output.
+ */
+export function primeAudio(): void {
   const ctx = getCtx()
   if (!ctx) return
+  if (ctx.state === 'suspended') ctx.resume().catch(() => {})
   try {
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {})
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.type = 'sine'
-    osc.frequency.value = frequency
-    const now = ctx.currentTime
-    // Soft attack/decay envelope to avoid clicks.
-    gain.gain.setValueAtTime(0.0001, now)
-    gain.gain.exponentialRampToValueAtTime(peak, now + 0.01)
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + durationMs / 1000)
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-    osc.start(now)
-    osc.stop(now + durationMs / 1000 + 0.02)
+    const buffer = ctx.createBuffer(1, 1, 22050)
+    const src = ctx.createBufferSource()
+    src.buffer = buffer
+    src.connect(ctx.destination)
+    src.start(0)
   } catch {
     /* ignore */
   }
+}
+
+function tone(
+  ctx: AudioContext,
+  at: number,
+  frequency: number,
+  peak: number,
+  durationS: number,
+): void {
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.type = 'sine'
+  osc.frequency.value = frequency
+  gain.gain.setValueAtTime(0.0001, at)
+  gain.gain.exponentialRampToValueAtTime(peak, at + 0.006)
+  gain.gain.exponentialRampToValueAtTime(0.0001, at + durationS)
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.start(at)
+  osc.stop(at + durationS + 0.02)
+}
+
+export function beep(durationMs = 180, frequency = 880, peak = 0.3): void {
+  play((ctx, at) => tone(ctx, at, frequency, peak, durationMs / 1000))
 }
 
 /**
@@ -60,33 +116,14 @@ export function beep(durationMs = 180, frequency = 880, peak = 0.3): void {
  * across a room while you're mid-exercise and not looking at the screen.
  */
 export function ding(): void {
-  const ctx = getCtx()
-  if (!ctx) return
-  try {
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {})
-    const now = ctx.currentTime
-    // [frequency, peak gain] — fundamental A5 plus shimmering upper partials.
+  play((ctx, at) => {
     const partials: Array<[number, number]> = [
       [880, 0.6],
       [1760, 0.28],
       [2640, 0.14],
     ]
-    for (const [freq, peak] of partials) {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = 'sine'
-      osc.frequency.value = freq
-      gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.exponentialRampToValueAtTime(peak, now + 0.006)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(now)
-      osc.stop(now + 1.25)
-    }
-  } catch {
-    /* ignore */
-  }
+    for (const [freq, peak] of partials) tone(ctx, at, freq, peak, 1.15)
+  })
 }
 
 /** Short, soft blip for the final "3… 2… 1…" seconds before a round ends. */

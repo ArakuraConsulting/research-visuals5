@@ -123,6 +123,22 @@ export interface ExerciseEffort {
   loadLabel?: string
 }
 
+/** The movement pattern a lift trains — used for the achievement breakdown. */
+export type MovementPattern = 'Push' | 'Pull' | 'Legs' | 'Carry' | 'Core'
+
+/**
+ * A session's training tally, computed at save time so the home screen and
+ * completion screen can show what was actually done (weight moved, by pattern).
+ */
+export interface SessionStats {
+  /** Approx total weight moved this session (kg): sets × reps × load. */
+  totalKg: number
+  /** Weight moved split by movement pattern (kg). */
+  byPattern: Partial<Record<MovementPattern, number>>
+  /** How many working sets were completed. */
+  sets: number
+}
+
 export interface HistoryEntry {
   id: string
   workoutId: string
@@ -132,6 +148,8 @@ export interface HistoryEntry {
   completedExerciseCount: number
   /** Any weights logged during the session */
   weights?: LoggedWeight[]
+  /** Training tally for the session (present for sessions saved from v13 on). */
+  stats?: SessionStats
 }
 
 /** Per-exercise progress captured during an active session. */
