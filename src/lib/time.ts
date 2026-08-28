@@ -46,11 +46,14 @@ export function formatClock(totalSeconds: number): string {
   return `${pad(minutes)}:${pad(seconds)}`
 }
 
-/** Short, human label like "3 x 30 sec" or "3 x 6-8". */
+/** Short, human label like "3 x 30 sec", "5 min", or "3 x 6-8". */
 export function exerciseSummary(ex: Exercise): string {
   if (ex.type === 'timed') {
     const rounds = ex.rounds ?? 1
-    return `${rounds} x ${ex.durationSeconds ?? 0} sec`
+    const dur = ex.durationSeconds ?? 0
+    // Single long round (e.g. a 5-minute cool-down) reads better in minutes.
+    if (rounds === 1 && dur >= 120) return `${Math.round(dur / 60)} min`
+    return `${rounds} x ${dur} sec`
   }
   const sets = ex.sets ?? 0
   return ex.repRange ? `${sets} x ${ex.repRange}` : `${sets} sets`

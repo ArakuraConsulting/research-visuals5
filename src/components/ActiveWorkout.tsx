@@ -23,7 +23,8 @@ import { exerciseSummary, formatClock, isSameDay } from '../lib/time'
 import { useInterval } from '../lib/useInterval'
 import { useWakeLock } from '../lib/useWakeLock'
 import { isMusicPlaying, startMusic, stopMusic } from '../lib/music'
-import { makeEffort, nextSessionNote } from '../lib/coach'
+import { logLoadKg, makeEffort, nextSessionNote } from '../lib/coach'
+import { computeSessionStats } from '../lib/achievements'
 import { makeId } from '../lib/util'
 import {
   buildLog,
@@ -139,18 +140,35 @@ export function ActiveWorkout({
     [workout.exercises, progress],
   )
 
-  const handleFinish = () => {
+  // Everything derived from what's been logged this session: the logs to
+  // persist, the weight list, the training tally, and any lift that beat its
+  // previous load (a small "personal best" to celebrate on the finish screen).
+  const result = useMemo(() => {
     const logs: Record<string, ExerciseLog> = {}
     const weights: LoggedWeight[] = []
+    const highlights: string[] = []
+    const fmtKg = (n: number) =>
+      Number.isInteger(n) ? String(n) : (Math.round(n * 10) / 10).toFixed(1)
     for (const ex of workout.exercises) {
       const p = progress[ex.id]
       if (!p) continue
       const log = buildLog(ex, p.entryNum, p.entryText, settings)
-      if (log) {
-        logs[ex.id] = log
-        weights.push({ exerciseName: ex.name, weight: lastTimeLabel(log, ex) })
+      if (!log) continue
+      logs[ex.id] = log
+      weights.push({ exerciseName: ex.name, weight: lastTimeLabel(log, ex) })
+      const prevKg = logLoadKg(exerciseLog[ex.id])
+      const nowKg = logLoadKg(log)
+      if (prevKg != null && nowKg != null && nowKg > prevKg) {
+        highlights.push(
+          `${ex.name} — ${lastTimeLabel(log, ex)}, up ${fmtKg(nowKg - prevKg)} kg`,
+        )
       }
     }
+    const stats = computeSessionStats(workout, progress, logs)
+    return { logs, weights, stats, highlights }
+  }, [workout, progress, settings, exerciseLog])
+
+  const handleFinish = () => {
     const entry: HistoryEntry = {
       id: makeId('hist'),
       workoutId: workout.id,
@@ -158,9 +176,10 @@ export function ActiveWorkout({
       dateISO: session.dateISO,
       elapsedSeconds,
       completedExerciseCount: doneCount,
-      weights: weights.length > 0 ? weights : undefined,
+      weights: result.weights.length > 0 ? result.weights : undefined,
+      stats: result.stats,
     }
-    onFinish(entry, logs)
+    onFinish(entry, result.logs)
   }
 
   if (finished) {
@@ -170,6 +189,8 @@ export function ActiveWorkout({
         elapsedSeconds={elapsedSeconds}
         completedCount={doneCount}
         totalCount={total}
+        stats={result.stats}
+        highlights={result.highlights}
         onDone={handleFinish}
       />
     )

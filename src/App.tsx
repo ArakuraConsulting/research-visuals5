@@ -104,6 +104,7 @@ export default function App() {
         <HomeView
           workouts={workouts}
           history={store.history}
+          exerciseLog={store.exerciseLog}
           progressByWorkout={progressByWorkout}
           travelMode={travelMode}
           onToggleTravel={(on) => store.updateSettings({ travelMode: on })}
