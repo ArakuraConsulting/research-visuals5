@@ -186,6 +186,7 @@ export function ActiveWorkout({
     return (
       <CompletionScreen
         workoutName={workout.name}
+        startedAtISO={session.dateISO}
         elapsedSeconds={elapsedSeconds}
         completedCount={doneCount}
         totalCount={total}

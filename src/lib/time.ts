@@ -80,6 +80,14 @@ export function formatDate(dateISO: string): string {
   })
 }
 
+/** Local start time, e.g. "7:42 AM" — for logging into other apps. */
+export function formatTime(dateISO: string): string {
+  return new Date(dateISO).toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 /** Local month + year, used as a history group heading. */
 export function formatMonth(dateISO: string): string {
   const d = new Date(dateISO)

@@ -1,5 +1,10 @@
 import type { ExerciseLog, HistoryEntry, Workout } from '../types'
-import { formatDate, formatElapsedShort, workoutTotalLabel } from '../lib/time'
+import {
+  formatDate,
+  formatElapsedShort,
+  formatTime,
+  workoutTotalLabel,
+} from '../lib/time'
 import { computeStats } from '../lib/stats'
 import { currentLoads, weekTotals } from '../lib/achievements'
 
@@ -206,7 +211,9 @@ function RecentActivity({ history }: { history: HistoryEntry[] }) {
             <p className="truncate text-sm font-medium text-ink">
               {h.workoutName}
             </p>
-            <p className="text-xs text-ink-faint">{formatDate(h.dateISO)}</p>
+            <p className="text-xs text-ink-faint">
+              {formatDate(h.dateISO)} · started {formatTime(h.dateISO)}
+            </p>
           </div>
           <span className="ml-3 shrink-0 text-sm font-medium tabular-nums text-accent-600">
             {formatElapsedShort(h.elapsedSeconds)}

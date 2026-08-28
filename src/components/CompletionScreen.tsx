@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import type { SessionStats } from '../types'
-import { formatClock } from '../lib/time'
+import { formatClock, formatTime } from '../lib/time'
 import { PATTERN_ORDER } from '../lib/achievements'
 import { beepComplete, vibrate } from '../lib/feedback'
 import { PrimaryButton } from './ui'
 
 export function CompletionScreen({
   workoutName,
+  startedAtISO,
   elapsedSeconds,
   completedCount,
   totalCount,
@@ -15,6 +16,7 @@ export function CompletionScreen({
   onDone,
 }: {
   workoutName: string
+  startedAtISO?: string
   elapsedSeconds: number
   completedCount: number
   totalCount: number
@@ -56,6 +58,15 @@ export function CompletionScreen({
         {allDone ? 'Workout done' : 'Progress saved'}
       </h1>
       <p className="mt-1 text-ink-soft">{workoutName}</p>
+      {startedAtISO && (
+        <p className="mt-1 text-sm text-ink-faint">
+          Started{' '}
+          <span className="font-semibold text-ink-soft">
+            {formatTime(startedAtISO)}
+          </span>{' '}
+          · {formatClock(elapsedSeconds)} long
+        </p>
+      )}
       {!allDone && (
         <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-faint">
           Your ticks are saved. Reopen this workout any time today to finish the
