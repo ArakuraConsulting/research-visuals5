@@ -23,6 +23,27 @@ type MetricKey =
   | 'bmrKcal'
   | 'metabolicAge'
 
+type Range = '1W' | '1M' | '3M' | '6M'
+const RANGE_DAYS: Record<Range, number> = { '1W': 7, '1M': 31, '3M': 92, '6M': 183 }
+const RANGE_LABEL: Record<Range, string> = {
+  '1W': '1 week',
+  '1M': '1 month',
+  '3M': '3 months',
+  '6M': '6 months',
+}
+const DAY_MS = 24 * 60 * 60 * 1000
+
+/** Metrics where an increase is the improvement (muscle, water, protein…). */
+const HIGHER_IS_BETTER = new Set<MetricKey>([
+  'skeletalMusclePct',
+  'fatFreeMassKg',
+  'bodyWaterPct',
+  'muscleMassKg',
+  'boneMassKg',
+  'proteinPct',
+  'bmrKcal',
+])
+
 /** Today's date as yyyy-mm-dd for the date input default. */
 function todayInput(): string {
   const d = new Date()
@@ -82,6 +103,7 @@ export function ProgressView({
   onDeleteBody: (id: string) => void
 }) {
   const [metric, setMetric] = useState<MetricKey>('weight')
+  const [range, setRange] = useState<Range>('1M')
   const [pendingDelete, setPendingDelete] = useState<BodyEntry | null>(null)
 
   // Measurement form fields
@@ -131,7 +153,23 @@ export function ProgressView({
       : metric === 'bodyFatPct'
         ? settings.goalBodyFatPct
         : undefined
-  const series = useMemo(() => bodySeries(bodyEntries, metric), [bodyEntries, metric])
+  const fullSeries = useMemo(
+    () => bodySeries(bodyEntries, metric),
+    [bodyEntries, metric],
+  )
+  const series = useMemo(() => {
+    const cutoff = Date.now() - RANGE_DAYS[range] * DAY_MS
+    const inRange = fullSeries.filter((p) => p.x >= cutoff)
+    // If nothing falls in the window (sparse readings), still show the latest
+    // point so the number isn't blank.
+    return inRange.length > 0 ? inRange : fullSeries.slice(-1)
+  }, [fullSeries, range])
+  const higherIsBetter = HIGHER_IS_BETTER.has(metric)
+  // Change since the previous reading (regardless of range).
+  const sinceLast =
+    fullSeries.length >= 2
+      ? fullSeries[fullSeries.length - 1].y - fullSeries[fullSeries.length - 2].y
+      : null
 
   const canSave = metrics.some((m) => num(fields[m.key]) !== undefined)
 
@@ -193,6 +231,9 @@ export function ProgressView({
           title="Weekly weigh-in"
           subtitle="Log weight and scale metrics — about once a week is ideal"
         >
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-faint">
+            Tap a measurement to see its trend
+          </p>
           <div className="mb-3 flex flex-wrap gap-1.5">
             {metrics.map((m) => (
               <button
@@ -208,7 +249,52 @@ export function ProgressView({
               </button>
             ))}
           </div>
-          <LineChart points={series} unit={activeMetric.unit} goal={goalFor} />
+
+          {/* Time-range toggle */}
+          <div className="mb-3 flex gap-1 rounded-full bg-cream-200 p-1">
+            {(['1W', '1M', '3M', '6M'] as Range[]).map((r) => (
+              <button
+                key={r}
+                onClick={() => setRange(r)}
+                aria-pressed={range === r}
+                className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition ${
+                  range === r
+                    ? 'bg-cream-50 text-ink shadow-soft'
+                    : 'text-ink-faint active:text-ink'
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+
+          <LineChart
+            points={series}
+            unit={activeMetric.unit}
+            goal={goalFor}
+            higherIsBetter={higherIsBetter}
+          />
+
+          {sinceLast != null && (
+            <p className="mt-2 text-center text-xs text-ink-faint">
+              Since your last reading:{' '}
+              <span
+                className={`font-semibold ${
+                  sinceLast === 0
+                    ? 'text-ink-soft'
+                    : (higherIsBetter ? sinceLast > 0 : sinceLast < 0)
+                      ? 'text-accent-600'
+                      : 'text-clay-600'
+                }`}
+              >
+                {sinceLast > 0 ? '+' : ''}
+                {sinceLast.toFixed(1)}
+                {activeMetric.unit === '%' ? '%' : ` ${activeMetric.unit}`}
+              </span>{' '}
+              · showing {RANGE_LABEL[range]}
+            </p>
+          )}
+
           {goalFor != null && series.length > 0 && (
             <div className="mt-2 rounded-2xl bg-accent-tint px-4 py-2.5 text-center text-sm font-medium text-accent-600">
               {(() => {

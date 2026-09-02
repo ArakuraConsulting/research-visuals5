@@ -56,11 +56,14 @@ export function LineChart({
   unit = '',
   height = 160,
   goal,
+  higherIsBetter = false,
 }: {
   points: Point[]
   unit?: string
   height?: number
   goal?: number
+  /** true = an increase is an improvement (muscle, water); false = a decrease is. */
+  higherIsBetter?: boolean
 }) {
   if (points.length === 0) {
     return (
@@ -112,7 +115,11 @@ export function LineChart({
         {points.length > 1 && (
           <span
             className={`text-sm font-semibold tabular-nums ${
-              delta < 0 ? 'text-accent-600' : delta > 0 ? 'text-clay-600' : 'text-ink-faint'
+              delta === 0
+                ? 'text-ink-faint'
+                : (higherIsBetter ? delta > 0 : delta < 0)
+                  ? 'text-accent-600'
+                  : 'text-clay-600'
             }`}
           >
             {delta > 0 ? '+' : ''}
