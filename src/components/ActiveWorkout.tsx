@@ -372,27 +372,29 @@ export function ActiveWorkout({
             </div>
           )}
 
-          {/* Optional timer / sets */}
+          {/* Timer (all timed exercises) / sets. Every timed exercise gets the
+              audible countdown + bell, so nothing needs the phone watched —
+              even the ones you might also follow along in your own app. */}
           <div className="mt-8">
-            {exercise.type === 'timed' && exercise.externalTimer ? (
-              <div className="rounded-3xl bg-white p-5 text-center shadow-card ring-1 ring-ink-line/60">
-                <p className="text-[15px] leading-relaxed text-ink-soft">
-                  You time this with your own app or device
-                  {exercise.durationSeconds
-                    ? ` (about ${Math.round(exercise.durationSeconds / 60)} min)`
-                    : ''}
-                  . Tap{' '}
-                  <span className="font-semibold text-ink">Mark as done</span>{' '}
-                  below when you’ve finished.
-                </p>
-              </div>
-            ) : exercise.type === 'timed' ? (
-              <TimedExercise
-                key={exercise.id}
-                exercise={exercise}
-                onComplete={() => updateProgress(exercise.id, { done: true })}
-                onSkip={() => setFocusIndex(null)}
-              />
+            {exercise.type === 'timed' ? (
+              <>
+                <TimedExercise
+                  key={exercise.id}
+                  exercise={exercise}
+                  onComplete={() => updateProgress(exercise.id, { done: true })}
+                  onSkip={() => setFocusIndex(null)}
+                />
+                {exercise.externalTimer && (
+                  <p className="mt-3 text-center text-xs leading-relaxed text-ink-faint">
+                    Prefer your own app or a video? Follow it alongside — this
+                    just times the{' '}
+                    {exercise.durationSeconds
+                      ? `${Math.round(exercise.durationSeconds / 60)} minutes`
+                      : 'round'}{' '}
+                    and rings when you’re done.
+                  </p>
+                )}
+              </>
             ) : (
               <SetsExercise
                 key={exercise.id}
