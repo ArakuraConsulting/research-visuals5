@@ -8,7 +8,7 @@
  *    content-hashed names and they never change once built.
  * User data lives in localStorage and is untouched by this cache.
  */
-const CACHE = 'wt-cache-v1'
+const CACHE = 'wt-cache-v2'
 
 self.addEventListener('install', () => {
   self.skipWaiting()
